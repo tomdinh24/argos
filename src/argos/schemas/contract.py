@@ -2,12 +2,12 @@
 
 Source of truth: AGENT_ARCHITECTURE.md §3.
 
-Every probabilistic claim an AI specialist emits must (a) be a number in [0, 1],
-(b) carry its own reasoning, and (c) cite at least one source — a Document, a
-sourced legal rule, or a ledger entry. Outputs missing these are rejected at
-this schema layer, before the specialist's proposal reaches Foundry as an
-AgentAction. There is no recommendation field on any output type; specialists
-surface evidence and probability, humans pick the path.
+Every probabilistic assertion an AI specialist emits must (a) be a number in
+[0, 1], (b) carry its own reasoning, and (c) cite at least one source — a
+Document, a sourced legal rule, or a ledger entry. Outputs missing these are
+rejected at this schema layer, before the specialist's proposal reaches Foundry
+as an AgentAction. There is no recommendation field on any output type;
+specialists surface evidence and quantify uncertainty, humans pick the path.
 """
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ from pydantic import BaseModel, Field, model_validator
 
 
 class EvidenceCitation(BaseModel):
-    """A pointer from a probabilistic claim to its supporting source.
+    """A pointer from an Assessment to its supporting source.
 
     Exactly one of `document_id`, `sourced_rule_id`, or `ledger_entry_id`
     must be populated. The `text_excerpt` records what the cited source
@@ -48,7 +48,7 @@ class EvidenceCitation(BaseModel):
         return self
 
 
-class ProbabilisticClaim(BaseModel):
+class Assessment(BaseModel):
     """A single quantified assertion with backing.
 
     Used as a building block in every legally-bearing specialist's output.
@@ -63,28 +63,28 @@ class ProbabilisticClaim(BaseModel):
     evidence_citations: list[EvidenceCitation] = Field(min_length=1)
 
 
-class OutcomePathDistribution(BaseModel):
-    """A distribution over mutually exclusive outcome paths.
+class Synthesis(BaseModel):
+    """A distribution over mutually exclusive outcomes.
 
     Coverage uses this over {clean coverage, ROR, denial}. Liability uses it
     over fault-allocation buckets. Reserve and Recovery use it for outcome
-    paths where applicable. Every path is a `ProbabilisticClaim` (so every
-    path carries its own evidence). Probabilities must sum to 1.0 within
+    paths where applicable. Every outcome is an `Assessment` (so every outcome
+    carries its own evidence). Probabilities must sum to 1.0 within
     floating-point tolerance.
     """
 
-    paths: list[ProbabilisticClaim] = Field(min_length=2)
+    outcomes: list[Assessment] = Field(min_length=2)
     would_shift_distribution: list[str] = Field(
         default_factory=list,
         description="What evidence, if present or absent, would move the mass",
     )
 
     @model_validator(mode="after")
-    def probabilities_sum_to_one(self) -> OutcomePathDistribution:
-        total = sum(p.probability for p in self.paths)
+    def probabilities_sum_to_one(self) -> Synthesis:
+        total = sum(o.probability for o in self.outcomes)
         if not (0.99 <= total <= 1.01):
             raise ValueError(
-                f"Outcome path probabilities must sum to 1.0 (±0.01); got {total:.4f}. "
-                f"Paths: {[(p.claim_text, p.probability) for p in self.paths]}"
+                f"Synthesis outcome probabilities must sum to 1.0 (±0.01); got {total:.4f}. "
+                f"Outcomes: {[(o.claim_text, o.probability) for o in self.outcomes]}"
             )
         return self

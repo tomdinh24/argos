@@ -12,10 +12,10 @@ from datetime import datetime, timezone
 import pytest
 from pydantic import ValidationError
 
-from argos.schemas.legally_bearing import (
+from argos.schemas.contract import (
+    Assessment,
     EvidenceCitation,
-    OutcomePathDistribution,
-    ProbabilisticClaim,
+    Synthesis,
 )
 from argos.schemas.specialists.brief import (
     ClaimBrief,
@@ -35,9 +35,9 @@ from argos.schemas.specialists.coverage import (
 )
 from argos.schemas.specialists.liability import (
     FaultAllocationBucket,
-    FaultAllocationDistribution,
+    FaultAllocationSynthesis,
     LiabilityAnalysis,
-    LiabilityDraftAssessment,
+    LiabilityDraft,
 )
 from argos.schemas.specialists.recovery import (
     RecoveryAmountBand,
@@ -72,8 +72,8 @@ def _rule_citation(rule_id: str = "FL_negligence_modified_51_2023") -> EvidenceC
     )
 
 
-def _claim(text: str, p: float, doc: str = "doc-1") -> ProbabilisticClaim:
-    return ProbabilisticClaim(
+def _assessment(text: str, p: float, doc: str = "doc-1") -> Assessment:
+    return Assessment(
         claim_text=text,
         probability=p,
         reasoning=f"reasoning for {text}",
@@ -90,12 +90,12 @@ class TestCoverageSchema:
             exposure_id="exp-1",
             reviewed_as_of=NOW,
             evidence_found=[_doc_citation()],
-            per_question_probabilities=[_claim("Policy in force", 1.0)],
-            outcome_path_distribution=OutcomePathDistribution(
-                paths=[
-                    _claim("Coverage clean", 0.89),
-                    _claim("Coverage with ROR", 0.09, doc="doc-2"),
-                    _claim("Denial defensible", 0.02, doc="doc-3"),
+            assessments=[_assessment("Policy in force", 1.0)],
+            synthesis=Synthesis(
+                outcomes=[
+                    _assessment("Coverage clean", 0.89),
+                    _assessment("Coverage with ROR", 0.09, doc="doc-2"),
+                    _assessment("Denial defensible", 0.02, doc="doc-3"),
                 ],
             ),
             coverage_analysis_memo=CoverageDraft(body="memo body", citations=[_doc_citation()]),
@@ -117,9 +117,9 @@ class TestLiabilitySchema:
             comparative_fault_rule="modified_51",
             comparative_fault_rule_citation=_rule_citation(),
             evidence_found=[_doc_citation()],
-            per_question_probabilities=[_claim("Insured following too close", 0.85)],
-            fault_allocation_distribution=FaultAllocationDistribution(
-                paths=[
+            assessments=[_assessment("Insured following too close", 0.85)],
+            fault_allocation_synthesis=FaultAllocationSynthesis(
+                buckets=[
                     FaultAllocationBucket(
                         insured_fault_pct=100,
                         claimant_fault_pct=0,
@@ -137,7 +137,7 @@ class TestLiabilitySchema:
                 ],
             ),
             recovery_barred_probability=0.0,
-            draft_assessment=LiabilityDraftAssessment(
+            draft_analysis=LiabilityDraft(
                 body="...", citations=[_doc_citation()]
             ),
         )
@@ -152,9 +152,9 @@ class TestLiabilitySchema:
                 comparative_fault_rule="modified_51",
                 comparative_fault_rule_citation=_doc_citation(),  # doc, not rule
                 evidence_found=[_doc_citation()],
-                per_question_probabilities=[_claim("foo", 0.5)],
-                fault_allocation_distribution=FaultAllocationDistribution(
-                    paths=[
+                assessments=[_assessment("foo", 0.5)],
+                fault_allocation_synthesis=FaultAllocationSynthesis(
+                    buckets=[
                         FaultAllocationBucket(
                             insured_fault_pct=100,
                             claimant_fault_pct=0,
@@ -172,7 +172,7 @@ class TestLiabilitySchema:
                     ],
                 ),
                 recovery_barred_probability=0.0,
-                draft_assessment=LiabilityDraftAssessment(
+                draft_analysis=LiabilityDraft(
                     body="...", citations=[_doc_citation()]
                 ),
             )
@@ -235,7 +235,7 @@ class TestRecoverySchema:
         analysis = RecoveryAnalysis(
             exposure_id="exp-1",
             reviewed_as_of=NOW,
-            opportunity=_claim("Recovery opportunity exists (subrogation)", 0.88),
+            opportunity=_assessment("Recovery opportunity exists (subrogation)", 0.88),
             recovery_type="subrogation",
             adverse_party_id="party-99",
             amount_band=RecoveryAmountBand(gross_low=11_000, gross_median=14_000, gross_high=17_000),
@@ -257,7 +257,7 @@ class TestRecoverySchema:
         analysis = RecoveryAnalysis(
             exposure_id="exp-1",
             reviewed_as_of=NOW,
-            opportunity=_claim("Recovery opportunity exists", 0.75),
+            opportunity=_assessment("Recovery opportunity exists", 0.75),
             recovery_type="subrogation",
             amount_band=RecoveryAmountBand(gross_low=8_000, gross_median=10_000, gross_high=12_000),
             sol_status=SOLStatus(
@@ -272,7 +272,7 @@ class TestClosureSchema:
         analysis = ClosureAnalysis(
             exposure_id="exp-1",
             reviewed_as_of=NOW,
-            ready_to_close=_claim("File is ready to close", 0.96),
+            ready_to_close=_assessment("File is ready to close", 0.96),
         )
         assert analysis.blocking_defects == []
 
@@ -280,7 +280,7 @@ class TestClosureSchema:
         analysis = ClosureAnalysis(
             exposure_id="exp-1",
             reviewed_as_of=NOW,
-            ready_to_close=_claim("File is ready to close", 0.12),
+            ready_to_close=_assessment("File is ready to close", 0.12),
             blocking_defects=[
                 ClosureDefect(
                     kind="open_recovery",

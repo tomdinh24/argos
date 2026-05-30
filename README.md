@@ -10,15 +10,13 @@ aliases:
 
 # Argos
 
-*The claims operations intelligence layer for specialty mid-tier auto + property P&C TPAs.*
-
-**AI specialists watch. Adjusters decide.**
+> Argos is an AI-native claims operations layer for specialty property and casualty TPAs. It turns fragmented claim files into structured evidence, calibrated probabilities, and draft work product across the full claim lifecycle, with validators that require every AI output to be sourced before it reaches the adjuster workspace.
 
 ---
 
 ## What this is
 
-A portfolio project building an AI-native operations layer for property + casualty insurance claims. Six specialists watch every claim — Brief, Coverage, Liability, Reserve, Recovery, Closure — and surface evidence + probability + drafted work product to the adjuster's cockpit. The adjuster picks the path. The substrate enforces every write.
+A portfolio project building Argos. Six specialists watch every claim — Brief, Coverage, Liability, Reserve, Recovery, Closure — and surface evidence + probability + drafted work product to the adjuster's workspace. The adjuster picks the path. The vault enforces every write.
 
 The architecture answers two interview loops:
 
@@ -39,7 +37,7 @@ The architecture answers two interview loops:
 ## Core architectural commitments
 
 - **Three layers.** Foundry holds typed semantic state and validates every write; Railway runs the specialists; Vercel renders the cockpit.
-- **Six specialists.** Brief, Coverage, Liability, Reserve, Recovery, Closure — each emits `LegallyBearingClaim` outputs (probability + reasoning + cited evidence) or, in Brief's case, a structured view with citations on every diff item.
+- **Six specialists.** Brief, Coverage, Liability, Reserve, Recovery, Closure — each emits `Assessment` and `Synthesis` outputs (probability + reasoning + cited evidence) or, in Brief's case, a structured view with citations on every diff item.
 - **No recommendations.** Specialists surface evidence and quantify uncertainty; humans pick the path. The schemas are tested to reject `recommended_*` fields. This is what makes the output calibratable.
 - **The deterministic spine.** Specialists never mutate state directly. Every write flows through a Foundry Action Type validator. Illegal state combinations and unbalanced financial postings are rejected at the door.
 - **Configuration as moat.** The same specialist code behaves differently per client because `SpecialistConfig` drives material-event triggers, authority matrices, notice deadlines, sourced legal rules.
@@ -52,12 +50,12 @@ foundry/              # Foundry-ready ontology YAML + Action Type TypeScript dra
   ontology/           # 28 object types from data-layer.md §5
   action-types/       # Validator skeletons (in progress)
 src/argos/            # Python package
-  schemas/            # Pydantic v2 schemas — the LegallyBearingClaim contract
-    legally_bearing.py        # EvidenceCitation, ProbabilisticClaim, OutcomePathDistribution
+  schemas/            # Pydantic v2 schemas — the Assessment + Synthesis contract
+    contract.py               # EvidenceCitation, Assessment, Synthesis
     specialists/              # One file per specialist's output schema
   specialists/        # Specialist runtimes (in progress)
   services/           # Priority Scorer + Correspondence (in progress)
-  substrate/          # OSDK client + Foundry Function wrappers (in progress)
+  vault/              # OSDK client + Foundry Function wrappers (in progress)
   synthesis/          # Three-pass synthesis pipeline (in progress)
 tests/                # pytest; 26 passing on the schema contract
 scripts/              # Data exploration scripts (FARS, CRSS loaders)
@@ -71,7 +69,7 @@ data/                 # DuckDB + raw datasets (gitignored)
 .venv/bin/pytest
 ```
 
-26 tests pass on the legally-bearing-claim contract and the six specialist schemas, including structural assertions that the Coverage and Liability schemas contain no `recommended_path` field (the "no recommendation" rule enforced by the test suite).
+26 tests pass on the Assessment + Synthesis contract and the six specialist schemas, including structural assertions that the Coverage and Liability schemas contain no `recommended_path` field (the "no recommendation" rule enforced by the test suite).
 
 ## Status
 

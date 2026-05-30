@@ -14,7 +14,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from argos.schemas.legally_bearing import EvidenceCitation, ProbabilisticClaim
+from argos.schemas.contract import Assessment, EvidenceCitation
 
 
 RecoveryType = Literal[
@@ -69,7 +69,7 @@ class RecoveryAnalysis(BaseModel):
     exposure_id: str
     reviewed_as_of: datetime
 
-    opportunity: ProbabilisticClaim = Field(
+    opportunity: Assessment = Field(
         description="P(a recovery opportunity exists) with reasoning + citations"
     )
     recovery_type: RecoveryType

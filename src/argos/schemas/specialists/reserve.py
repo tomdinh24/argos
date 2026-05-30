@@ -15,7 +15,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from argos.schemas.legally_bearing import EvidenceCitation
+from argos.schemas.contract import EvidenceCitation
 
 
 ReserveComponent = Literal[

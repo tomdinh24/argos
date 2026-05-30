@@ -13,14 +13,14 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-from argos.schemas.legally_bearing import EvidenceCitation, ProbabilisticClaim
+from argos.schemas.contract import Assessment, EvidenceCitation
 
 
 ComparativeFaultRule = Literal["pure", "modified_50", "modified_51", "contributory"]
 
 
 class FaultAllocationBucket(BaseModel):
-    """One row in the fault-allocation distribution.
+    """One bucket in the fault-allocation synthesis.
 
     `other_party_fault_pct` is populated for multi-party (3+ vehicle) crashes
     and left None for two-party cases.
@@ -45,13 +45,13 @@ class FaultAllocationBucket(BaseModel):
         return self
 
 
-class FaultAllocationDistribution(BaseModel):
-    paths: list[FaultAllocationBucket] = Field(min_length=2)
+class FaultAllocationSynthesis(BaseModel):
+    buckets: list[FaultAllocationBucket] = Field(min_length=2)
     would_shift_distribution: list[str] = Field(default_factory=list)
 
     @model_validator(mode="after")
-    def probabilities_sum_to_one(self) -> FaultAllocationDistribution:
-        total = sum(b.probability for b in self.paths)
+    def probabilities_sum_to_one(self) -> FaultAllocationSynthesis:
+        total = sum(b.probability for b in self.buckets)
         if not (0.99 <= total <= 1.01):
             raise ValueError(
                 f"Fault-allocation probabilities must sum to 1.0 (±0.01); got {total:.4f}"
@@ -59,7 +59,7 @@ class FaultAllocationDistribution(BaseModel):
         return self
 
 
-class LiabilityDraftAssessment(BaseModel):
+class LiabilityDraft(BaseModel):
     body: str
     citations: list[EvidenceCitation] = Field(min_length=1)
 
@@ -76,9 +76,9 @@ class LiabilityAnalysis(BaseModel):
 
     evidence_found: list[EvidenceCitation] = Field(min_length=1)
 
-    per_question_probabilities: list[ProbabilisticClaim] = Field(min_length=1)
+    assessments: list[Assessment] = Field(min_length=1)
 
-    fault_allocation_distribution: FaultAllocationDistribution
+    fault_allocation_synthesis: FaultAllocationSynthesis
 
     recovery_barred_probability: float = Field(
         ge=0.0,
@@ -89,7 +89,7 @@ class LiabilityAnalysis(BaseModel):
         ),
     )
 
-    draft_assessment: LiabilityDraftAssessment
+    draft_analysis: LiabilityDraft
 
     @model_validator(mode="after")
     def rule_citation_is_sourced(self) -> LiabilityAnalysis:

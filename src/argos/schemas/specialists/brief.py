@@ -14,7 +14,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from argos.schemas.legally_bearing import EvidenceCitation
+from argos.schemas.contract import EvidenceCitation
 
 
 CoverageStatus = Literal[

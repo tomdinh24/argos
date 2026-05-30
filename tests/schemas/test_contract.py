@@ -3,10 +3,10 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from argos.schemas.legally_bearing import (
+from argos.schemas.contract import (
+    Assessment,
     EvidenceCitation,
-    OutcomePathDistribution,
-    ProbabilisticClaim,
+    Synthesis,
 )
 
 
@@ -61,19 +61,19 @@ class TestEvidenceCitation:
             )
 
 
-class TestProbabilisticClaim:
+class TestAssessment:
     def test_with_citations_ok(self) -> None:
-        c = ProbabilisticClaim(
+        a = Assessment(
             claim_text="Coverage applies, clean",
             probability=0.89,
             reasoning="Policy in force; Part A covers; no exclusion fires",
             evidence_citations=[_citation()],
         )
-        assert c.probability == 0.89
+        assert a.probability == 0.89
 
     def test_missing_citations_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            ProbabilisticClaim(
+            Assessment(
                 claim_text="Coverage applies, clean",
                 probability=0.89,
                 reasoning="...",
@@ -82,14 +82,14 @@ class TestProbabilisticClaim:
 
     def test_probability_must_be_unit_interval(self) -> None:
         with pytest.raises(ValidationError):
-            ProbabilisticClaim(
+            Assessment(
                 claim_text="...",
                 probability=1.5,
                 reasoning="...",
                 evidence_citations=[_citation()],
             )
         with pytest.raises(ValidationError):
-            ProbabilisticClaim(
+            Assessment(
                 claim_text="...",
                 probability=-0.1,
                 reasoning="...",
@@ -97,9 +97,9 @@ class TestProbabilisticClaim:
             )
 
 
-class TestOutcomePathDistribution:
-    def _path(self, claim: str, p: float, doc: str = "doc-1") -> ProbabilisticClaim:
-        return ProbabilisticClaim(
+class TestSynthesis:
+    def _outcome(self, claim: str, p: float, doc: str = "doc-1") -> Assessment:
+        return Assessment(
             claim_text=claim,
             probability=p,
             reasoning=f"reasoning for {claim}",
@@ -107,44 +107,44 @@ class TestOutcomePathDistribution:
         )
 
     def test_sums_to_one_ok(self) -> None:
-        dist = OutcomePathDistribution(
-            paths=[
-                self._path("Coverage clean", 0.89),
-                self._path("Coverage with ROR", 0.09, doc="doc-2"),
-                self._path("Denial defensible", 0.02, doc="doc-3"),
+        syn = Synthesis(
+            outcomes=[
+                self._outcome("Coverage clean", 0.89),
+                self._outcome("Coverage with ROR", 0.09, doc="doc-2"),
+                self._outcome("Denial defensible", 0.02, doc="doc-3"),
             ],
             would_shift_distribution=["Personal-use docs would drop ROR toward 0%"],
         )
-        assert len(dist.paths) == 3
+        assert len(syn.outcomes) == 3
 
     def test_floating_point_tolerance(self) -> None:
         # 0.333 * 3 = 0.999 — within ±0.01 tolerance
-        OutcomePathDistribution(
-            paths=[
-                self._path("a", 0.333),
-                self._path("b", 0.333, doc="d2"),
-                self._path("c", 0.334, doc="d3"),
+        Synthesis(
+            outcomes=[
+                self._outcome("a", 0.333),
+                self._outcome("b", 0.333, doc="d2"),
+                self._outcome("c", 0.334, doc="d3"),
             ],
         )
 
     def test_does_not_sum_to_one_rejected(self) -> None:
         with pytest.raises(ValidationError, match="sum to 1.0"):
-            OutcomePathDistribution(
-                paths=[
-                    self._path("a", 0.5),
-                    self._path("b", 0.3, doc="d2"),
+            Synthesis(
+                outcomes=[
+                    self._outcome("a", 0.5),
+                    self._outcome("b", 0.3, doc="d2"),
                 ],
             )
 
     def test_overshoot_rejected(self) -> None:
         with pytest.raises(ValidationError, match="sum to 1.0"):
-            OutcomePathDistribution(
-                paths=[
-                    self._path("a", 0.6),
-                    self._path("b", 0.6, doc="d2"),
+            Synthesis(
+                outcomes=[
+                    self._outcome("a", 0.6),
+                    self._outcome("b", 0.6, doc="d2"),
                 ],
             )
 
-    def test_single_path_rejected(self) -> None:
+    def test_single_outcome_rejected(self) -> None:
         with pytest.raises(ValidationError):
-            OutcomePathDistribution(paths=[self._path("only", 1.0)])
+            Synthesis(outcomes=[self._outcome("only", 1.0)])

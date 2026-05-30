@@ -14,18 +14,18 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
-from argos.schemas.legally_bearing import (
+from argos.schemas.contract import (
+    Assessment,
     EvidenceCitation,
-    OutcomePathDistribution,
-    ProbabilisticClaim,
+    Synthesis,
 )
 
 
 class CoverageDraft(BaseModel):
     """One of the three drafted artifacts: memo, ROR letter, or denial letter.
 
-    The cockpit attaches the chosen draft to the file when the adjuster picks a
-    path. The other two stay linked to the AgentAction as audit history — the
+    The workspace attaches the chosen draft to the file when the adjuster picks
+    a path. The other two stay linked to the AgentAction as audit history — the
     cost of being able to pivot instantly if the human had chosen differently.
     """
 
@@ -45,15 +45,15 @@ class CoverageAnalysis(BaseModel):
 
     evidence_found: list[EvidenceCitation] = Field(
         min_length=1,
-        description="Layer 1 of the cockpit data: everything the AI read",
+        description="Layer 1 of the workspace data: everything the AI read",
     )
 
-    per_question_probabilities: list[ProbabilisticClaim] = Field(
+    assessments: list[Assessment] = Field(
         min_length=1,
         description="Layer 2: each underlying question with its probability and citations",
     )
 
-    outcome_path_distribution: OutcomePathDistribution = Field(
+    synthesis: Synthesis = Field(
         description=(
             "Layer 3: distribution over {clean coverage, ROR, denial}. "
             "Probabilities sum to 1.0."
@@ -63,9 +63,9 @@ class CoverageAnalysis(BaseModel):
     coverage_analysis_memo: CoverageDraft
     ror_letter: CoverageDraft | None = Field(
         default=None,
-        description="Drafted when the ROR path carries non-trivial probability",
+        description="Drafted when the ROR outcome carries non-trivial probability",
     )
     denial_letter: CoverageDraft | None = Field(
         default=None,
-        description="Drafted when the denial path carries non-trivial probability",
+        description="Drafted when the denial outcome carries non-trivial probability",
     )

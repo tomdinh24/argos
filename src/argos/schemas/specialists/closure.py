@@ -5,7 +5,7 @@ Source of truth: AGENT_ARCHITECTURE.md §2.1.
 Surfaces a ready-to-close probability and a list of blocking defects with
 citations. The actual close write is rejected by the Action Type validator
 when defects exist — the Closure specialist's output is advisory; the
-substrate enforces the block. Closure execution itself is always
+Action Type validator enforces the block. Closure execution itself is always
 human-approved.
 """
 from __future__ import annotations
@@ -15,7 +15,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from argos.schemas.legally_bearing import EvidenceCitation, ProbabilisticClaim
+from argos.schemas.contract import Assessment, EvidenceCitation
 
 
 DefectKind = Literal[
@@ -45,7 +45,7 @@ class ClosureAnalysis(BaseModel):
     exposure_id: str
     reviewed_as_of: datetime
 
-    ready_to_close: ProbabilisticClaim = Field(
+    ready_to_close: Assessment = Field(
         description="P(file is ready to close cleanly) with reasoning + citations"
     )
 
