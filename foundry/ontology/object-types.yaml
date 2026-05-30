@@ -1,0 +1,578 @@
+# ---
+# tags:
+#   - project/argos
+#   - type/foundry-spec
+#   - status/draft
+# created: 2026-05-28
+# aliases:
+#   - Object Types Spec
+# ---
+#
+# Foundry Ontology — Object Types
+# Source of truth: data-layer.md §5 (v0.2.1 minimum viable slice marker).
+# Each object type below maps field-by-field to Foundry Ontology Manager.
+#
+# Convention: snake_case for property names, PascalCase for object-type api_name.
+
+object_types:
+
+  # ─────────────────────────────────────────────────────────
+  # PORTFOLIO LAYER
+  # ─────────────────────────────────────────────────────────
+
+  - api_name: ClientProgram
+    display_name: Client Program
+    description: TPA client (self-insured, captive, carrier outsource, MGA, or WYO demo branch)
+    primary_key: client_program_id
+    title_property: client_name
+    properties:
+      - { name: client_program_id, type: string, required: true }
+      - { name: client_name, type: string, required: true }
+      - { name: client_type, type: string, required: true,
+          enum: [self_insured_corp, captive, carrier_outsource, MGA, WYO_demo_only] }
+      - { name: lines_handled, type: string, required: true,
+          enum: [auto, flood, both] }
+      - { name: effective_valid_from, type: date, required: true }
+      - { name: effective_valid_to, type: date, required: false }
+      - { name: handling_agreement_summary, type: string, required: false }
+      - { name: is_empirically_exercised_in_v1, type: boolean, required: true }
+
+  - api_name: Policy
+    display_name: Policy
+    description: An insurance policy issued under a client program
+    primary_key: policy_id
+    title_property: policy_number
+    properties:
+      - { name: policy_id, type: string, required: true }
+      - { name: client_program_id, type: string, required: true }
+      - { name: policy_number, type: string, required: true }
+      - { name: named_insured_party_id, type: string, required: true }
+      - { name: policy_form, type: string, required: true }
+      - { name: jurisdiction_state, type: string, required: true }
+
+  - api_name: PolicyPeriod
+    display_name: Policy Period
+    description: A bound effective-dated period of a Policy
+    primary_key: policy_period_id
+    title_property: policy_period_id
+    properties:
+      - { name: policy_period_id, type: string, required: true }
+      - { name: policy_id, type: string, required: true }
+      - { name: effective_from, type: date, required: true }
+      - { name: effective_to, type: date, required: true }
+      - { name: status, type: string, required: true,
+          enum: [in_force, expired, cancelled, non_renewed] }
+
+  - api_name: CoveragePart
+    display_name: Coverage Part
+    description: A specific coverage (auto BI, flood building, etc.) on a PolicyPeriod
+    primary_key: coverage_part_id
+    title_property: coverage_type
+    properties:
+      - { name: coverage_part_id, type: string, required: true }
+      - { name: policy_period_id, type: string, required: true }
+      - { name: coverage_type, type: string, required: true,
+          enum: [auto_BI, auto_PD, auto_UM_UIM, auto_collision, auto_comprehensive,
+                 auto_medpay, auto_rental, flood_building, flood_contents, flood_ICC] }
+      - { name: limit_per_occurrence, type: number, required: true }
+      - { name: limit_per_person, type: number, required: false }
+      - { name: limit_aggregate, type: number, required: false }
+      - { name: deductible, type: number, required: true }
+      - { name: SIR, type: number, required: false }
+      - { name: sublimits_json, type: string, required: false }
+      - { name: exclusions_json, type: string, required: false }
+
+  - api_name: CoverageLayer
+    display_name: Coverage Layer
+    description: A layer in the coverage tower (primary, SIR, excess, reinsurance, captive)
+    primary_key: coverage_layer_id
+    title_property: layer_type
+    properties:
+      - { name: coverage_layer_id, type: string, required: true }
+      - { name: policy_period_id, type: string, required: true }
+      - { name: layer_type, type: string, required: true,
+          enum: [primary, SIR, excess, reinsurance, captive_layer] }
+      - { name: attachment_point, type: number, required: true }
+      - { name: layer_limit, type: number, required: true }
+      - { name: carrier_party_id, type: string, required: false }
+      - { name: reporting_threshold, type: number, required: false }
+      - { name: reporting_deadline_days, type: integer, required: false }
+
+  - api_name: RiskUnit
+    display_name: Risk Unit
+    description: An insured vehicle or property (v1 = insured assets only)
+    primary_key: risk_unit_id
+    title_property: risk_unit_id
+    properties:
+      - { name: risk_unit_id, type: string, required: true }
+      - { name: policy_period_id, type: string, required: true }
+      - { name: unit_type, type: string, required: true,
+          enum: [vehicle, property] }
+      - { name: unit_details_json, type: string, required: true }
+
+  # ─────────────────────────────────────────────────────────
+  # CLAIM LAYER
+  # ─────────────────────────────────────────────────────────
+
+  - api_name: LossOccurrence
+    display_name: Loss Occurrence
+    description: The underlying event — may spawn multiple Claims across multiple Policies
+    primary_key: loss_occurrence_id
+    title_property: loss_occurrence_id
+    properties:
+      - { name: loss_occurrence_id, type: string, required: true }
+      - { name: date_of_loss, type: date, required: true }
+      - { name: jurisdiction_state, type: string, required: true }
+      - { name: loss_facts_json, type: string, required: true }
+      - { name: source_event_id, type: string, required: false }
+      - { name: scenario_family, type: string, required: true,
+          enum: [fatality_auto, severe_BI_auto, moderate_BI_auto, PDO_auto,
+                 flood_residential, flood_commercial, flood_with_wind_dispute,
+                 multi_vehicle_shared_occurrence] }
+
+  - api_name: Claim
+    display_name: Claim
+    description: A claim filed by one insured under one policy from one loss occurrence
+    primary_key: claim_id
+    title_property: claim_id
+    properties:
+      - { name: claim_id, type: string, required: true }
+      - { name: client_program_id, type: string, required: true }
+      - { name: loss_occurrence_id, type: string, required: true }
+      - { name: policy_period_id, type: string, required: true }
+      - { name: fnol_date, type: date, required: true }
+      - { name: fnol_reporter_party_id, type: string, required: true }
+      - { name: lifecycle_status, type: string, required: true,
+          enum: [open, administratively_closed, reopened] }
+
+  - api_name: ClaimExposure
+    display_name: Claim Exposure
+    description: The financial and operational pivot — one exposure per claimant per coverage
+    primary_key: exposure_id
+    title_property: exposure_id
+    properties:
+      - { name: exposure_id, type: string, required: true }
+      - { name: claim_id, type: string, required: true }
+      - { name: coverage_part_id, type: string, required: true }
+      - { name: claimant_party_id, type: string, required: false }
+      - { name: damaged_risk_unit_id, type: string, required: false }
+      - { name: exposure_type, type: string, required: true,
+          enum: [auto_BI_claimant, auto_PD_claimant, auto_UM_first_party,
+                 auto_collision_first_party, auto_medpay_first_party,
+                 flood_building_first_party, flood_contents_first_party, flood_ICC] }
+      # Seven disambiguated status dimensions (v0.2.1)
+      - { name: coverage_status, type: string, required: true,
+          enum: [pending, accepted, denied, reservation_of_rights] }
+      - { name: handling_status, type: string, required: true,
+          enum: [open_investigation, in_negotiation, settled, withdrawn, closed] }
+      - { name: settlement_status, type: string, required: true,
+          enum: [not_applicable, in_progress, executed_release, paid_in_full] }
+      - { name: representation_status, type: string, required: true,
+          enum: [unrepresented, represented] }
+      - { name: litigation_status, type: string, required: true,
+          enum: [none, suit_filed, in_discovery, in_mediation, in_trial, resolved, dismissed] }
+      - { name: recovery_status, type: string, required: true,
+          enum: [not_screened, no_potential, potential, pursuing, settled, abandoned, closed] }
+      - { name: financial_status, type: string, required: true,
+          enum: [no_payment_due, reserves_outstanding, partially_paid, paid, reconciled] }
+
+  # ─────────────────────────────────────────────────────────
+  # PARTY LAYER
+  # ─────────────────────────────────────────────────────────
+
+  - api_name: Party
+    display_name: Party
+    description: A person or organization involved in any claim
+    primary_key: party_id
+    title_property: display_name
+    properties:
+      - { name: party_id, type: string, required: true }
+      - { name: party_type, type: string, required: true,
+          enum: [individual, organization, attorney_firm, vendor, carrier, government] }
+      - { name: display_name, type: string, required: true }
+      - { name: contact_info_json, type: string, required: false }
+
+  - api_name: ClaimPartyRole
+    display_name: Claim Party Role
+    description: A role a party holds on a specific claim (parties can hold multiple roles)
+    primary_key: role_id
+    title_property: role
+    properties:
+      - { name: role_id, type: string, required: true }
+      - { name: claim_id, type: string, required: true }
+      - { name: party_id, type: string, required: true }
+      - { name: role, type: string, required: true,
+          enum: [named_insured, additional_insured, insured_driver, claimant, witness,
+                 attorney_for_claimant, attorney_for_insured, defense_counsel,
+                 mortgagee, public_adjuster, contractor, IME_provider,
+                 accident_reconstructionist, repair_shop, tow_operator, independent_adjuster] }
+      - { name: applies_to_exposure_id, type: string, required: false }
+      - { name: effective_from, type: date, required: true }
+      - { name: effective_to, type: date, required: false }
+
+  # ─────────────────────────────────────────────────────────
+  # LIABILITY LAYER (versioned, not status)
+  # ─────────────────────────────────────────────────────────
+
+  - api_name: LiabilityAssessment
+    display_name: Liability Assessment
+    description: A versioned assessment of fault allocation on an exposure
+    primary_key: assessment_id
+    title_property: assessment_id
+    properties:
+      - { name: assessment_id, type: string, required: true }
+      - { name: exposure_id, type: string, required: true }
+      - { name: insured_fault_pct, type: number, required: true }
+      - { name: claimant_fault_pct, type: number, required: true }
+      - { name: other_party_fault_pct, type: number, required: false }
+      - { name: comparative_fault_rule, type: string, required: true,
+          enum: [pure, modified_50, modified_51, contributory] }
+      - { name: assessment_status, type: string, required: true,
+          enum: [preliminary, revised, final, disputed] }
+      - { name: assessed_at, type: timestamp, required: true }
+      - { name: assessed_by_party_id, type: string, required: true }
+      - { name: basis_document_ids, type: string, required: false }  # JSON array
+      - { name: rationale_text, type: string, required: false }
+      - { name: superseded_by_assessment_id, type: string, required: false }
+
+  # ─────────────────────────────────────────────────────────
+  # FINANCIAL LEDGER (transaction header + balanced postings)
+  # ─────────────────────────────────────────────────────────
+
+  - api_name: FinancialTransaction
+    display_name: Financial Transaction
+    description: One accounting event; groups one or more balanced FinancialPosting rows
+    primary_key: transaction_id
+    title_property: transaction_id
+    properties:
+      - { name: transaction_id, type: string, required: true }
+      - { name: exposure_id, type: string, required: true }
+      - { name: transaction_kind, type: string, required: true,
+          enum: [reserve_revision, indemnity_payment, expense_payment,
+                 recovery_received, recovery_anticipated_change,
+                 transfer_between_components, correction_reversal] }
+      - { name: effective_at, type: timestamp, required: true }
+      - { name: recorded_at, type: timestamp, required: true }
+      - { name: source_document_id, type: string, required: false }
+      - { name: authority_decision_id, type: string, required: false }
+      - { name: rationale_text, type: string, required: false }
+      - { name: reverses_transaction_id, type: string, required: false }
+
+  - api_name: FinancialPosting
+    display_name: Financial Posting
+    description: A single signed posting against a named account; balanced under its FinancialTransaction
+    primary_key: posting_id
+    title_property: posting_id
+    properties:
+      - { name: posting_id, type: string, required: true }
+      - { name: transaction_id, type: string, required: true }
+      - { name: account, type: string, required: true,
+          enum: [outstanding_indemnity, paid_indemnity,
+                 outstanding_ALAE, paid_ALAE,
+                 outstanding_ULAE, paid_ULAE,
+                 outstanding_ALE, paid_ALE,
+                 anticipated_subro, received_subro,
+                 anticipated_salvage, received_salvage,
+                 deductible_billable, deductible_recovered,
+                 ceded_recoverable] }
+      - { name: amount_delta, type: number, required: true }
+      - { name: component, type: string, required: true,
+          enum: [indemnity, ALAE, ULAE, ALE, expert_fees, defense, mitigation] }
+      - { name: gross_net_basis, type: string, required: true,
+          enum: [gross, net_of_recovery, net_of_deductible, net_of_SIR, net_of_excess] }
+
+  # ─────────────────────────────────────────────────────────
+  # RECOVERY (single-exposure attachment in v1)
+  # ─────────────────────────────────────────────────────────
+
+  - api_name: Recovery
+    display_name: Recovery
+    description: A recovery opportunity (subro / salvage / contribution / etc.) on an exposure
+    primary_key: recovery_id
+    title_property: recovery_id
+    properties:
+      - { name: recovery_id, type: string, required: true }
+      - { name: exposure_id, type: string, required: true }
+      - { name: recovery_type, type: string, required: true,
+          enum: [subrogation, salvage, contribution, deductible_recovery,
+                 restitution, reinsurance_reimbursement] }
+      - { name: status, type: string, required: true,
+          enum: [potential, referred, demanded, in_arbitration,
+                 in_litigation, recovered, abandoned] }
+      - { name: adverse_party_id, type: string, required: false }
+      - { name: adverse_carrier_party_id, type: string, required: false }
+      - { name: estimated_gross_amount, type: number, required: true }
+      - { name: recovered_gross_amount, type: number, required: false }
+      - { name: recovery_costs, type: number, required: false }
+      - { name: statute_of_limitations_date, type: date, required: false }
+      - { name: evidence_preservation_status, type: string, required: true,
+          enum: [secured, at_risk, lost] }
+      - { name: made_whole_status, type: string, required: true,
+          enum: [not_applicable, not_made_whole, made_whole] }
+
+  # ─────────────────────────────────────────────────────────
+  # DOCUMENTS
+  # ─────────────────────────────────────────────────────────
+
+  - api_name: Document
+    display_name: Document
+    description: A document attached to a claim file
+    primary_key: document_id
+    title_property: document_type
+    properties:
+      - { name: document_id, type: string, required: true }
+      - { name: claim_id, type: string, required: true }
+      - { name: document_type, type: string, required: true,
+          enum: [police_report, recorded_statement, medical_record, medical_bill,
+                 repair_estimate, contractor_estimate, demand_package, inspection_report,
+                 photos, adjuster_notes, ALE_receipts, NFIP_proof_of_loss, proof_of_loss,
+                 reservation_of_rights_letter, coverage_analysis_memo, subrogation_demand,
+                 lien_notice, hospital_lien, attorney_letter_of_representation,
+                 IME_report, mediation_brief, settlement_release, denial_letter] }
+      - { name: received_date, type: date, required: true }
+      - { name: source, type: string, required: true,
+          enum: [insured, claimant, attorney, vendor, third_party, system_generated,
+                 adverse_carrier, government, court, medical_provider] }
+      - { name: file_path, type: string, required: true }
+      - { name: is_synthetic, type: boolean, required: true }  # NEVER expose to specialists
+
+  - api_name: DocumentAssociation
+    display_name: Document Association
+    description: Cross-exposure document linkage (a demand package can concern multiple BI exposures)
+    primary_key: association_id
+    title_property: association_id
+    properties:
+      - { name: association_id, type: string, required: true }
+      - { name: document_id, type: string, required: true }
+      - { name: entity_type, type: string, required: true,
+          enum: [occurrence, claim, exposure, party, recovery, lien, notice] }
+      - { name: entity_id, type: string, required: true }
+      - { name: association_type, type: string, required: true,
+          enum: [primary_subject, evidence_of, related_to, supersedes] }
+
+  - api_name: DocumentExtraction
+    display_name: Document Extraction
+    description: A specialist's structured read of a document — not source of truth
+    primary_key: extraction_id
+    title_property: extraction_id
+    properties:
+      - { name: extraction_id, type: string, required: true }
+      - { name: document_id, type: string, required: true }
+      - { name: extracted_by, type: string, required: true,
+          enum: [specialist_reserve, specialist_recovery, specialist_closure, human] }
+      - { name: extracted_at, type: timestamp, required: true }
+      - { name: extracted_fields_json, type: string, required: true }
+      - { name: confidence_per_field_json, type: string, required: false }
+      - { name: extraction_prompt_version, type: string, required: true }
+
+  # ─────────────────────────────────────────────────────────
+  # EVENT LOG
+  # ─────────────────────────────────────────────────────────
+
+  - api_name: Event
+    display_name: Event
+    description: Canonical event-log row; bitemporal
+    primary_key: event_id
+    title_property: event_type
+    properties:
+      - { name: event_id, type: string, required: true }
+      - { name: claim_id, type: string, required: true }
+      - { name: exposure_id, type: string, required: false }
+      - { name: event_type, type: string, required: true,
+          enum: [fnol, coverage_determined, exposure_added, liability_assessed,
+                 financial_transaction_recorded, document_received,
+                 authority_requested, authority_decided,
+                 payment_requested, payment_issued, payment_cleared, payment_voided,
+                 statement_taken, notice_triggered, notice_delivered,
+                 litigation_event, recovery_identified, recovery_referred, lien_received,
+                 closure_attempted, closure_completed, file_reopened] }
+      - { name: occurred_at, type: timestamp, required: true }
+      - { name: recorded_at, type: timestamp, required: true }
+      - { name: triggered_by, type: string, required: true }  # party_id | specialist_id | 'system'
+      - { name: details_json, type: string, required: false }
+
+  # ─────────────────────────────────────────────────────────
+  # OPERATIONAL
+  # ─────────────────────────────────────────────────────────
+
+  - api_name: DiaryTask
+    display_name: Diary Task
+    description: A scheduled task on an exposure
+    primary_key: diary_id
+    title_property: task_type
+    properties:
+      - { name: diary_id, type: string, required: true }
+      - { name: exposure_id, type: string, required: true }
+      - { name: task_type, type: string, required: true,
+          enum: [follow_up, document_request, payment_processing, notice_send,
+                 reserve_review, recovery_review, closure_review] }
+      - { name: due_date, type: date, required: true }
+      - { name: assigned_to_party_id, type: string, required: true }
+      - { name: status, type: string, required: true,
+          enum: [open, completed, overdue, cancelled] }
+
+  - api_name: AuthorityRequest
+    display_name: Authority Request
+    description: A request for authority approval (with escalation chain via parent_request_id)
+    primary_key: request_id
+    title_property: requested_action
+    properties:
+      - { name: request_id, type: string, required: true }
+      - { name: exposure_id, type: string, required: true }
+      - { name: requested_action, type: string, required: true,
+          enum: [reserve_change, payment_authorize, settlement_authorize,
+                 counsel_assign, expert_engage, recovery_pursue, recovery_waive, close] }
+      - { name: requested_amount, type: number, required: false }
+      - { name: requested_by_party_id, type: string, required: true }
+      - { name: required_approver_level, type: string, required: true,
+          enum: [handler, supervisor, manager, client] }
+      - { name: parent_request_id, type: string, required: false }  # escalation chain
+      - { name: status, type: string, required: true,
+          enum: [pending, approved, denied, escalated] }
+
+  - api_name: AuthorityDecision
+    display_name: Authority Decision
+    description: A decision on an authority request
+    primary_key: decision_id
+    title_property: decision
+    properties:
+      - { name: decision_id, type: string, required: true }
+      - { name: request_id, type: string, required: true }
+      - { name: decided_by_party_id, type: string, required: true }
+      - { name: decision, type: string, required: true,
+          enum: [approved, denied, partially_approved, escalated] }
+      - { name: decision_amount, type: number, required: false }
+      - { name: rationale_text, type: string, required: false }
+      - { name: decided_at, type: timestamp, required: true }
+
+  - api_name: NoticeObligation
+    display_name: Notice Obligation
+    description: A notice that must be delivered (excess carrier, reinsurer, DOI, etc.)
+    primary_key: notice_id
+    title_property: notice_type
+    properties:
+      - { name: notice_id, type: string, required: true }
+      - { name: exposure_id, type: string, required: true }
+      - { name: notice_type, type: string, required: true,
+          enum: [excess_carrier, reinsurer, client, DOI, court, Medicare_Section_111] }
+      - { name: triggered_by_event_id, type: string, required: true }
+      - { name: required_by_date, type: date, required: true }
+      - { name: delivered_at, type: timestamp, required: false }
+      - { name: delivery_method, type: string, required: false,
+          enum: [email, certified_mail, portal_upload] }
+      - { name: delivery_confirmation, type: string, required: false }
+
+  # ─────────────────────────────────────────────────────────
+  # COMPLIANCE (shape-only in v1)
+  # ─────────────────────────────────────────────────────────
+
+  - api_name: Lien
+    display_name: Lien
+    description: A lien asserted against an exposure
+    primary_key: lien_id
+    title_property: lien_type
+    properties:
+      - { name: lien_id, type: string, required: true }
+      - { name: exposure_id, type: string, required: true }
+      - { name: lien_type, type: string, required: true,
+          enum: [hospital, medical_provider, ERISA, Medicare_conditional_payment,
+                 Medicaid, attorney, child_support, workers_comp] }
+      - { name: lienholder_party_id, type: string, required: true }
+      - { name: asserted_amount, type: number, required: true }
+      - { name: resolved_amount, type: number, required: false }
+      - { name: status, type: string, required: true,
+          enum: [open, negotiated, paid, disputed, waived] }
+      - { name: notice_received_date, type: date, required: true }
+
+  - api_name: MedicareReportingStatus
+    display_name: Medicare Reporting Status
+    description: Shape-only — v1 detects obligation existence; does NOT file Section 111
+    primary_key: reporting_id
+    title_property: reporting_id
+    properties:
+      - { name: reporting_id, type: string, required: true }
+      - { name: exposure_id, type: string, required: true }
+      - { name: claimant_medicare_eligible, type: boolean, required: true }
+      - { name: ORM_status, type: string, required: true,
+          enum: [not_applicable, ongoing, terminated] }
+      - { name: TPOC_required, type: boolean, required: false }
+      - { name: TPOC_amount, type: number, required: false }
+      - { name: MSA_required, type: boolean, required: false }
+      - { name: reporting_responsible_party_id, type: string, required: false }
+
+  # ─────────────────────────────────────────────────────────
+  # CONFIGURATION
+  # ─────────────────────────────────────────────────────────
+
+  - api_name: SpecialistConfig
+    display_name: Specialist Config
+    description: Per-customer per-specialist configuration (the moat)
+    primary_key: config_id
+    title_property: specialist
+    properties:
+      - { name: config_id, type: string, required: true }
+      - { name: client_program_id, type: string, required: true }
+      - { name: specialist, type: string, required: true,
+          enum: [brief, coverage, liability, reserve, recovery, closure] }
+      - { name: config_json, type: string, required: true }
+      - { name: effective_from, type: date, required: true }
+      - { name: effective_to, type: date, required: false }
+      - { name: approved_by, type: string, required: true }
+
+  # ─────────────────────────────────────────────────────────
+  # AUDIT TRAIL
+  # ─────────────────────────────────────────────────────────
+
+  - api_name: AgentAction
+    display_name: Agent Action
+    description: A specialist invocation with full audit context. Output adheres to the LegallyBearingClaim contract (AGENT_ARCHITECTURE §3) — every probabilistic claim in output_json must have at least one linked EvidenceCitation row.
+    primary_key: action_id
+    title_property: specialist
+    properties:
+      - { name: action_id, type: string, required: true }
+      - { name: specialist, type: string, required: true,
+          enum: [brief, coverage, liability, reserve, recovery, closure] }
+      - { name: prompt_version, type: string, required: true }
+      - { name: model_id, type: string, required: true }
+      - { name: exposure_id, type: string, required: false }  # Brief refreshes are claim-scoped
+      - { name: claim_id, type: string, required: true }
+      - { name: input_hash, type: string, required: true }  # SHA256 of Layer-B view
+      - { name: input_snapshot_path, type: string, required: false }
+      - { name: output_json, type: string, required: true }
+      - { name: reasoning_trace, type: string, required: true }
+      - { name: triggered_by, type: string, required: true }
+      - { name: triggered_at, type: timestamp, required: true }
+      - { name: status, type: string, required: true,
+          enum: [proposed_pending_approval, auto_applied, human_approved,
+                 human_rejected, schema_violation, schema_violation_missing_citations,
+                 schema_violation_distribution_invalid, llm_refusal] }
+      - { name: requires_human_approval, type: boolean, required: true }
+      - { name: applied_at, type: timestamp, required: false }
+      - { name: escalation_outcome, type: string, required: false,
+          enum: [applied_automatically, approved_by_human, rejected_by_human,
+                 routed_to_authority_chain, edited_by_human] }
+      - { name: approved_by_party_id, type: string, required: false }
+      - { name: approved_at, type: timestamp, required: false }
+      - { name: created_at, type: timestamp, required: true }
+      - { name: truth_layer_metrics_json, type: string, required: false }
+
+  - api_name: EvidenceCitation
+    display_name: Evidence Citation
+    description: A pointer from a probabilistic claim in an AgentAction's output to its supporting source. Every probabilistic claim emitted by a legally-bearing specialist must link to one or more of these (Pydantic min_length=1 contract, AGENT_ARCHITECTURE §3.2). Exactly one of document_id, sourced_rule_id, or ledger_entry_id must be populated.
+    primary_key: citation_id
+    title_property: claim_text
+    properties:
+      - { name: citation_id, type: string, required: true }
+      - { name: agent_action_id, type: string, required: true }
+      - { name: document_id, type: string, required: false }
+      - { name: sourced_rule_id, type: string, required: false }
+      - { name: ledger_entry_id, type: string, required: false }
+      - { name: locator, type: string, required: true }  # page / paragraph / section / field / row identifier
+      - { name: text_excerpt, type: string, required: true }
+      - { name: relation, type: string, required: true,
+          enum: [supports, refutes, contextual] }
+      - { name: claim_text, type: string, required: true }
+      - { name: probability, type: number, required: false }  # the probability the cited claim carries, if applicable
+      - { name: verification_status, type: string, required: true,
+          enum: [unverified, verified, hallucinated_dropped],
+          default: unverified }

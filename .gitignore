@@ -1,0 +1,32 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.ipynb_checkpoints/
+
+# Python build artifacts
+*.egg-info/
+build/
+dist/
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Env (never commit secrets)
+.env
+.env.local
+
+# Raw data — too large to track; reproducible via scripts/download_*.sh
+data/raw/*
+!data/raw/.gitkeep
+
+# DuckDB local file
+*.duckdb
+*.duckdb.wal
+
+# pytest cache
+.pytest_cache/
+
+# Hypothesis cache
+.hypothesis/
