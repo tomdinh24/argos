@@ -148,3 +148,70 @@ on the locked verdict.
    engine integration story may not need a 4-pair eval to begin
    with; a single-pair smoke check + integration test might be
    enough to validate B6/B7 wiring.
+
+## Anchor-pair v2 run — 2026-05-31
+
+**Composite verdict: SHIP — all 4 pairs passed.**
+
+Locked thresholds: `docs/evals/document-reader-anchor-pairs-v2-thresholds.md`.
+Output: `data/eval-runs/document-reader-anchors/anchor_pairs_run.json`
+(overwritten — v1 run preserved in commit `972e966`).
+
+### Per-pair result
+
+| pair | posture | A pass | B pass | flip A→B | composite |
+|---|---|---|---|---|---|
+| 1 | liability | ✓ | ✓ | ✓ | **PASS** |
+| 2 | coverage  | ✓ | ✓ | ✓ | **PASS** |
+| 3 | damages   | ✓ | ✓ | ✓ | **PASS** |
+| 4 | reserve   | ✓ | ✓ | ✓ | **PASS** |
+
+### What happened
+
+Every check on every variant passed:
+
+- 8/8 schema validations.
+- 4/4 Variant A controls returned `material=False`, empty
+  `text_excerpt`, `posture_changed=None`. Reader correctly identified
+  the stripped-down bodies as routine procedural / administrative
+  content.
+- 4/4 Variant B targets returned `material=True`, correct
+  `posture_changed` enum, and a `text_excerpt` with 1.0 overlap
+  against the added sentence.
+- 4/4 paired-delta materiality flips A→B held.
+- Retry logic never fired — Sonnet 4.6 produced schema-valid output
+  on every first attempt.
+
+Pairs 2 and 4 reproduced their v1 PASS results exactly (same bodies,
+same Reader, same call shape — confirms reproducibility of the
+underlying methodology). Pairs 1 and 3, with the stripped Variant A
+bodies, now flip correctly: Variant A clean, Variant B flagged with
+the right posture and the right verbatim excerpt.
+
+### What this validates
+
+- **The Reader works.** On a fixture where Variant A is truly inert,
+  the Reader correctly distinguishes routine from material content
+  across all four postures with 100% verbatim citation precision.
+- **The architecture works.** Policy engine (deterministic) + LLM
+  extraction (narrow per-document materiality call) closes the loop
+  on the v3 design from the triage post-mortem. The Reader is the
+  LLM half; the policy engine is the deterministic half. Each does
+  what it's actually good at.
+- **The methodology works.** The v1 fixture bug was caught by the
+  locked-thresholds discipline, not by a soft pass. The v2 fix was
+  locked before the run; the run honored the lock. The result is
+  defensible.
+
+### Ready for integration
+
+Reader is now eligible to wire into the policy engine:
+
+- **B6 trigger** changes from `unread_document_count >= 1` to
+  `material_unread_document_count >= 1` (Reader-classified count).
+- **B7 within-bucket score** can incorporate material-doc signal in
+  addition to incurred / aged / severity.
+
+Integration carries its own locked-thresholds doc — that's the next
+piece of work whenever triage gets revisited. The Reader's standalone
+v2 PASS is the prerequisite, not the integration itself.
