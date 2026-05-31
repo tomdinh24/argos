@@ -1,0 +1,396 @@
+{
+  "run_timestamp": "2026-05-31T21:40:19.925137+00:00",
+  "spec": "docs/specs/document-reader.md",
+  "thresholds": "docs/evals/document-reader-anchor-pairs-thresholds.md",
+  "model": "claude-sonnet-4-6",
+  "pairs_run": [
+    "pair-1-liability",
+    "pair-2-coverage",
+    "pair-3-damages",
+    "pair-4-reserve"
+  ],
+  "pair_results": [
+    {
+      "pair_id": "pair-1-liability",
+      "posture": "liability",
+      "variant_a_result": {
+        "pair_id": "pair-1-liability",
+        "posture": "liability",
+        "variant": "A",
+        "expected_material": false,
+        "expected_posture": null,
+        "actual_material": true,
+        "actual_posture": "liability",
+        "actual_reason": "Police report establishes physical evidence \u2014 14 ft of V-1 skid marks vs. no skid marks from V-2 \u2014 and scene details (V-2 displaced 22 ft, rotated ~80\u00b0) that bear directly on fault determination at an uncontrolled intersection; liability posture shifts from ambiguous toward insured V-1.",
+        "actual_text_excerpt": "Skid marks visible from V-1 totaling 14 feet leading to point of impact. No skid marks observed from V-2.",
+        "model": "claude-sonnet-4-6",
+        "attempts": 1,
+        "schema_valid": true,
+        "checks": {
+          "schema_valid": {
+            "passed": true,
+            "detail": "Pydantic validation passed"
+          },
+          "excerpt_iff_material": {
+            "passed": true
+          },
+          "posture_iff_material": {
+            "passed": true
+          },
+          "excerpt_in_body": {
+            "passed": true,
+            "overlap_ratio": 1.0
+          },
+          "material_matches": {
+            "passed": false,
+            "expected": false,
+            "actual": true
+          },
+          "posture_matches": {
+            "passed": true,
+            "detail": "n/a (material=False)"
+          },
+          "excerpt_directionality": {
+            "passed": false,
+            "detail": "Variant A excerpt must be empty"
+          }
+        },
+        "all_per_variant_checks_passed": false
+      },
+      "variant_b_result": {
+        "pair_id": "pair-1-liability",
+        "posture": "liability",
+        "variant": "B",
+        "expected_material": true,
+        "expected_posture": "liability",
+        "actual_material": true,
+        "actual_posture": "liability",
+        "actual_reason": "Police report establishes a traffic citation issued to the insured V-1 driver for failure to yield at an uncontrolled intersection; fault posture shifts materially against the insured, requiring adjuster to reassess liability and reserve.",
+        "actual_text_excerpt": "Officer determined V-1 driver failed to yield right of way at uncontrolled intersection in violation of Florida Statute 316.123(2); citation issued to V-1 driver at scene.",
+        "model": "claude-sonnet-4-6",
+        "attempts": 1,
+        "schema_valid": true,
+        "checks": {
+          "schema_valid": {
+            "passed": true,
+            "detail": "Pydantic validation passed"
+          },
+          "excerpt_iff_material": {
+            "passed": true
+          },
+          "posture_iff_material": {
+            "passed": true
+          },
+          "excerpt_in_body": {
+            "passed": true,
+            "overlap_ratio": 1.0
+          },
+          "material_matches": {
+            "passed": true,
+            "expected": true,
+            "actual": true
+          },
+          "posture_matches": {
+            "passed": true,
+            "expected": "liability",
+            "actual": "liability"
+          },
+          "excerpt_directionality": {
+            "passed": true,
+            "overlap_with_added_sentence": 1.0
+          }
+        },
+        "all_per_variant_checks_passed": true
+      },
+      "paired_delta_materiality_flip": false,
+      "pair_passed": false
+    },
+    {
+      "pair_id": "pair-2-coverage",
+      "posture": "coverage",
+      "variant_a_result": {
+        "pair_id": "pair-2-coverage",
+        "posture": "coverage",
+        "variant": "A",
+        "expected_material": false,
+        "expected_posture": null,
+        "actual_material": false,
+        "actual_posture": null,
+        "actual_reason": "Acme Mutual's letter is a routine acknowledgment of the tender receipt and promises a coverage position within 30 days; no acceptance, denial, or reservation of rights issued \u2014 no posture change.",
+        "actual_text_excerpt": "",
+        "model": "claude-sonnet-4-6",
+        "attempts": 1,
+        "schema_valid": true,
+        "checks": {
+          "schema_valid": {
+            "passed": true,
+            "detail": "Pydantic validation passed"
+          },
+          "excerpt_iff_material": {
+            "passed": true
+          },
+          "posture_iff_material": {
+            "passed": true
+          },
+          "excerpt_in_body": {
+            "passed": true,
+            "detail": "n/a (material=False)"
+          },
+          "material_matches": {
+            "passed": true,
+            "expected": false,
+            "actual": false
+          },
+          "posture_matches": {
+            "passed": true,
+            "detail": "n/a (material=False)"
+          },
+          "excerpt_directionality": {
+            "passed": true,
+            "detail": "Variant A excerpt must be empty"
+          }
+        },
+        "all_per_variant_checks_passed": true
+      },
+      "variant_b_result": {
+        "pair_id": "pair-2-coverage",
+        "posture": "coverage",
+        "variant": "B",
+        "expected_material": true,
+        "expected_posture": "coverage",
+        "actual_material": true,
+        "actual_posture": "coverage",
+        "actual_reason": "Acme Mutual's coverage counsel formally denies the tender of defense and indemnity, citing a contract interpretation exclusion; co-defendant carrier will not contribute to defense or indemnity, materially changing coverage posture.",
+        "actual_text_excerpt": "After review, Acme Mutual declines your tender of defense and indemnity. Our position is that the cooperative-defense clause in the underlying contract does not extend to claims arising from your insured's independent acts. We will not be participating in defense.",
+        "model": "claude-sonnet-4-6",
+        "attempts": 1,
+        "schema_valid": true,
+        "checks": {
+          "schema_valid": {
+            "passed": true,
+            "detail": "Pydantic validation passed"
+          },
+          "excerpt_iff_material": {
+            "passed": true
+          },
+          "posture_iff_material": {
+            "passed": true
+          },
+          "excerpt_in_body": {
+            "passed": true,
+            "overlap_ratio": 1.0
+          },
+          "material_matches": {
+            "passed": true,
+            "expected": true,
+            "actual": true
+          },
+          "posture_matches": {
+            "passed": true,
+            "expected": "coverage",
+            "actual": "coverage"
+          },
+          "excerpt_directionality": {
+            "passed": true,
+            "overlap_with_added_sentence": 1.0
+          }
+        },
+        "all_per_variant_checks_passed": true
+      },
+      "paired_delta_materiality_flip": true,
+      "pair_passed": true
+    },
+    {
+      "pair_id": "pair-3-damages",
+      "posture": "damages",
+      "variant_a_result": {
+        "pair_id": "pair-3-damages",
+        "posture": "damages",
+        "variant": "A",
+        "expected_material": false,
+        "expected_posture": null,
+        "actual_material": true,
+        "actual_posture": "reserve",
+        "actual_reason": "Counsel discloses updated medical specials of $18,742.50 plus $4,200 in documented lost wages with ongoing treatment anticipated; these new economic damage figures warrant reserve reassessment.",
+        "actual_text_excerpt": "Total medical specials to date stand at $18,742.50 across providers; ongoing treatment is anticipated. Our client continues to experience pain that limits her ability to perform her work as a dental hygienist, with documented lost wages of $4,200.00 to date.",
+        "model": "claude-sonnet-4-6",
+        "attempts": 1,
+        "schema_valid": true,
+        "checks": {
+          "schema_valid": {
+            "passed": true,
+            "detail": "Pydantic validation passed"
+          },
+          "excerpt_iff_material": {
+            "passed": true
+          },
+          "posture_iff_material": {
+            "passed": true
+          },
+          "excerpt_in_body": {
+            "passed": true,
+            "overlap_ratio": 1.0
+          },
+          "material_matches": {
+            "passed": false,
+            "expected": false,
+            "actual": true
+          },
+          "posture_matches": {
+            "passed": true,
+            "detail": "n/a (material=False)"
+          },
+          "excerpt_directionality": {
+            "passed": false,
+            "detail": "Variant A excerpt must be empty"
+          }
+        },
+        "all_per_variant_checks_passed": false
+      },
+      "variant_b_result": {
+        "pair_id": "pair-3-damages",
+        "posture": "damages",
+        "variant": "B",
+        "expected_material": true,
+        "expected_posture": "damages",
+        "actual_material": true,
+        "actual_posture": "damages",
+        "actual_reason": "Claimant counsel has issued a policy-limits demand of $300,000.00 with a hard deadline of July 15, 2026; damages posture changes and adjuster must evaluate the demand against the current $120,000 reserve and respond before the deadline to avoid bad faith exposure.",
+        "actual_text_excerpt": "our client hereby demands the policy limits of $300,000.00 to fully resolve all claims against your insured. This demand is open for acceptance through July 15, 2026, after which date we will proceed with formal litigation.",
+        "model": "claude-sonnet-4-6",
+        "attempts": 1,
+        "schema_valid": true,
+        "checks": {
+          "schema_valid": {
+            "passed": true,
+            "detail": "Pydantic validation passed"
+          },
+          "excerpt_iff_material": {
+            "passed": true
+          },
+          "posture_iff_material": {
+            "passed": true
+          },
+          "excerpt_in_body": {
+            "passed": true,
+            "overlap_ratio": 1.0
+          },
+          "material_matches": {
+            "passed": true,
+            "expected": true,
+            "actual": true
+          },
+          "posture_matches": {
+            "passed": true,
+            "expected": "damages",
+            "actual": "damages"
+          },
+          "excerpt_directionality": {
+            "passed": true,
+            "overlap_with_added_sentence": 1.0
+          }
+        },
+        "all_per_variant_checks_passed": true
+      },
+      "paired_delta_materiality_flip": false,
+      "pair_passed": false
+    },
+    {
+      "pair_id": "pair-4-reserve",
+      "posture": "reserve",
+      "variant_a_result": {
+        "pair_id": "pair-4-reserve",
+        "posture": "reserve",
+        "variant": "A",
+        "expected_material": false,
+        "expected_posture": null,
+        "actual_material": false,
+        "actual_posture": null,
+        "actual_reason": "Routine follow-up visit confirming continuation of existing conservative treatment (PT and chiropractic); no new diagnosis, surgical recommendation, cost estimate, or posture-changing findings introduced.",
+        "actual_text_excerpt": "",
+        "model": "claude-sonnet-4-6",
+        "attempts": 1,
+        "schema_valid": true,
+        "checks": {
+          "schema_valid": {
+            "passed": true,
+            "detail": "Pydantic validation passed"
+          },
+          "excerpt_iff_material": {
+            "passed": true
+          },
+          "posture_iff_material": {
+            "passed": true
+          },
+          "excerpt_in_body": {
+            "passed": true,
+            "detail": "n/a (material=False)"
+          },
+          "material_matches": {
+            "passed": true,
+            "expected": false,
+            "actual": false
+          },
+          "posture_matches": {
+            "passed": true,
+            "detail": "n/a (material=False)"
+          },
+          "excerpt_directionality": {
+            "passed": true,
+            "detail": "Variant A excerpt must be empty"
+          }
+        },
+        "all_per_variant_checks_passed": true
+      },
+      "variant_b_result": {
+        "pair_id": "pair-4-reserve",
+        "posture": "reserve",
+        "variant": "B",
+        "expected_material": true,
+        "expected_posture": "reserve",
+        "actual_material": true,
+        "actual_posture": "reserve",
+        "actual_reason": "New MRI findings confirming disc herniation, neurosurgical referral, and surgical cost estimate of $85,000\u2013$120,000 far exceed the current $25,000 reserve set for conservative-only treatment; reserve posture must change.",
+        "actual_text_excerpt": "MRI dated 2026-05-15 reveals C5-C6 disc herniation with nerve root impingement. Patient has been referred to neurosurgical consultation. Surgical intervention may be indicated if conservative treatment fails over the next 60 days. Estimated cost of cervical discectomy and fusion: $85,000\u2013$120,000.",
+        "model": "claude-sonnet-4-6",
+        "attempts": 1,
+        "schema_valid": true,
+        "checks": {
+          "schema_valid": {
+            "passed": true,
+            "detail": "Pydantic validation passed"
+          },
+          "excerpt_iff_material": {
+            "passed": true
+          },
+          "posture_iff_material": {
+            "passed": true
+          },
+          "excerpt_in_body": {
+            "passed": true,
+            "overlap_ratio": 1.0
+          },
+          "material_matches": {
+            "passed": true,
+            "expected": true,
+            "actual": true
+          },
+          "posture_matches": {
+            "passed": true,
+            "expected": "reserve",
+            "actual": "reserve"
+          },
+          "excerpt_directionality": {
+            "passed": true,
+            "overlap_with_added_sentence": 1.0
+          }
+        },
+        "all_per_variant_checks_passed": true
+      },
+      "paired_delta_materiality_flip": true,
+      "pair_passed": true
+    }
+  ],
+  "composite_verdict": "DO NOT SHIP \u2014 2/4 pairs passed. Per locked thresholds, Reader ships only when all 4 pairs pass. Failure detail above.",
+  "all_passed": false
+}
