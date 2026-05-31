@@ -11,6 +11,17 @@ supersedes_draft: 2026-05-30-initial
 
 # Triage Ranker spec
 
+> **Note (2026-05-30):** This spec describes the deterministic linear-
+> weighted-sum ranker that shipped as `services/triage/ranker.py`. It
+> reaches k=6 against independent OpenAI golds and is the current
+> production path. A subsequent hybrid v2 attempt was killed on first
+> run (see `docs/evals/triage-ranker-tuning-procedure.md`). The Codex
+> post-mortem on v2 identified the architectural lesson: free-form LLM
+> ranking is an oracle problem with no canonical answer. The target
+> architecture for the next triage iteration is captured in
+> `docs/specs/triage-ranker-policy-engine.md` — deterministic policy
+> gates + within-bucket scoring + LLM only for extraction/materiality.
+
 ## Problem
 
 An adjuster opens their software in the morning carrying 125–250 open

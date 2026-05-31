@@ -8,6 +8,15 @@ created: 2026-05-30
 
 # Triage ranker — hybrid v2 (LLM materiality re-rank)
 
+> **Status (2026-05-30): KILLED.** This spec describes the approach that
+> was built, run once against locked thresholds, and failed. v2 regressed
+> against gpt5 gold (k=6→k=5) and held flat against gpt55pro (k=6→k=6) —
+> see `docs/evals/triage-ranker-tuning-procedure.md` "Hybrid v2 run."
+> The Codex post-mortem identified the structural failure: free-form
+> LLM ranking is an oracle problem. The replacement design is
+> `docs/specs/triage-ranker-policy-engine.md`. This doc is preserved
+> as the worked example of what NOT to build, not as a path forward.
+
 ## Why v2 exists
 
 The deterministic S1 ranker (v1, shipped as `services/triage/ranker.py`)

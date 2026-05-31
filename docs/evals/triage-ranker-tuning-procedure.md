@@ -351,12 +351,15 @@ exposure.
 
 **Net of v1 + v2 verdicts:** ship deterministic S1 with the tuned
 weights from `tuned_weights.json`. v2 is dead — the LLM materiality
-re-rank as designed does not earn its keep on independent golds. v3, if
-it exists, should reframe the question: not "can an LLM pick better than
-the linear scorer," but "can an LLM consistently apply a STATED
-adjuster-style policy that the linear scorer can't express." That's a
-constrained judgment problem (apply this policy) rather than an open
-judgment problem (pick the best 7), and it might generalize better.
+re-rank as designed does not earn its keep on independent golds.
+
+The architectural lesson from v2 is captured in
+`docs/specs/triage-ranker-policy-engine.md`: triage should be a
+deterministic policy engine (gates on absolute thresholds) + within-
+bucket linear scoring + LLM only for extraction and materiality. Free-
+form LLM ranking is an oracle problem with no canonical answer. The
+next serious triage iteration should be built from that architecture,
+not from another iteration of the linear-scorer-plus-LLM-judge pattern.
 
 ## Known inert feature in the tuned vector
 
