@@ -79,9 +79,24 @@ class PolicyRankedItem:
 # --- Bucket assignment -----------------------------------------------------
 
 
-def assign_bucket(raw: RawFeatures) -> tuple[int, str]:
+def assign_bucket(
+    raw: RawFeatures,
+    *,
+    material_unread_count: int | None = None,
+) -> tuple[int, str]:
     """Apply locked policy triggers to one raw-feature row. Returns
-    `(bucket_number, why_today)`. First trigger that matches wins."""
+    `(bucket_number, why_today)`. First trigger that matches wins.
+
+    `material_unread_count` is the optional Reader-screened count of
+    unread material documents on this claim. When provided, B6 uses
+    this instead of the raw `unread_document_count` — only docs the
+    Reader flagged as `material=True` count toward the B6 trigger.
+    When None (default), behavior is identical to v3: B6 fires on any
+    unread doc regardless of materiality.
+
+    See `docs/evals/triage-policy-engine-with-reader-integrated-thresholds.md`
+    for the locked integration semantics.
+    """
 
     # 1 — same-day mandatory: SLA fires today
     if raw.hours_until_sla_breach < SLA_SAME_DAY_HOURS:
@@ -111,13 +126,22 @@ def assign_bucket(raw: RawFeatures) -> tuple[int, str]:
     if STAT_IMMINENT_DAYS < raw.days_until_statute <= STAT_APPROACHING_MAX_DAYS:
         return 5, f"statute {int(raw.days_until_statute)}d (approaching)"
 
-    # 6 — high exposure with action trigger
+    # 6 — high exposure with action trigger.
+    # Use Reader-supplied material count when available; otherwise fall
+    # back to raw unread count (v3 behavior).
+    if material_unread_count is not None:
+        effective_unread = float(material_unread_count)
+        unread_label = f"{int(effective_unread)} material unread docs"
+    else:
+        effective_unread = raw.unread_document_count
+        unread_label = f"{int(effective_unread)} unread docs"
+
     if raw.incurred_amount >= HIGH_EXPOSURE_INCURRED and (
-        raw.unread_document_count >= 1 or raw.open_diary_count >= 1
+        effective_unread >= 1 or raw.open_diary_count >= 1
     ):
         trigger = (
-            f"{int(raw.unread_document_count)} unread docs"
-            if raw.unread_document_count >= 1
+            unread_label
+            if effective_unread >= 1
             else f"{int(raw.open_diary_count)} overdue diary"
         )
         return 6, f"incurred ${raw.incurred_amount:,.0f} + {trigger}"
@@ -190,12 +214,20 @@ _BUCKET_KEY_FNS = {1: _key_b1, 2: _key_b2, 3: _key_b3, 4: _key_b4, 5: _key_b5, 6
 def rank_policy(
     caseload: Caseload,
     s1_weights: Weights = DEFAULT_WEIGHTS,
+    *,
+    material_counts: dict[str, int] | None = None,
 ) -> list[PolicyRankedItem]:
     """Rank every CoverageRequest in the caseload via the policy engine.
 
     Buckets are evaluated in precedence order (1..7); within each bucket,
     the locked sort key applies; final tiebreak is request_id ascending.
     The S1 weights are used only inside bucket 7 (routine work).
+
+    `material_counts`: optional `{claim_id: material_unread_count}` from
+    the Document Reader. When provided, B6 trigger uses each claim's
+    material-doc count instead of the raw unread count. When None
+    (default), behavior is identical to v3 — preserves backward
+    compatibility and lets v3 tests + benchmarks reproduce exactly.
     """
     raw_by_rid: dict[str, RawFeatures] = extract_raw(caseload)
     normalized_by_rid: dict[str, dict[str, float]] = extract_features(caseload)
@@ -204,7 +236,18 @@ def rank_policy(
     by_bucket: dict[int, list[str]] = {b: [] for b in BUCKET_NAMES}
     bucket_and_why: dict[str, tuple[int, str]] = {}
     for rid, raw in raw_by_rid.items():
-        bucket, why = assign_bucket(raw)
+        # Resolve material count for THIS claim if a Reader-screened map
+        # was passed in. CoverageRequest.request_id is the key for the
+        # bucket assignment, but material counts are per Claim — look up
+        # via the request's claim_id.
+        m_count: int | None = None
+        if material_counts is not None:
+            claim_id = next(
+                (r.claim_id for r in caseload.requests if r.request_id == rid),
+                None,
+            )
+            m_count = material_counts.get(claim_id, 0) if claim_id else 0
+        bucket, why = assign_bucket(raw, material_unread_count=m_count)
         bucket_and_why[rid] = (bucket, why)
         by_bucket[bucket].append(rid)
 
