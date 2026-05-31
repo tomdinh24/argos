@@ -71,7 +71,7 @@ class NoticeObligationTriggered(BaseModel):
 
 
 class ReserveAnalysis(BaseModel):
-    exposure_id: str
+    request_id: str
     reviewed_as_of: datetime
 
     per_component: list[ReserveComponentAnalysis] = Field(min_length=1)

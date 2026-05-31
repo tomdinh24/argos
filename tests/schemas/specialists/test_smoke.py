@@ -30,7 +30,7 @@ from argos.schemas.specialists.closure import (
     ClosureDefect,
 )
 from argos.schemas.specialists.coverage import (
-    CoverageAnalysis,
+    CoverageReport,
     CoverageDraft,
 )
 from argos.schemas.specialists.liability import (
@@ -86,8 +86,8 @@ NOW = datetime.now(timezone.utc)
 
 class TestCoverageSchema:
     def test_minimal_valid(self) -> None:
-        analysis = CoverageAnalysis(
-            exposure_id="exp-1",
+        analysis = CoverageReport(
+            request_id="exp-1",
             reviewed_as_of=NOW,
             evidence_found=[_doc_citation()],
             assessments=[_assessment("Policy in force", 1.0)],
@@ -104,14 +104,14 @@ class TestCoverageSchema:
 
     def test_no_recommendation_field(self) -> None:
         """The schema must not have a `recommended_path` field."""
-        assert "recommended_path" not in CoverageAnalysis.model_fields
-        assert "recommendation" not in CoverageAnalysis.model_fields
+        assert "recommended_path" not in CoverageReport.model_fields
+        assert "recommendation" not in CoverageReport.model_fields
 
 
 class TestLiabilitySchema:
     def test_minimal_valid(self) -> None:
         analysis = LiabilityAnalysis(
-            exposure_id="exp-1",
+            request_id="exp-1",
             reviewed_as_of=NOW,
             jurisdiction="FL",
             comparative_fault_rule="modified_51",
@@ -146,7 +146,7 @@ class TestLiabilitySchema:
     def test_rule_citation_must_be_sourced(self) -> None:
         with pytest.raises(ValidationError, match="sourced legal rule"):
             LiabilityAnalysis(
-                exposure_id="exp-1",
+                request_id="exp-1",
                 reviewed_as_of=NOW,
                 jurisdiction="FL",
                 comparative_fault_rule="modified_51",
@@ -195,7 +195,7 @@ class TestLiabilitySchema:
 class TestReserveSchema:
     def test_minimal_valid(self) -> None:
         analysis = ReserveAnalysis(
-            exposure_id="exp-1",
+            request_id="exp-1",
             reviewed_as_of=NOW,
             per_component=[
                 ReserveComponentAnalysis(
@@ -233,7 +233,7 @@ class TestReserveSchema:
 class TestRecoverySchema:
     def test_minimal_valid_with_sourced_sol(self) -> None:
         analysis = RecoveryAnalysis(
-            exposure_id="exp-1",
+            request_id="exp-1",
             reviewed_as_of=NOW,
             opportunity=_assessment("Recovery opportunity exists (subrogation)", 0.88),
             recovery_type="subrogation",
@@ -255,7 +255,7 @@ class TestRecoverySchema:
     def test_unknown_sol_acceptable(self) -> None:
         # Unsourced jurisdictions: specialist must surface "unknown", not assert
         analysis = RecoveryAnalysis(
-            exposure_id="exp-1",
+            request_id="exp-1",
             reviewed_as_of=NOW,
             opportunity=_assessment("Recovery opportunity exists", 0.75),
             recovery_type="subrogation",
@@ -270,7 +270,7 @@ class TestRecoverySchema:
 class TestClosureSchema:
     def test_minimal_valid_ready(self) -> None:
         analysis = ClosureAnalysis(
-            exposure_id="exp-1",
+            request_id="exp-1",
             reviewed_as_of=NOW,
             ready_to_close=_assessment("File is ready to close", 0.96),
         )
@@ -278,7 +278,7 @@ class TestClosureSchema:
 
     def test_with_blocking_defects(self) -> None:
         analysis = ClosureAnalysis(
-            exposure_id="exp-1",
+            request_id="exp-1",
             reviewed_as_of=NOW,
             ready_to_close=_assessment("File is ready to close", 0.12),
             blocking_defects=[

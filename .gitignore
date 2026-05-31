@@ -30,3 +30,6 @@ data/raw/*
 
 # Hypothesis cache
 .hypothesis/
+
+# /codex session-id cache (per-machine ephemeral)
+.context/

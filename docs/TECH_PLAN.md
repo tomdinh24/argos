@@ -182,8 +182,8 @@ Total migration cost: ~2 weeks. Manageable. We're not betting the company on Fou
 
 All in-scope entities from data-layer.md §5 become Foundry object types:
 
-- `ClientProgram`, `Policy`, `PolicyPeriod`, `CoveragePart`, `CoverageLayer`, `RiskUnit`
-- `LossOccurrence`, `Claim`, `ClaimExposure`
+- `ClientProgram`, `Policy`, `PolicyPeriod`, `PolicyCoverage`, `CoverageLayer`, `RiskUnit`
+- `LossOccurrence`, `Claim`, `CoverageRequest`
 - `Party`, `ClaimPartyRole`
 - `LiabilityAssessment`
 - `FinancialTransaction`, `FinancialPosting`
@@ -195,7 +195,7 @@ All in-scope entities from data-layer.md §5 become Foundry object types:
 - `SpecialistConfig`
 - `AgentAction` (the audit-trail object type)
 
-Link types model the relationships from §5: `Claim → ClaimExposure (1:many)`, `ClaimExposure → FinancialPosting (via FinancialTransaction, many:many)`, `Document → DocumentAssociation → ClaimExposure (many:many cross-exposure linkage)`, etc.
+Link types model the relationships from §5: `Claim → CoverageRequest (1:many)`, `CoverageRequest → FinancialPosting (via FinancialTransaction, many:many)`, `Document → DocumentAssociation → CoverageRequest (many:many cross-exposure linkage)`, etc.
 
 `AggregateLimitsTracker` is implemented as a *derived view* in Foundry — a query computed from `FinancialPosting` rows across child exposures, exposed as a typed read endpoint.
 
@@ -210,7 +210,7 @@ Action Types built:
 | Action Type | What it does | Validation |
 |---|---|---|
 | `RecordFinancialTransaction` | Create a `FinancialTransaction` with N balanced `FinancialPosting` rows | Posting rules per `transaction_kind` enforced (e.g., `indemnity_payment` requires balanced `paid_indemnity +X` + `outstanding_indemnity -X`) |
-| `UpdateExposureStatus` | Change one or more of the seven status dimensions on a `ClaimExposure` | Illegal-combination matrix enforced; per-dimension transition guards enforced |
+| `UpdateExposureStatus` | Change one or more of the seven status dimensions on a `CoverageRequest` | Illegal-combination matrix enforced; per-dimension transition guards enforced |
 | `RecordLiabilityAssessment` | Append a new `LiabilityAssessment` row | Supersession chain validated; fault percentages sum to 100 |
 | `EmitAgentAction` | Specialist emits a recommendation | Required fields present; input hash recorded; confidence in [0,1] |
 | `ApproveAgentAction` | Human approves a queued recommendation | Authority chain validated; routes to `RecordFinancialTransaction` or `UpdateExposureStatus` as effect |
@@ -230,9 +230,9 @@ Limited to compute that needs direct ontology access. Python.
 
 | Function | What it does |
 |---|---|
-| `get_financials_as_of(exposure_id, valid_at, recorded_at)` | The bitemporal query — returns paid/outstanding/incurred/recovered per component at the specified time-axis pair. Window-function SQL over `FinancialPosting`. |
-| `get_aggregate_limits(claim_id, coverage_part_id)` | Computes `consumed/remaining/breach_status` from child exposures' postings |
-| `get_exposure_layer_b_snapshot(exposure_id, as_of)` | Returns the full Layer-B view (documents received ≤ as_of, ledger ≤ as_of, parties, status dimensions, applicable config) — the specialist's input payload |
+| `get_financials_as_of(request_id, valid_at, recorded_at)` | The bitemporal query — returns paid/outstanding/incurred/recovered per component at the specified time-axis pair. Window-function SQL over `FinancialPosting`. |
+| `get_aggregate_limits(claim_id, coverage_id)` | Computes `consumed/remaining/breach_status` from child exposures' postings |
+| `get_exposure_layer_b_snapshot(request_id, as_of)` | Returns the full Layer-B view (documents received ≤ as_of, ledger ≤ as_of, parties, status dimensions, applicable config) — the specialist's input payload |
 | `get_applicable_config(client_program_id, specialist, as_of)` | Returns the `SpecialistConfig` row in force at `as_of` |
 | `get_audit_trail(claim_id)` | Returns the chronological `AgentAction` history for a claim |
 
@@ -299,9 +299,9 @@ backend/
 Each specialist follows the same pattern:
 
 ```python
-async def run_reserve_specialist(exposure_id: str, as_of: datetime) -> ReserveRecommendation:
+async def run_reserve_specialist(request_id: str, as_of: datetime) -> ReserveRecommendation:
     # 1. Read Layer B from Foundry via OSDK
-    layer_b = await osdk.functions.get_exposure_layer_b_snapshot(exposure_id, as_of)
+    layer_b = await osdk.functions.get_exposure_layer_b_snapshot(request_id, as_of)
     config = await osdk.functions.get_applicable_config(layer_b.client_program_id, 'reserve', as_of)
 
     # 2. Build prompt
@@ -319,7 +319,7 @@ async def run_reserve_specialist(exposure_id: str, as_of: datetime) -> ReserveRe
     # 4. Emit AgentAction via Action Type (Foundry handles audit)
     await osdk.actions.emit_agent_action(
         specialist='reserve',
-        exposure_id=exposure_id,
+        request_id=request_id,
         recommendation=recommendation,
         input_hash=hash_layer_b(layer_b),
         confidence=recommendation.confidence,
@@ -329,7 +329,7 @@ async def run_reserve_specialist(exposure_id: str, as_of: datetime) -> ReserveRe
     # 5. If auto-applicable, trigger the downstream Action Type
     if recommendation.auto_applicable(config):
         await osdk.actions.record_financial_transaction(
-            exposure_id=exposure_id,
+            request_id=request_id,
             transaction_kind='reserve_revision',
             postings=recommendation.to_postings(),
         )
@@ -489,7 +489,7 @@ Three pre-seeded demo claims targeting specific narrative beats:
 Audit comes from two places:
 
 1. **Foundry-native Action Type invocation log.** Every Action Type call is automatically logged by Foundry with who/what/when/inputs/outputs. This is the system-of-record audit. We don't build it; we use it.
-2. **The `AgentAction` object type.** Every specialist recommendation creates an `AgentAction` row via the `EmitAgentAction` Action Type. The object holds: specialist, prompt_version, model_id, exposure_id, input_hash, output_json, confidence, reasoning_trace, triggered_by, requires_human_approval, applied_at, escalation_outcome, created_at.
+2. **The `AgentAction` object type.** Every specialist recommendation creates an `AgentAction` row via the `EmitAgentAction` Action Type. The object holds: specialist, prompt_version, model_id, request_id, input_hash, output_json, confidence, reasoning_trace, triggered_by, requires_human_approval, applied_at, escalation_outcome, created_at.
 
 The combination answers "why did we set the reserve at $X on claim Y on date Z" three months later. Foundry's audit log shows *what* was invoked; the `AgentAction` row shows *what the specialist reasoned and proposed*.
 
@@ -499,7 +499,7 @@ The combination answers "why did we set the reserve at $X on claim Y on date Z" 
 
 | Interview moment | Winning artifact |
 |---|---|
-| **Palantir FDE — ontology round** | Foundry Ontology Manager walkthrough: object types, link types, the typed semantic graph. Walk through `ClaimExposure` with its seven status dimensions, the link to `LiabilityAssessment` (versioned), the link via `FinancialTransaction` to `FinancialPosting`. |
+| **Palantir FDE — ontology round** | Foundry Ontology Manager walkthrough: object types, link types, the typed semantic graph. Walk through `CoverageRequest` with its seven status dimensions, the link to `LiabilityAssessment` (versioned), the link via `FinancialTransaction` to `FinancialPosting`. |
 | **Palantir FDE — invariants / validation** | Action Type TypeScript validators: the illegal-combination matrix and financial-posting rules encoded at the data layer. Demonstrate that an external caller trying to write an illegal state combination is rejected by Foundry. |
 | **Palantir FDE — Functions / SQL** | `get_financials_as_of` Function in Code Repositories: real Python, window-function query over `FinancialPosting`, demonstrably correct under backdated `effective_at` corrections. |
 | **Palantir FDE — system design** | Whiteboard the three-layer architecture (§4). Defend the per-component decisions (§2): why Foundry holds the data layer, why our Python holds the specialists, why Next.js holds the UI. The "right tool per layer" framing is itself an FDE signal. |

@@ -1,0 +1,402 @@
+{
+  "variant": "clean",
+  "model": "claude-opus-4-8",
+  "attempts": 1,
+  "analysis": {
+    "exposure_id": "EXP-2023-04471-REYES-BI",
+    "reviewed_as_of": "2023-03-17T00:00:00Z",
+    "evidence_found": [
+      {
+        "document_id": "DOC-001",
+        "locator": "Declarations \u2014 Liability Coverage block",
+        "text_excerpt": "Bodily Injury / Property Damage Combined Single Limit ..... $1,000,000",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-001",
+        "locator": "Declarations \u2014 Schedule of Covered Autos",
+        "text_excerpt": "Unit 14: 2019 Freightliner M2-106, VIN 1FVACWDT9KHKL4218, GVWR 24,500 lbs,",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-001",
+        "locator": "Declarations \u2014 Covered Autos Symbols",
+        "text_excerpt": "Liability (Sym. 7) ............. Specifically Described Autos",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-001",
+        "locator": "Declarations \u2014 Policy Period",
+        "text_excerpt": "Policy Period: 01/01/2023 12:01 A.M. to 01/01/2024 12:01 A.M. (Standard Time)",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-001",
+        "locator": "Declarations \u2014 Driver Eligibility",
+        "text_excerpt": "All scheduled drivers must hold a valid CDL Class B for Unit 14.",
+        "relation": "contextual"
+      },
+      {
+        "document_id": "DOC-002",
+        "locator": "Police report \u2014 Vehicles V-1",
+        "text_excerpt": "Driver: Aliyah, Marcus J., M/47, FL CDL A2241, DOB 12/04/1975.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-002",
+        "locator": "Police report \u2014 Citations / Violations",
+        "text_excerpt": "V-1 driver Aliyah cited under FSS 316.0895(1) \u2014 Following Too Closely.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-002",
+        "locator": "Police report \u2014 Narrative",
+        "text_excerpt": "V-1, traveling directly behind V-2 in the same lane, failed to slow in time.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-002",
+        "locator": "Police report \u2014 Injuries",
+        "text_excerpt": "V-2 driver Reyes complained of neck and lower-back pain on scene; transported non-emergency by HCFR to Tampa General.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-003",
+        "locator": "Recorded statement \u2014 Aliyah",
+        "text_excerpt": "I was returning to the terminal. That's, uh, that's the protocol.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-003",
+        "locator": "Recorded statement \u2014 Aliyah",
+        "text_excerpt": "Yes ma'am. Causeway is the route back to the terminal.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-004",
+        "locator": "Dispatch log \u2014 authorization",
+        "text_excerpt": "Marcus Aliyah is the assigned driver of Unit 14 for the 2023-03-13 BR-Mon-A route. No reassignment, no swap.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-004",
+        "locator": "Dispatch log \u2014 authorization",
+        "text_excerpt": "Vehicle use during the return leg (Adamo \u2192 Causeway terminal) is on-duty per Northwind operations manual \u00a74.3",
+        "relation": "supports"
+      }
+    ],
+    "assessments": [
+      {
+        "claim_text": "The loss vehicle (Unit 14) is a scheduled covered auto under the policy's liability coverage.",
+        "probability": 0.99,
+        "reasoning": "The policy uses Symbol 7 (Specifically Described Autos) for liability, and the declarations schedule lists Unit 14, the 2019 Freightliner M2-106, by VIN. The police report identifies V-1 as the same 2019 Freightliner M2-106 owned by Northwind Logistics. Identity of the vehicle as a scheduled covered auto is therefore well-supported.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-001",
+            "locator": "Declarations \u2014 Covered Autos Symbols",
+            "text_excerpt": "Liability (Sym. 7) ............. Specifically Described Autos",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-001",
+            "locator": "Declarations \u2014 Schedule of Covered Autos",
+            "text_excerpt": "Unit 14: 2019 Freightliner M2-106, VIN 1FVACWDT9KHKL4218, GVWR 24,500 lbs,",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-002",
+            "locator": "Police report \u2014 Vehicles V-1",
+            "text_excerpt": "V-1: 2019 Freightliner M2-106 (24-ft box truck, no trailer), tag FL-TRK-Q4218.",
+            "relation": "supports"
+          }
+        ]
+      },
+      {
+        "claim_text": "The loss occurred within the policy period.",
+        "probability": 0.99,
+        "reasoning": "The declarations state the policy period runs 01/01/2023 to 01/01/2024. The police report dates the crash 03/13/2023, which falls within that window.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-001",
+            "locator": "Declarations \u2014 Policy Period",
+            "text_excerpt": "Policy Period: 01/01/2023 12:01 A.M. to 01/01/2024 12:01 A.M. (Standard Time)",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-002",
+            "locator": "Police report \u2014 header",
+            "text_excerpt": "Date of Crash: 03/13/2023      Time: 16:42 hrs       Day: Mon",
+            "relation": "supports"
+          }
+        ]
+      },
+      {
+        "claim_text": "The driver, M. Aliyah, was operating Unit 14 with the insured's permission on an assigned, on-duty trip at the time of loss.",
+        "probability": 0.97,
+        "reasoning": "The dispatch log confirms Aliyah was the assigned driver for the BR-Mon-A route with no reassignment, and that the return leg to the terminal was on-duty per the operations manual. Aliyah's recorded statement corroborates that he was returning to the terminal per protocol on the assigned route. This supports operation by a permissive/insured user, relevant to who qualifies as an insured under the liability part.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-004",
+            "locator": "Dispatch log \u2014 authorization",
+            "text_excerpt": "Marcus Aliyah is the assigned driver of Unit 14 for the 2023-03-13 BR-Mon-A route. No reassignment, no swap.",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-004",
+            "locator": "Dispatch log \u2014 authorization",
+            "text_excerpt": "Vehicle use during the return leg (Adamo \u2192 Causeway terminal) is on-duty per Northwind operations manual \u00a74.3",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-003",
+            "locator": "Recorded statement \u2014 Aliyah",
+            "text_excerpt": "I was returning to the terminal. That's, uh, that's the protocol.",
+            "relation": "supports"
+          }
+        ]
+      },
+      {
+        "claim_text": "A covered 'bodily injury' caused by an 'accident' arising from use of the covered auto is presented.",
+        "probability": 0.95,
+        "reasoning": "The police report records the claimant complaining of neck and lower-back pain at scene and being transported to Tampa General, coded 'Possible Injury (C)'. The event is a front-to-rear motor vehicle collision \u2014 an accident arising from use of the covered auto. This is consistent with the auto_BI insuring agreement being triggered, subject to ordinary proof of injury and damages.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-002",
+            "locator": "Police report \u2014 Injuries",
+            "text_excerpt": "V-2 driver Reyes complained of neck and lower-back pain on scene; transported non-emergency by HCFR to Tampa General.",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-002",
+            "locator": "Police report \u2014 Crash Type",
+            "text_excerpt": "Crash Type: Front-to-Rear, 2 vehicles",
+            "relation": "supports"
+          }
+        ]
+      },
+      {
+        "claim_text": "The driver eligibility condition (valid CDL) is potentially implicated but not clearly breached on the present record.",
+        "probability": 0.2,
+        "reasoning": "The declarations require scheduled drivers to hold a valid CDL Class B for Unit 14. The police report records Aliyah holding 'FL CDL A2241' and the dispatch log records his CDL as valid through 2024-08-31. The licensing documents reference a Class A / license number rather than expressly confirming the 'Class B' classification named in the eligibility clause; the record does not establish whether this is a coverage-defeating condition breach or merely a higher class that satisfies the requirement. This is a flag, not an established breach. Probability reflects uncertainty that an eligibility issue exists at all, not a recommendation.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-001",
+            "locator": "Declarations \u2014 Driver Eligibility",
+            "text_excerpt": "All scheduled drivers must hold a valid CDL Class B for Unit 14.",
+            "relation": "contextual"
+          },
+          {
+            "document_id": "DOC-002",
+            "locator": "Police report \u2014 Vehicles V-1",
+            "text_excerpt": "Driver: Aliyah, Marcus J., M/47, FL CDL A2241, DOB 12/04/1975.",
+            "relation": "contextual"
+          },
+          {
+            "document_id": "DOC-004",
+            "locator": "Dispatch log \u2014 Unit 14 driver line",
+            "text_excerpt": "Driver: M. Aliyah (CDL #A2241-FL, exp. 2024-08-31)",
+            "relation": "contextual"
+          }
+        ]
+      }
+    ],
+    "synthesis": {
+      "outcomes": [
+        {
+          "claim_text": "Clean coverage: the liability claim is covered with no coverage defense raised.",
+          "probability": 0.9,
+          "reasoning": "Covered auto, within policy period, permissive assigned driver on an on-duty trip, and an accident causing alleged bodily injury. No exclusion is apparent on the documents provided, and fault facts (citation, narrative, witness, driver admission) point to an insured-side liability event squarely within the auto_BI grant.",
+          "evidence_citations": [
+            {
+              "document_id": "DOC-001",
+              "locator": "Declarations \u2014 Liability Coverage block",
+              "text_excerpt": "Bodily Injury / Property Damage Combined Single Limit ..... $1,000,000",
+              "relation": "supports"
+            },
+            {
+              "document_id": "DOC-004",
+              "locator": "Dispatch log \u2014 authorization",
+              "text_excerpt": "Vehicle use during the return leg (Adamo \u2192 Causeway terminal) is on-duty per Northwind operations manual \u00a74.3",
+              "relation": "supports"
+            },
+            {
+              "document_id": "DOC-002",
+              "locator": "Police report \u2014 Narrative",
+              "text_excerpt": "V-1, traveling directly behind V-2 in the same lane, failed to slow in time.",
+              "relation": "supports"
+            }
+          ]
+        },
+        {
+          "claim_text": "Reservation of rights: coverage extended subject to investigation of the CDL Class B driver-eligibility condition.",
+          "probability": 0.09,
+          "reasoning": "The declarations require a valid CDL Class B for Unit 14, while the police report and dispatch log reference a Class A / number-only license without confirming the Class B classification. This unresolved gap between the eligibility condition's stated class and the documented license is a basis on which a reservation could be noted pending clarification of license classification, though a Class A endorsement may fully satisfy the requirement.",
+          "evidence_citations": [
+            {
+              "document_id": "DOC-001",
+              "locator": "Declarations \u2014 Driver Eligibility",
+              "text_excerpt": "All scheduled drivers must hold a valid CDL Class B for Unit 14.",
+              "relation": "contextual"
+            },
+            {
+              "document_id": "DOC-002",
+              "locator": "Police report \u2014 Vehicles V-1",
+              "text_excerpt": "Driver: Aliyah, Marcus J., M/47, FL CDL A2241, DOB 12/04/1975.",
+              "relation": "contextual"
+            },
+            {
+              "document_id": "DOC-004",
+              "locator": "Dispatch log \u2014 Unit 14 driver line",
+              "text_excerpt": "Driver: M. Aliyah (CDL #A2241-FL, exp. 2024-08-31)",
+              "relation": "contextual"
+            }
+          ]
+        },
+        {
+          "claim_text": "Denial: no coverage available for the exposure.",
+          "probability": 0.01,
+          "reasoning": "No document supports a complete coverage defense. The vehicle is scheduled, the loss is in-period, the driver is the assigned permissive operator, and an accident with alleged bodily injury is documented. There is no exclusion or condition in the record establishing a basis to deny outright.",
+          "evidence_citations": [
+            {
+              "document_id": "DOC-001",
+              "locator": "Declarations \u2014 Schedule of Covered Autos",
+              "text_excerpt": "Unit 14: 2019 Freightliner M2-106, VIN 1FVACWDT9KHKL4218, GVWR 24,500 lbs,",
+              "relation": "refutes"
+            },
+            {
+              "document_id": "DOC-004",
+              "locator": "Dispatch log \u2014 authorization",
+              "text_excerpt": "Marcus Aliyah is the assigned driver of Unit 14 for the 2023-03-13 BR-Mon-A route. No reassignment, no swap.",
+              "relation": "refutes"
+            }
+          ]
+        }
+      ],
+      "would_shift_distribution": [
+        "Confirmation of Aliyah's CDL classification (whether the Class A license satisfies or fails the 'valid CDL Class B for Unit 14' eligibility condition) would shift mass between clean coverage and ROR.",
+        "Evidence that the eligibility provision is a coverage condition versus an underwriting warranty would affect whether any license issue is coverage-bearing at all.",
+        "Any later-surfacing exclusion (e.g., a non-permissive use fact or a policy condition violation) would be required to move meaningful mass toward denial; none appears in the present record.",
+        "Medical records substantiating or undercutting the claimed neck/back injury would affect the bodily-injury element but not the coverage grant itself."
+      ]
+    },
+    "coverage_analysis_memo": {
+      "body": "COVERAGE ANALYSIS MEMO\nExposure: EXP-2023-04471-REYES-BI (Claim CLM-2023-04471)\nCoverage part: CP-NWL-2023-BI (auto Bodily Injury liability), Policy NWL-CA-024471\nReviewed as of: 2023-03-17\n\n1. Loss summary. On 03/13/2023 at 16:42, Unit 14 (2019 Freightliner M2-106 box truck, driver M. Aliyah) struck the rear of a 2022 Honda Civic driven by J. Reyes at the Causeway Blvd / Bermuda Ave T-intersection in Tampa, FL. The police report records the crash type as 'Front-to-Rear, 2 vehicles' and the narrative states 'V-1, traveling directly behind V-2 in the same lane, failed to slow in time.' Reyes complained of neck and lower-back pain at scene and was transported to Tampa General.\n\n2. Covered auto. Liability is written on Symbol 7 ('Liability (Sym. 7) ............. Specifically Described Autos'). The declarations schedule lists 'Unit 14: 2019 Freightliner M2-106, VIN 1FVACWDT9KHKL4218,' and the police report identifies V-1 as that same vehicle owned by Northwind Logistics. The vehicle is a scheduled covered auto.\n\n3. Policy period. The declarations period is '01/01/2023 12:01 A.M. to 01/01/2024 12:01 A.M.' The crash date of 03/13/2023 falls within the period.\n\n4. Insured driver / permissive use. The dispatch log states 'Marcus Aliyah is the assigned driver of Unit 14 for the 2023-03-13 BR-Mon-A route. No reassignment, no swap,' and that 'Vehicle use during the return leg (Adamo \u2192 Causeway terminal) is on-duty per Northwind operations manual \u00a74.3.' Aliyah's recorded statement corroborates that he was 'returning to the terminal' on the assigned Causeway route. This supports operation by an insured/permissive user on an on-duty trip.\n\n5. Bodily injury / accident. The event is a motor-vehicle accident arising from use of the covered auto, with alleged bodily injury documented in the police report ('complained of neck and lower-back pain on scene; transported non-emergency by HCFR to Tampa General'). The auto_BI insuring agreement appears engaged, subject to ordinary proof of injury and damages.\n\n6. Open coverage flag \u2014 driver eligibility. The declarations require that 'All scheduled drivers must hold a valid CDL Class B for Unit 14.' The police report records Aliyah's license as 'FL CDL A2241' and the dispatch log records 'CDL #A2241-FL, exp. 2024-08-31.' These sources reference a Class A / license-number designation rather than expressly confirming the 'Class B' classification named in the eligibility clause. The record does not establish whether a higher Class A license satisfies the requirement or whether this is a condition breach; this is identified as an open item, not a resolved coverage defense.\n\n7. Distribution. Over {clean coverage, reservation of rights, denial}, the analysis places the mass primarily on clean coverage, with a small allocation to a reservation of rights tied to the unresolved CDL classification question, and negligible mass on denial given the absence of any documented exclusion or coverage-defeating condition. See the synthesis and assessments for quantified probabilities and the evidence that would shift them.\n\nThis memo states analysis only and does not recommend a coverage path.",
+      "citations": [
+        {
+          "document_id": "DOC-001",
+          "locator": "Declarations \u2014 Covered Autos Symbols",
+          "text_excerpt": "Liability (Sym. 7) ............. Specifically Described Autos",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-001",
+          "locator": "Declarations \u2014 Schedule of Covered Autos",
+          "text_excerpt": "Unit 14: 2019 Freightliner M2-106, VIN 1FVACWDT9KHKL4218, GVWR 24,500 lbs,",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-001",
+          "locator": "Declarations \u2014 Policy Period",
+          "text_excerpt": "Policy Period: 01/01/2023 12:01 A.M. to 01/01/2024 12:01 A.M. (Standard Time)",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-001",
+          "locator": "Declarations \u2014 Driver Eligibility",
+          "text_excerpt": "All scheduled drivers must hold a valid CDL Class B for Unit 14.",
+          "relation": "contextual"
+        },
+        {
+          "document_id": "DOC-002",
+          "locator": "Police report \u2014 Crash Type",
+          "text_excerpt": "Crash Type: Front-to-Rear, 2 vehicles",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-002",
+          "locator": "Police report \u2014 Narrative",
+          "text_excerpt": "V-1, traveling directly behind V-2 in the same lane, failed to slow in time.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-002",
+          "locator": "Police report \u2014 Injuries",
+          "text_excerpt": "V-2 driver Reyes complained of neck and lower-back pain on scene; transported non-emergency by HCFR to Tampa General.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-002",
+          "locator": "Police report \u2014 Vehicles V-1",
+          "text_excerpt": "Driver: Aliyah, Marcus J., M/47, FL CDL A2241, DOB 12/04/1975.",
+          "relation": "contextual"
+        },
+        {
+          "document_id": "DOC-003",
+          "locator": "Recorded statement \u2014 Aliyah",
+          "text_excerpt": "I was returning to the terminal. That's, uh, that's the protocol.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-004",
+          "locator": "Dispatch log \u2014 authorization",
+          "text_excerpt": "Marcus Aliyah is the assigned driver of Unit 14 for the 2023-03-13 BR-Mon-A route. No reassignment, no swap.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-004",
+          "locator": "Dispatch log \u2014 Unit 14 driver line",
+          "text_excerpt": "Driver: M. Aliyah (CDL #A2241-FL, exp. 2024-08-31)",
+          "relation": "contextual"
+        }
+      ]
+    },
+    "ror_letter": {
+      "body": "RESERVATION OF RIGHTS \u2014 DRAFT (analysis artifact; no path is recommended)\n\nRe: Claim CLM-2023-04471 / Exposure EXP-2023-04471-REYES-BI\nPolicy: NWL-CA-024471 (Commercial Automobile, Form CA 00 01)\nInsured: Northwind Logistics, LLC\nDate of loss: 03/13/2023\n\nThis draft is prepared to preserve the carrier's position pending completion of investigation into one open coverage item. It describes the analysis only and advocates no outcome.\n\nFacts. On 03/13/2023, Unit 14, a scheduled covered auto, was involved in a front-to-rear collision with the claimant's vehicle. The loss is within the policy period ('01/01/2023 12:01 A.M. to 01/01/2024 12:01 A.M.'), and the vehicle is identified on the declarations schedule ('Unit 14: 2019 Freightliner M2-106, VIN 1FVACWDT9KHKL4218').\n\nOpen item \u2014 driver eligibility condition. The declarations provide that 'All scheduled drivers must hold a valid CDL Class B for Unit 14.' The available records describe the operating driver's license as 'FL CDL A2241' (police report) and 'CDL #A2241-FL, exp. 2024-08-31' (dispatch log). These references identify a Class A / numbered license rather than confirming the 'Class B' classification stated in the eligibility provision. Until the driver's license classification and its sufficiency under this provision are confirmed, the carrier reserves all rights and defenses under the policy, including those relating to the driver-eligibility condition, while continuing to investigate and, as applicable, handle the claim.\n\nNo other coverage defense is presently asserted, and nothing in this letter waives any term, condition, or exclusion of the policy. The carrier will supplement or withdraw this reservation as the licensing question is resolved.",
+      "citations": [
+        {
+          "document_id": "DOC-001",
+          "locator": "Declarations \u2014 Driver Eligibility",
+          "text_excerpt": "All scheduled drivers must hold a valid CDL Class B for Unit 14.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-001",
+          "locator": "Declarations \u2014 Policy Period",
+          "text_excerpt": "Policy Period: 01/01/2023 12:01 A.M. to 01/01/2024 12:01 A.M. (Standard Time)",
+          "relation": "contextual"
+        },
+        {
+          "document_id": "DOC-001",
+          "locator": "Declarations \u2014 Schedule of Covered Autos",
+          "text_excerpt": "Unit 14: 2019 Freightliner M2-106, VIN 1FVACWDT9KHKL4218, GVWR 24,500 lbs,",
+          "relation": "contextual"
+        },
+        {
+          "document_id": "DOC-002",
+          "locator": "Police report \u2014 Vehicles V-1",
+          "text_excerpt": "Driver: Aliyah, Marcus J., M/47, FL CDL A2241, DOB 12/04/1975.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-004",
+          "locator": "Dispatch log \u2014 Unit 14 driver line",
+          "text_excerpt": "Driver: M. Aliyah (CDL #A2241-FL, exp. 2024-08-31)",
+          "relation": "supports"
+        }
+      ]
+    }
+  },
+  "checks": {
+    "citation_verifier": {
+      "passed": true,
+      "total_checked": 50,
+      "violations": []
+    },
+    "recommendation_regex": {
+      "passed": true,
+      "drafts_checked": 2,
+      "hits": []
+    },
+    "premise_grounding": null
+  }
+}

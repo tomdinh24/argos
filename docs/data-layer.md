@@ -71,8 +71,8 @@ This document defines:
 | Injury severity (KABCO) | Medical bills, treatment timeline, provider records, lien chronology |
 | Persons involved | Parties cast as policyholders / claimants / witnesses / attorneys / vendors, with multi-role support |
 | Crash facts / cause of loss | **Liability allocation** — modeled as versioned `LiabilityAssessment` (§5), not a static status |
-| — | `Policy`, `PolicyPeriod`, `CoveragePart`, `CoverageLayer`, SIR, excess tower, reinsurance attachment |
-| — | `ClaimExposure` decomposition (one claim → multiple exposures, each with own reserve / payment / recovery / closure state) |
+| — | `Policy`, `PolicyPeriod`, `PolicyCoverage`, `CoverageLayer`, SIR, excess tower, reinsurance attachment |
+| — | `CoverageRequest` decomposition (one claim → multiple exposures, each with own reserve / payment / recovery / closure state) |
 | — | `FinancialTransaction` + `FinancialPosting` ledger (balanced postings against named accounts — see §5) |
 | — | Bitemporal financial history (`effective_at` × `recorded_at`, per §5) |
 | — | Claim lifecycle as **disambiguated status dimensions** (six on the exposure + one on the claim), with explicit illegal-combination matrix |
@@ -138,7 +138,7 @@ For flood: causation assignment (flood-only / flood-plus-wind / non-covered).
 
 ### Step 4 — Apply coverage from the client's program
 
-Generate Policy → PolicyPeriod → CoveragePart → CoverageLayer rows from the client's program template.
+Generate Policy → PolicyPeriod → PolicyCoverage → CoverageLayer rows from the client's program template.
 
 ### Step 5 — Generate the claim timeline
 
@@ -183,8 +183,8 @@ The substrate is a relational ontology stored in the [TECH_PLAN.md](./TECH_PLAN.
 ### Build scope marker
 
 **Built first** (prove the specialists traverse it live):
-- ClientProgram, Policy, PolicyPeriod, CoveragePart, CoverageLayer
-- LossOccurrence, Claim, ClaimExposure
+- ClientProgram, Policy, PolicyPeriod, PolicyCoverage, CoverageLayer
+- LossOccurrence, Claim, CoverageRequest
 - Party, ClaimPartyRole
 - LiabilityAssessment
 - FinancialTransaction, FinancialPosting
@@ -196,7 +196,7 @@ The substrate is a relational ontology stored in the [TECH_PLAN.md](./TECH_PLAN.
 - NoticeObligation (basic structure)
 - Lien (basic structure)
 - SpecialistConfig
-- RiskUnit (insured assets only — claimant assets modeled implicitly via `Party` and `ClaimExposure.claimant_party_id`)
+- RiskUnit (insured assets only — claimant assets modeled implicitly via `Party` and `CoverageRequest.claimant_party_id`)
 
 **Schema-only, operational logic deferred** (model the shape so the ontology survives stress test, but do not build the runtime behavior):
 - `MedicareReportingStatus` — model the existence-of-obligation detection so Closure can flag it; do *not* build Section 111 EDI filing logic. CMS reporting is a labyrinthine compliance project that distracts from the AI value prop.
@@ -234,8 +234,8 @@ PolicyPeriod
   effective_to
   status (in_force, expired, cancelled, non_renewed)
 
-CoveragePart
-  coverage_part_id (PK)
+PolicyCoverage
+  coverage_id (PK)
   policy_period_id (FK)
   coverage_type (enum: auto_BI, auto_PD, auto_UM_UIM, auto_collision, auto_comprehensive,
                        auto_medpay, auto_rental, flood_building, flood_contents, flood_ICC)
@@ -286,10 +286,10 @@ Claim
   fnol_reporter_party_id (FK → Party)
   lifecycle_status (enum: open, administratively_closed, reopened)  // claim-level only
 
-ClaimExposure  // financial/operational pivot
-  exposure_id (PK)
+CoverageRequest  // financial/operational pivot
+  request_id (PK)
   claim_id (FK)
-  coverage_part_id (FK)
+  coverage_id (FK)
   claimant_party_id (FK → Party — for BI/liability; null for first-party physical damage)
   damaged_risk_unit_id (FK → RiskUnit — for property/collision; null for BI)
   exposure_type (enum: auto_BI_claimant, auto_PD_claimant, auto_UM_first_party,
@@ -338,7 +338,7 @@ Versioned, not a status. Real liability is revised as new evidence arrives.
 ```
 LiabilityAssessment
   assessment_id (PK)
-  exposure_id (FK)
+  request_id (FK)
   insured_fault_pct
   claimant_fault_pct
   other_party_fault_pct (nullable — multi-party crashes)
@@ -368,7 +368,7 @@ ClaimPartyRole
               attorney_for_claimant, attorney_for_insured, defense_counsel,
               mortgagee, public_adjuster, contractor, IME_provider, accident_reconstructionist,
               repair_shop, tow_operator, independent_adjuster)
-  applies_to_exposure_id (FK, nullable)
+  applies_to_request_id (FK, nullable)
   effective_from
   effective_to (nullable)
 ```
@@ -380,7 +380,7 @@ A single `Transaction` table with one signed `amount_delta` would be single-entr
 ```
 FinancialTransaction  // the header — one row per accounting event
   transaction_id (PK)
-  exposure_id (FK)  // every financial event is exposure-scoped
+  request_id (FK)  // every financial event is exposure-scoped
   transaction_kind (enum: reserve_revision, indemnity_payment, expense_payment,
                           recovery_received, recovery_anticipated_change,
                           transfer_between_components, correction_reversal)
@@ -423,13 +423,13 @@ The constraint is enforced at write time (a Python validation layer on every `Fi
 
 **Payment lifecycle is NOT in the ledger.** A payment going through request → approval → check issued → check cleared → check voided is an *operational* sequence, captured as `Event` rows. The financial ledger only sees the cleared cash event (which writes one `indemnity_payment` or `expense_payment` `FinancialTransaction`). If a cleared check is later voided, that writes a `correction_reversal` with inverted postings — the original financial event is never edited or supersession-flagged; the audit trail shows both events.
 
-**True bitemporality.** `effective_at` is when the transaction is effective in the claim's business timeline; `recorded_at` is when the system recorded it. Together they support backdated entries, corrections, audit restatements, and as-of-then-from-now loss runs. Querying as-of-any-pair is mediated by the `get_financials_as_of(exposure_id, as_of_effective, as_of_recorded)` Python tool (§9) — specialists do not write bitemporal SQL.
+**True bitemporality.** `effective_at` is when the transaction is effective in the claim's business timeline; `recorded_at` is when the system recorded it. Together they support backdated entries, corrections, audit restatements, and as-of-then-from-now loss runs. Querying as-of-any-pair is mediated by the `get_financials_as_of(request_id, as_of_effective, as_of_recorded)` Python tool (§9) — specialists do not write bitemporal SQL.
 
 **Derived snapshot view.**
 
 ```
 ExposureSnapshot  // computed, not source-of-truth
-  exposure_id
+  request_id
   component
   outstanding
   paid_to_date
@@ -442,13 +442,13 @@ ExposureSnapshot  // computed, not source-of-truth
 
 ### Aggregate limits tracker
 
-Per-occurrence and aggregate limits live on `CoveragePart`. With multi-exposure claims, specialists at the exposure level can't see when sibling exposures have eroded the shared limit. The tracker rolls this up at the claim level.
+Per-occurrence and aggregate limits live on `PolicyCoverage`. With multi-exposure claims, specialists at the exposure level can't see when sibling exposures have eroded the shared limit. The tracker rolls this up at the claim level.
 
 ```
 AggregateLimitsTracker
   tracker_id (PK)
   claim_id (FK)
-  coverage_part_id (FK)
+  coverage_id (FK)
   limit_basis (enum: per_occurrence, per_person, aggregate, per_loss)
   limit_amount
   consumed_amount  // computed: SUM(paid + outstanding) across child exposures
@@ -464,7 +464,7 @@ Maintained as a view computed from `FinancialPosting` rows on the relevant expos
 ```
 Recovery  // single-exposure attachment
   recovery_id (PK)
-  exposure_id (FK)
+  request_id (FK)
   recovery_type (enum: subrogation, salvage, contribution, deductible_recovery,
                        restitution, reinsurance_reimbursement)
   status (enum: potential, referred, demanded, in_arbitration, in_litigation, recovered, abandoned)
@@ -518,7 +518,7 @@ Document types: police_report, recorded_statement, medical_record, medical_bill,
 ```
 DiaryTask
   diary_id (PK)
-  exposure_id (FK)
+  request_id (FK)
   task_type (enum: follow_up, document_request, payment_processing, notice_send,
                    reserve_review, recovery_review, closure_review)
   due_date
@@ -527,7 +527,7 @@ DiaryTask
 
 AuthorityRequest
   request_id (PK)
-  exposure_id (FK)
+  request_id (FK)
   requested_action (enum: reserve_change, payment_authorize, settlement_authorize,
                           counsel_assign, expert_engage, recovery_pursue, recovery_waive, close)
   requested_amount (nullable)
@@ -547,7 +547,7 @@ AuthorityDecision
 
 NoticeObligation
   notice_id (PK)
-  exposure_id (FK)
+  request_id (FK)
   notice_type (enum: excess_carrier, reinsurer, client, DOI, court, Medicare_Section_111)
   triggered_by_event_id (FK)
   required_by_date
@@ -561,7 +561,7 @@ NoticeObligation
 ```
 Lien
   lien_id (PK)
-  exposure_id (FK)
+  request_id (FK)
   lien_type (enum: hospital, medical_provider, ERISA, Medicare_conditional_payment,
                    Medicaid, attorney, child_support, workers_comp)
   lienholder_party_id (FK → Party)
@@ -572,7 +572,7 @@ Lien
 
 MedicareReportingStatus  // shape modeled for Closure to detect obligation; not a functioning S111 filer
   reporting_id (PK)
-  exposure_id (FK)
+  request_id (FK)
   claimant_medicare_eligible (bool)
   ORM_status (enum: not_applicable, ongoing, terminated)
   TPOC_required (bool, nullable)
@@ -588,7 +588,7 @@ MedicareReportingStatus  // shape modeled for Closure to detect obligation; not 
 Event
   event_id (PK)
   claim_id (FK)
-  exposure_id (FK, nullable)
+  request_id (FK, nullable)
   event_type (enum: fnol, coverage_determined, exposure_added, liability_assessed,
                     financial_transaction_recorded, document_received,
                     authority_requested, authority_decided,
@@ -612,7 +612,7 @@ Two first-class entities back the AI side of the substrate. They are populated b
 AgentAction  // the audit row for every specialist invocation
   agent_action_id (PK)
   specialist (enum: brief, coverage, liability, reserve, recovery, closure)
-  exposure_id (FK, nullable — Brief refreshes are claim-scoped)
+  request_id (FK, nullable — Brief refreshes are claim-scoped)
   claim_id (FK)
   prompt_version
   model_id  // e.g., claude-sonnet-4-6
@@ -953,7 +953,7 @@ For a real customer pilot: 10K-50K real claims, real documents, real configurati
 - **Programmatic fuzzing (Pass 3):** Python post-pass. Deterministic given a seed. Excluded from eval-set holdouts.
 - **Document extraction:** Anthropic SDK. Per-specialist prompts.
 - **Eval framework:** layered (§7). Layer C-statutory and C-policy are pure code. Layer D judgment runs through a different LLM than the generator (cross-model). Layer E calibration is computed from `AgentAction.output_json` predicted probabilities bucketed against Layer A / Layer C-statutory ground truth — pure code, runs on every AIP Evals run.
-- **Bitemporal access.** Specialists access ledger state via `get_financials_as_of(exposure_id, as_of_effective, as_of_recorded) → ExposureFinancialSnapshot`. Implemented in Python with window-function SQL against `FinancialPosting`. **Specialists never write bitemporal SQL.** DuckDB has no native `AS OF SYSTEM TIME` and LLMs are unreliable at authoring temporal SQL.
+- **Bitemporal access.** Specialists access ledger state via `get_financials_as_of(request_id, as_of_effective, as_of_recorded) → ExposureFinancialSnapshot`. Implemented in Python with window-function SQL against `FinancialPosting`. **Specialists never write bitemporal SQL.** DuckDB has no native `AS OF SYSTEM TIME` and LLMs are unreliable at authoring temporal SQL.
 - **Versioning.** Versioned document artifacts via Git-LFS are authoritative. Seed reproduces only the structured/sampling layer.
 - **Generation idempotency and caching.** Idempotent per `(claim_id, document_type, pass_number)`. Successful generations cached.
 - **Source-event traceability.** Every synthetic claim retains its `source_event_id`.

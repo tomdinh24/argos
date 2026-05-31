@@ -65,7 +65,7 @@ class LiabilityDraft(BaseModel):
 
 
 class LiabilityAnalysis(BaseModel):
-    exposure_id: str
+    request_id: str
     reviewed_as_of: datetime
 
     jurisdiction: str = Field(description="State or jurisdiction code, e.g. 'FL'")

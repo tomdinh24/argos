@@ -66,7 +66,7 @@ class RecoveryDemandDraft(BaseModel):
 
 
 class RecoveryAnalysis(BaseModel):
-    exposure_id: str
+    request_id: str
     reviewed_as_of: datetime
 
     opportunity: Assessment = Field(

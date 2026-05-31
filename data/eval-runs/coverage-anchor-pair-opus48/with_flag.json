@@ -1,0 +1,397 @@
+{
+  "variant": "with_flag",
+  "model": "claude-opus-4-8",
+  "attempts": 1,
+  "analysis": {
+    "exposure_id": "EXP-2023-04471-REYES-BI",
+    "reviewed_as_of": "2023-03-16T00:00:00Z",
+    "evidence_found": [
+      {
+        "document_id": "DOC-001",
+        "locator": "Declarations \u2014 Liability Coverage",
+        "text_excerpt": "Bodily Injury / Property Damage Combined Single Limit ..... $1,000,000",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-001",
+        "locator": "Declarations \u2014 Policy Period",
+        "text_excerpt": "Policy Period: 01/01/2023 12:01 A.M. to 01/01/2024 12:01 A.M. (Standard Time)",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-001",
+        "locator": "Declarations \u2014 Covered Autos Symbols",
+        "text_excerpt": "Liability (Sym. 7) ............. Specifically Described Autos",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-001",
+        "locator": "Declarations \u2014 Schedule of Covered Autos",
+        "text_excerpt": "Unit 14: 2019 Freightliner M2-106, VIN 1FVACWDT9KHKL4218, GVWR 24,500 lbs,",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-001",
+        "locator": "Declarations \u2014 Driver Eligibility",
+        "text_excerpt": "All scheduled drivers must hold a valid CDL Class B for Unit 14.",
+        "relation": "contextual"
+      },
+      {
+        "document_id": "DOC-002",
+        "locator": "Police Report \u2014 Vehicles V-1",
+        "text_excerpt": "V-1: 2019 Freightliner M2-106 (24-ft box truck, no trailer), tag FL-TRK-Q4218.\n     Owner: Northwind Logistics LLC. Insurer: per policy NWL-CA-024471.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-002",
+        "locator": "Police Report \u2014 Vehicles V-1 Driver",
+        "text_excerpt": "Driver: Aliyah, Marcus J., M/47, FL CDL A2241, DOB 12/04/1975.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-002",
+        "locator": "Police Report \u2014 Narrative",
+        "text_excerpt": "V-1, traveling directly behind V-2 in the same lane, failed to\nslow in time. V-1 front struck V-2 rear at approximately 12 MPH closing\nspeed.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-002",
+        "locator": "Police Report \u2014 Driver statement",
+        "text_excerpt": "When asked about the purpose of the trip, V-1 driver stated, \"I was on my way home for the day.\"",
+        "relation": "contextual"
+      },
+      {
+        "document_id": "DOC-002",
+        "locator": "Police Report \u2014 Citations",
+        "text_excerpt": "V-1 driver Aliyah cited under FSS 316.0895(1) \u2014 Following Too Closely.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-002",
+        "locator": "Police Report \u2014 Injuries",
+        "text_excerpt": "V-2 driver Reyes complained of neck and lower-back pain on scene; transported\nnon-emergency by HCFR to Tampa General. Coded \"Possible Injury (C).\"",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-003",
+        "locator": "Recorded Statement \u2014 purpose of trip",
+        "text_excerpt": "I was returning to the terminal. That's, uh, that's the protocol.\n            Log the truck in, do the post-trip inspection, drop the keys.\n            Before I, you know, before I clock out.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-003",
+        "locator": "Recorded Statement \u2014 assigned route",
+        "text_excerpt": "Yes ma'am. Causeway is the route back to the terminal.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-003",
+        "locator": "Recorded Statement \u2014 driver of Unit 14",
+        "text_excerpt": "Yes. Almost always. There's another driver who drives it when I'm\n            off, but, you know, it's my, my regular unit.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-004",
+        "locator": "Dispatch Log \u2014 final drop",
+        "text_excerpt": "12    15:51   4471 E Adamo Dr (warehouse A)      delivery   completed   [final drop]",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-004",
+        "locator": "Dispatch Log \u2014 authorization",
+        "text_excerpt": "Marcus Aliyah is the assigned driver of Unit 14 for the\n  2023-03-13 BR-Mon-A route. No reassignment, no swap.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-004",
+        "locator": "Dispatch Log \u2014 on-duty determination",
+        "text_excerpt": "Vehicle use during the\n  return leg (Adamo \u2192 Causeway terminal) is on-duty per Northwind operations\n  manual \u00a74.3 (truck must be returned to terminal before driver clock-out).",
+        "relation": "supports"
+      }
+    ],
+    "assessments": [
+      {
+        "claim_text": "The loss occurred within the policy period.",
+        "probability": 0.99,
+        "reasoning": "The declarations show the policy period running 01/01/2023 to 01/01/2024, and the police report and dispatch log both place the crash on 03/13/2023, squarely within that window.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-001",
+            "locator": "Declarations \u2014 Policy Period",
+            "text_excerpt": "Policy Period: 01/01/2023 12:01 A.M. to 01/01/2024 12:01 A.M. (Standard Time)",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-002",
+            "locator": "Police Report \u2014 Header",
+            "text_excerpt": "Date of Crash: 03/13/2023      Time: 16:42 hrs       Day: Mon",
+            "relation": "supports"
+          }
+        ]
+      },
+      {
+        "claim_text": "The vehicle involved (Unit 14) is a specifically scheduled covered auto under the liability coverage.",
+        "probability": 0.98,
+        "reasoning": "Liability is written on Symbol 7 (Specifically Described Autos), and Unit 14, a 2019 Freightliner M2-106 with VIN 1FVACWDT9KHKL4218, appears on the schedule of covered autos. The police report identifies the V-1 vehicle as the same 2019 Freightliner M2-106 owned by Northwind Logistics under this policy.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-001",
+            "locator": "Declarations \u2014 Covered Autos Symbols",
+            "text_excerpt": "Liability (Sym. 7) ............. Specifically Described Autos",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-001",
+            "locator": "Declarations \u2014 Schedule of Covered Autos",
+            "text_excerpt": "Unit 14: 2019 Freightliner M2-106, VIN 1FVACWDT9KHKL4218, GVWR 24,500 lbs,",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-002",
+            "locator": "Police Report \u2014 Vehicles V-1",
+            "text_excerpt": "V-1: 2019 Freightliner M2-106 (24-ft box truck, no trailer), tag FL-TRK-Q4218.\n     Owner: Northwind Logistics LLC. Insurer: per policy NWL-CA-024471.",
+            "relation": "supports"
+          }
+        ]
+      },
+      {
+        "claim_text": "The driver, Marcus Aliyah, was a permissive/scheduled user operating the covered auto with the insured's authorization at the time of loss.",
+        "probability": 0.95,
+        "reasoning": "The dispatch log identifies Aliyah as the assigned driver of Unit 14 for the BR-Mon-A route with no reassignment or swap, and the driver eligibility requirement is a valid CDL; the police report records Aliyah holding FL CDL A2241. Aliyah's recorded statement confirms Unit 14 is his regular unit.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-004",
+            "locator": "Dispatch Log \u2014 authorization",
+            "text_excerpt": "Marcus Aliyah is the assigned driver of Unit 14 for the\n  2023-03-13 BR-Mon-A route. No reassignment, no swap.",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-002",
+            "locator": "Police Report \u2014 Vehicles V-1 Driver",
+            "text_excerpt": "Driver: Aliyah, Marcus J., M/47, FL CDL A2241, DOB 12/04/1975.",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-003",
+            "locator": "Recorded Statement \u2014 driver of Unit 14",
+            "text_excerpt": "Yes. Almost always. There's another driver who drives it when I'm\n            off, but, you know, it's my, my regular unit.",
+            "relation": "supports"
+          }
+        ]
+      },
+      {
+        "claim_text": "The vehicle was being used within the scope of business operations (in-scope use) at the time of loss, notwithstanding the driver's police-report remark about heading home.",
+        "probability": 0.88,
+        "reasoning": "The dispatch log expressly characterizes the return leg from the Adamo warehouse to the Causeway terminal as on-duty per Northwind operations manual \u00a74.3 (truck must be returned before clock-out), and Aliyah's recorded statement states he was returning to the terminal to log the truck in and perform the post-trip inspection before clocking out. The police report's quote 'I was on my way home for the day' introduces some tension regarding scope of use, but the dispatch log and recorded statement both indicate the return-to-terminal leg was a required operational task. The final drop logged at 15:51 and the incident at 16:42 are consistent with the return leg.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-004",
+            "locator": "Dispatch Log \u2014 on-duty determination",
+            "text_excerpt": "Vehicle use during the\n  return leg (Adamo \u2192 Causeway terminal) is on-duty per Northwind operations\n  manual \u00a74.3 (truck must be returned to terminal before driver clock-out).",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-003",
+            "locator": "Recorded Statement \u2014 purpose of trip",
+            "text_excerpt": "I was returning to the terminal. That's, uh, that's the protocol.\n            Log the truck in, do the post-trip inspection, drop the keys.\n            Before I, you know, before I clock out.",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-002",
+            "locator": "Police Report \u2014 Driver statement",
+            "text_excerpt": "When asked about the purpose of the trip, V-1 driver stated, \"I was on my way home for the day.\"",
+            "relation": "refutes"
+          }
+        ]
+      },
+      {
+        "claim_text": "The loss constitutes a covered 'accident' resulting in bodily injury within the meaning of the auto BI coverage.",
+        "probability": 0.96,
+        "reasoning": "The police report describes a front-to-rear two-vehicle crash and codes the V-2 driver Reyes as 'Possible Injury (C)' with neck and lower-back pain, transported to Tampa General. This is an accidental occurrence giving rise to bodily injury claimed against the insured driver.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-002",
+            "locator": "Police Report \u2014 Injuries",
+            "text_excerpt": "V-2 driver Reyes complained of neck and lower-back pain on scene; transported\nnon-emergency by HCFR to Tampa General. Coded \"Possible Injury (C).\"",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-002",
+            "locator": "Police Report \u2014 Narrative",
+            "text_excerpt": "V-1, traveling directly behind V-2 in the same lane, failed to\nslow in time. V-1 front struck V-2 rear at approximately 12 MPH closing\nspeed.",
+            "relation": "supports"
+          }
+        ]
+      }
+    ],
+    "synthesis": {
+      "outcomes": [
+        {
+          "claim_text": "Clean coverage: the BI exposure is covered with no reservation needed.",
+          "probability": 0.85,
+          "reasoning": "Each coverage element is satisfied on the documents: in-period loss, scheduled covered auto, authorized/assigned driver, accidental bodily injury, and a return-to-terminal use that the dispatch log expressly classifies as on-duty under the operations manual. There is no exclusion implicated on the record provided.",
+          "evidence_citations": [
+            {
+              "document_id": "DOC-004",
+              "locator": "Dispatch Log \u2014 on-duty determination",
+              "text_excerpt": "Vehicle use during the\n  return leg (Adamo \u2192 Causeway terminal) is on-duty per Northwind operations\n  manual \u00a74.3 (truck must be returned to terminal before driver clock-out).",
+              "relation": "supports"
+            },
+            {
+              "document_id": "DOC-001",
+              "locator": "Declarations \u2014 Schedule of Covered Autos",
+              "text_excerpt": "Unit 14: 2019 Freightliner M2-106, VIN 1FVACWDT9KHKL4218, GVWR 24,500 lbs,",
+              "relation": "supports"
+            }
+          ]
+        },
+        {
+          "claim_text": "Reservation of rights: coverage proceeds subject to a reservation pending resolution of the scope-of-use question raised by the driver's 'on my way home' statement.",
+          "probability": 0.13,
+          "reasoning": "The police report records the driver telling the deputy 'I was on my way home for the day,' which is in tension with the dispatch log's on-duty characterization and the recorded statement's return-to-terminal account. An adjuster may wish to preserve rights while reconciling whether the return leg was business use versus a personal commute.",
+          "evidence_citations": [
+            {
+              "document_id": "DOC-002",
+              "locator": "Police Report \u2014 Driver statement",
+              "text_excerpt": "When asked about the purpose of the trip, V-1 driver stated, \"I was on my way home for the day.\"",
+              "relation": "supports"
+            },
+            {
+              "document_id": "DOC-003",
+              "locator": "Recorded Statement \u2014 purpose of trip",
+              "text_excerpt": "I was returning to the terminal. That's, uh, that's the protocol.\n            Log the truck in, do the post-trip inspection, drop the keys.\n            Before I, you know, before I clock out.",
+              "relation": "contextual"
+            }
+          ]
+        },
+        {
+          "claim_text": "Denial: the exposure falls outside coverage.",
+          "probability": 0.02,
+          "reasoning": "No exclusion or coverage defect is supported on the record. The vehicle is scheduled, the driver is assigned, the loss is in-period, and the only adverse note (the 'on my way home' remark) is outweighed by the dispatch log's express on-duty classification. Denial is a remote outcome.",
+          "evidence_citations": [
+            {
+              "document_id": "DOC-004",
+              "locator": "Dispatch Log \u2014 authorization",
+              "text_excerpt": "Marcus Aliyah is the assigned driver of Unit 14 for the\n  2023-03-13 BR-Mon-A route. No reassignment, no swap.",
+              "relation": "refutes"
+            }
+          ]
+        }
+      ],
+      "would_shift_distribution": [
+        "The Northwind operations manual \u00a74.3 text itself, to confirm the return-to-terminal leg is mandated business use",
+        "Driver clock-in/clock-out (timekeeping) records showing whether Aliyah was on the clock at 16:42",
+        "Any prior reconciliation of the police-report 'on my way home' statement against the recorded statement",
+        "Confirmation of garaging/route geography establishing that Causeway is the necessary return path to the terminal",
+        "Medical records confirming the nature and extent of Reyes's claimed bodily injury"
+      ]
+    },
+    "coverage_analysis_memo": {
+      "body": "COVERAGE ANALYSIS MEMO \u2014 EXP-2023-04471-REYES-BI (Claim CLM-2023-04471)\n\nExposure: Third-party auto bodily-injury claim by Janet M. Reyes (V-2 driver) against Northwind Logistics, LLC, arising from a 03/13/2023 rear-end collision in Tampa, FL involving scheduled Unit 14 (2019 Freightliner M2-106), driver Marcus Aliyah. Targeted coverage part: auto BI, CSL $1,000,000 each accident.\n\n1. POLICY STATUS / TRIGGER. The policy period runs '01/01/2023 12:01 A.M. to 01/01/2024 12:01 A.M.' The crash occurred 03/13/2023 per the Hillsborough County crash report ('Date of Crash: 03/13/2023      Time: 16:42 hrs'). The loss falls within the policy period.\n\n2. COVERED AUTO. Liability is written on Symbol 7 ('Liability (Sym. 7) ............. Specifically Described Autos'). Unit 14 appears on the schedule ('Unit 14: 2019 Freightliner M2-106, VIN 1FVACWDT9KHKL4218'). The crash report identifies V-1 as the same '2019 Freightliner M2-106 (24-ft box truck, no trailer)' owned by 'Northwind Logistics LLC. Insurer: per policy NWL-CA-024471.' The vehicle is a scheduled covered auto.\n\n3. DRIVER / PERMISSIVE USE. The dispatch log states 'Marcus Aliyah is the assigned driver of Unit 14 for the 2023-03-13 BR-Mon-A route. No reassignment, no swap.' The crash report records the driver as 'Aliyah, Marcus J., M/47, FL CDL A2241,' consistent with the eligibility requirement of a valid CDL. The driver's recorded statement confirms Unit 14 is 'my, my regular unit.'\n\n4. SCOPE OF USE. The dispatch log characterizes the return leg as on-duty: 'Vehicle use during the return leg (Adamo \u2192 Causeway terminal) is on-duty per Northwind operations manual \u00a74.3 (truck must be returned to terminal before driver clock-out).' The final delivery was logged at 15:51 ('4471 E Adamo Dr (warehouse A) delivery completed [final drop]') and the incident at 16:42, consistent with the return leg. In his recorded statement the driver said he was 'returning to the terminal... Log the truck in, do the post-trip inspection, drop the keys. Before I, you know, before I clock out.' A point of tension exists: in the crash report the driver told the deputy, 'I was on my way home for the day.' This statement is in tension with the dispatch log's on-duty classification and the recorded statement and bears on whether the return leg was business use or a personal commute.\n\n5. BODILY INJURY / ACCIDENT. The crash report describes a front-to-rear collision ('V-1 front struck V-2 rear at approximately 12 MPH closing speed') and codes Reyes as injured: 'V-2 driver Reyes complained of neck and lower-back pain on scene; transported non-emergency by HCFR to Tampa General. Coded \"Possible Injury (C).\"' An accidental bodily-injury occurrence is presented.\n\n6. DISTRIBUTION. Over {clean coverage, ROR, denial}: 0.85 / 0.13 / 0.02. The principal open item driving any reservation is the reconciliation of the 'on my way home' statement against the on-duty classification in the dispatch log and the recorded statement.\n\n7. ITEMS THAT WOULD SHIFT THE ANALYSIS. Operations manual \u00a74.3 text; driver timekeeping records for 03/13/2023; confirmation of route geography; and Reyes's medical records on the nature/extent of injury.\n\nThis memo states the analysis and the distribution; it does not recommend a path.",
+      "citations": [
+        {
+          "document_id": "DOC-001",
+          "locator": "Declarations \u2014 Policy Period",
+          "text_excerpt": "Policy Period: 01/01/2023 12:01 A.M. to 01/01/2024 12:01 A.M. (Standard Time)",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-001",
+          "locator": "Declarations \u2014 Covered Autos Symbols",
+          "text_excerpt": "Liability (Sym. 7) ............. Specifically Described Autos",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-001",
+          "locator": "Declarations \u2014 Schedule of Covered Autos",
+          "text_excerpt": "Unit 14: 2019 Freightliner M2-106, VIN 1FVACWDT9KHKL4218, GVWR 24,500 lbs,",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-002",
+          "locator": "Police Report \u2014 Header",
+          "text_excerpt": "Date of Crash: 03/13/2023      Time: 16:42 hrs       Day: Mon",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-002",
+          "locator": "Police Report \u2014 Vehicles V-1",
+          "text_excerpt": "V-1: 2019 Freightliner M2-106 (24-ft box truck, no trailer), tag FL-TRK-Q4218.\n     Owner: Northwind Logistics LLC. Insurer: per policy NWL-CA-024471.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-002",
+          "locator": "Police Report \u2014 Injuries",
+          "text_excerpt": "V-2 driver Reyes complained of neck and lower-back pain on scene; transported\nnon-emergency by HCFR to Tampa General. Coded \"Possible Injury (C).\"",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-002",
+          "locator": "Police Report \u2014 Driver statement",
+          "text_excerpt": "When asked about the purpose of the trip, V-1 driver stated, \"I was on my way home for the day.\"",
+          "relation": "contextual"
+        },
+        {
+          "document_id": "DOC-003",
+          "locator": "Recorded Statement \u2014 purpose of trip",
+          "text_excerpt": "I was returning to the terminal. That's, uh, that's the protocol.\n            Log the truck in, do the post-trip inspection, drop the keys.\n            Before I, you know, before I clock out.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-004",
+          "locator": "Dispatch Log \u2014 on-duty determination",
+          "text_excerpt": "Vehicle use during the\n  return leg (Adamo \u2192 Causeway terminal) is on-duty per Northwind operations\n  manual \u00a74.3 (truck must be returned to terminal before driver clock-out).",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-004",
+          "locator": "Dispatch Log \u2014 final drop",
+          "text_excerpt": "12    15:51   4471 E Adamo Dr (warehouse A)      delivery   completed   [final drop]",
+          "relation": "supports"
+        }
+      ]
+    },
+    "ror_letter": {
+      "body": "RESERVATION OF RIGHTS \u2014 ANALYSIS DRAFT\nRe: Claim CLM-2023-04471 / Exposure EXP-2023-04471-REYES-BI\nPolicy NWL-CA-024471 \u2014 Northwind Logistics, LLC\nLoss Date: 03/13/2023\n\nThis letter describes a coverage question presented by the file. It is provided for the insured's information regarding the basis on which the claim is being handled and is not a determination that coverage is owed or excluded.\n\nThe claim arises from a 03/13/2023 collision in which scheduled Unit 14 (2019 Freightliner M2-106), driven by Marcus Aliyah, struck the rear of a vehicle operated by Janet Reyes, who reported injury. The crash report records: 'V-2 driver Reyes complained of neck and lower-back pain on scene; transported non-emergency by HCFR to Tampa General. Coded \"Possible Injury (C).\"'\n\nOPEN COVERAGE QUESTION \u2014 SCOPE OF USE. The record contains conflicting accounts of the purpose of the trip at the time of loss. In the crash report the driver stated, 'I was on my way home for the day.' In contrast, the dispatch log states that 'Vehicle use during the return leg (Adamo \u2192 Causeway terminal) is on-duty per Northwind operations manual \u00a74.3 (truck must be returned to terminal before driver clock-out),' and the driver's recorded statement describes 'returning to the terminal... Before I, you know, before I clock out.' Because these accounts bear on whether the vehicle was being used within the scope of the insured's business operations, the carrier is handling the matter while this question is resolved and reserves its rights under the policy with respect to it.\n\nThe carrier requests the Northwind operations manual \u00a74.3, driver timekeeping records for 03/13/2023, and any related documentation bearing on the purpose of the return leg.\n\nThis draft states the open question and reserves rights; it does not recommend or adopt any coverage position.",
+      "citations": [
+        {
+          "document_id": "DOC-002",
+          "locator": "Police Report \u2014 Driver statement",
+          "text_excerpt": "When asked about the purpose of the trip, V-1 driver stated, \"I was on my way home for the day.\"",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-004",
+          "locator": "Dispatch Log \u2014 on-duty determination",
+          "text_excerpt": "Vehicle use during the\n  return leg (Adamo \u2192 Causeway terminal) is on-duty per Northwind operations\n  manual \u00a74.3 (truck must be returned to terminal before driver clock-out).",
+          "relation": "contextual"
+        },
+        {
+          "document_id": "DOC-003",
+          "locator": "Recorded Statement \u2014 purpose of trip",
+          "text_excerpt": "I was returning to the terminal. That's, uh, that's the protocol.\n            Log the truck in, do the post-trip inspection, drop the keys.\n            Before I, you know, before I clock out.",
+          "relation": "contextual"
+        },
+        {
+          "document_id": "DOC-002",
+          "locator": "Police Report \u2014 Injuries",
+          "text_excerpt": "V-2 driver Reyes complained of neck and lower-back pain on scene; transported\nnon-emergency by HCFR to Tampa General. Coded \"Possible Injury (C).\"",
+          "relation": "supports"
+        }
+      ]
+    }
+  },
+  "checks": {
+    "citation_verifier": {
+      "passed": true,
+      "total_checked": 49,
+      "violations": []
+    },
+    "recommendation_regex": {
+      "passed": true,
+      "drafts_checked": 2,
+      "hits": []
+    },
+    "premise_grounding": null
+  }
+}

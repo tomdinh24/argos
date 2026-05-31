@@ -1,0 +1,404 @@
+{
+  "exposure_id": "EXP-2023-04471-REYES-BI",
+  "reviewed_as_of": "2025-01-31T12:00:00Z",
+  "evidence_found": [
+    {
+      "document_id": "DOC-001",
+      "locator": "Declarations Page \u2014 Covered Autos Symbols / Schedule of Covered Autos",
+      "text_excerpt": "Unit 14: 2019 Freightliner M2-106, VIN 1FVACWDT9KHKL4218, GVWR 24,500 lbs, Body: Box truck (24-ft), Garage: Tampa terminal, Class 2-D-T-1 (radius \u2264 200 mi, secondary class T \u2014 Truck), Use: pickup/delivery \u2014 general commodities. Liability + Comp + Collision.",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-001",
+      "locator": "Declarations Page \u2014 Covered Autos Symbols",
+      "text_excerpt": "Liability (Sym. 7) ............. Specifically Described Autos",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-001",
+      "locator": "Declarations Page \u2014 Liability Coverage",
+      "text_excerpt": "Bodily Injury / Property Damage Combined Single Limit ..... $1,000,000\n  Each Accident                                              $1,000,000\n  Deductible (Liability) ............................................. $0",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-001",
+      "locator": "Declarations Page \u2014 Policy Period",
+      "text_excerpt": "Policy Period: 01/01/2023 12:01 A.M. to 01/01/2024 12:01 A.M. (Standard Time)",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-001",
+      "locator": "Declarations Page \u2014 Driver Eligibility",
+      "text_excerpt": "All scheduled drivers must hold a valid CDL Class B for Unit 14. Annual MVR pull by Producer. Drivers must be 23 years of age or older with three years documented commercial driving experience.",
+      "relation": "contextual"
+    },
+    {
+      "document_id": "DOC-002",
+      "locator": "Traffic Crash Report \u2014 Vehicles / V-1",
+      "text_excerpt": "V-1: 2019 Freightliner M2-106 (24-ft box truck, no trailer), tag FL-TRK-Q4218. Owner: Northwind Logistics LLC. Insurer: per policy NWL-CA-024471. Driver: Aliyah, Marcus J., M/47, FL CDL A2241, DOB 12/04/1975.",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-002",
+      "locator": "Traffic Crash Report \u2014 Citations / Violations",
+      "text_excerpt": "V-1 driver Aliyah cited under FSS 316.0895(1) \u2014 Following Too Closely.",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-002",
+      "locator": "Traffic Crash Report \u2014 Injuries",
+      "text_excerpt": "V-2 driver Reyes complained of neck and lower-back pain on scene; transported non-emergency by HCFR to Tampa General. Coded \"Possible Injury (C).\"",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-002",
+      "locator": "Traffic Crash Report \u2014 Contributing Factors",
+      "text_excerpt": "V-1: Improper following distance (primary). No alcohol, no drugs. Not distracted per driver statement (hands-free only; no call active).",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-003",
+      "locator": "Recorded Statement \u2014 Aliyah, purpose of trip",
+      "text_excerpt": "I was returning to the terminal. That's, uh, that's the protocol. Log the truck in, do the post-trip inspection, drop the keys. Before I, you know, before I clock out.",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-003",
+      "locator": "Recorded Statement \u2014 Aliyah, assigned route",
+      "text_excerpt": "Yes ma'am. Causeway is the route back to the terminal. There's not really another way to get there from the Adamo warehouse, unless you wanted to go all the way around on the interstate, which, you know, nobody does.",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-004",
+      "locator": "Dispatch Log \u2014 Authorization / final drop / incident",
+      "text_excerpt": "Authorization: Marcus Aliyah is the assigned driver of Unit 14 for the 2023-03-13 BR-Mon-A route. No reassignment, no swap. Vehicle use during the return leg (Adamo \u2192 Causeway terminal) is on-duty per Northwind operations manual \u00a74.3 (truck must be returned to terminal before driver clock-out).",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-004",
+      "locator": "Dispatch Log \u2014 Incident entry",
+      "text_excerpt": "16:42   INCIDENT REPORTED \u2014 Causeway Blvd / Bermuda Ave intersection. Driver radioed terminal at 16:44. PD dispatched. Tow scheduled 17:12. Truck inbound to terminal at time of incident; ETA to terminal was 17:00 per route plan. Post-trip inspection / unit lock-in not yet performed (incident occurred prior to scheduled check-in).",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-004",
+      "locator": "Dispatch Log \u2014 Driver / CDL",
+      "text_excerpt": "Unit 14   Driver: M. Aliyah (CDL #A2241-FL, exp. 2024-08-31)",
+      "relation": "supports"
+    }
+  ],
+  "assessments": [
+    {
+      "claim_text": "The loss date (03/13/2023) falls within the policy period.",
+      "probability": 1.0,
+      "reasoning": "The policy period runs from 01/01/2023 12:01 A.M. to 01/01/2024 12:01 A.M. The crash occurred at 16:42 on 03/13/2023. The loss date is squarely within the policy period.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-001",
+          "locator": "Declarations Page \u2014 Policy Period",
+          "text_excerpt": "Policy Period: 01/01/2023 12:01 A.M. to 01/01/2024 12:01 A.M. (Standard Time)",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-002",
+          "locator": "Traffic Crash Report \u2014 Date/Time",
+          "text_excerpt": "Date of Crash: 03/13/2023      Time: 16:42 hrs",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "Unit 14 (2019 Freightliner M2-106) is a specifically described covered auto under the policy and carries liability coverage.",
+      "probability": 1.0,
+      "reasoning": "The declarations page explicitly schedules Unit 14 with liability, comprehensive, and collision coverage under Symbol 7 (Specifically Described Autos). The police report confirms the involved vehicle matches the scheduled unit by make, model, year, and owner.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-001",
+          "locator": "Declarations Page \u2014 Schedule of Covered Autos",
+          "text_excerpt": "Unit 14: 2019 Freightliner M2-106, VIN 1FVACWDT9KHKL4218, GVWR 24,500 lbs, Body: Box truck (24-ft), Garage: Tampa terminal, Class 2-D-T-1 (radius \u2264 200 mi, secondary class T \u2014 Truck), Use: pickup/delivery \u2014 general commodities. Liability + Comp + Collision.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-002",
+          "locator": "Traffic Crash Report \u2014 Vehicles / V-1",
+          "text_excerpt": "V-1: 2019 Freightliner M2-106 (24-ft box truck, no trailer), tag FL-TRK-Q4218. Owner: Northwind Logistics LLC. Insurer: per policy NWL-CA-024471.",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "Driver Marcus Aliyah was an authorized driver operating Unit 14 in the course and scope of his assigned duties at the time of the loss.",
+      "probability": 0.97,
+      "reasoning": "The dispatch log confirms Aliyah as the assigned driver for the BR-Mon-A route on 03/13/2023 with no reassignment or swap. The log explicitly classifies the return leg as on-duty per the operations manual. Aliyah's recorded statement corroborates that he was returning to the terminal per required protocol. The police report confirms his CDL (A2241) matches the dispatch log. The residual 0.03 accounts for the remote possibility that undisclosed personal deviation on the return route could be raised, though the documented route and both the dispatch log and driver statement provide consistent, on-route evidence.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-004",
+          "locator": "Dispatch Log \u2014 Authorization",
+          "text_excerpt": "Authorization: Marcus Aliyah is the assigned driver of Unit 14 for the 2023-03-13 BR-Mon-A route. No reassignment, no swap. Vehicle use during the return leg (Adamo \u2192 Causeway terminal) is on-duty per Northwind operations manual \u00a74.3 (truck must be returned to terminal before driver clock-out).",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-003",
+          "locator": "Recorded Statement \u2014 Aliyah, purpose of trip",
+          "text_excerpt": "I was returning to the terminal. That's, uh, that's the protocol. Log the truck in, do the post-trip inspection, drop the keys. Before I, you know, before I clock out.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-002",
+          "locator": "Traffic Crash Report \u2014 Vehicles / V-1",
+          "text_excerpt": "Driver: Aliyah, Marcus J., M/47, FL CDL A2241, DOB 12/04/1975.",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "Driver Aliyah satisfies the policy's driver eligibility requirements (valid CDL, age, and experience).",
+      "probability": 0.92,
+      "reasoning": "The declarations page requires all scheduled drivers to hold a valid CDL Class B for Unit 14, be 23 or older, and have three years documented commercial driving experience. The dispatch log shows Aliyah's CDL #A2241-FL with an expiration date of 2024-08-31 (valid on the loss date). Aliyah stated in his recorded statement that he is in his fourth year with Northwind. His date of birth is 12/04/1975, making him 47 at the time of the loss. However, the declarations page specifies CDL Class B minimum; the police report records his license as 'FL CDL A2241.' A CDL Class A is a higher classification that meets or exceeds Class B requirements, so there is no eligibility deficiency apparent. The residual 0.08 reflects that the file does not contain the actual MVR or a verification that the annual MVR pull was completed, leaving a small gap that could surface an undisclosed suspension or endorsement issue.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-001",
+          "locator": "Declarations Page \u2014 Driver Eligibility",
+          "text_excerpt": "All scheduled drivers must hold a valid CDL Class B for Unit 14. Annual MVR pull by Producer. Drivers must be 23 years of age or older with three years documented commercial driving experience.",
+          "relation": "contextual"
+        },
+        {
+          "document_id": "DOC-004",
+          "locator": "Dispatch Log \u2014 Driver / CDL",
+          "text_excerpt": "Unit 14   Driver: M. Aliyah (CDL #A2241-FL, exp. 2024-08-31)",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-003",
+          "locator": "Recorded Statement \u2014 Aliyah, tenure",
+          "text_excerpt": "Uh, this'll be my, this is my fourth year. I think \u2014 yeah, four years in May.",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "The claimant Janet Reyes suffered a bodily injury arising out of a covered auto accident, triggering the auto BI coverage part.",
+      "probability": 0.96,
+      "reasoning": "The police report documents Reyes's injury complaints (neck and lower-back pain), her transport to Tampa General, and codes her injury as 'Possible Injury (C).' The crash was caused by V-1 (Unit 14) rear-ending V-2 (Reyes's Civic). The citation against Aliyah for following too closely under FSS 316.0895(1) establishes a clear nexus between the covered vehicle's operation and the bodily injury claim. The residual probability accounts for the nascent medical picture \u2014 the injury is coded 'possible' rather than confirmed at this stage \u2014 and for the early stage of medical documentation.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-002",
+          "locator": "Traffic Crash Report \u2014 Injuries",
+          "text_excerpt": "V-2 driver Reyes complained of neck and lower-back pain on scene; transported non-emergency by HCFR to Tampa General. Coded \"Possible Injury (C).\"",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-002",
+          "locator": "Traffic Crash Report \u2014 Citations / Violations",
+          "text_excerpt": "V-1 driver Aliyah cited under FSS 316.0895(1) \u2014 Following Too Closely.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-002",
+          "locator": "Traffic Crash Report \u2014 Contributing Factors",
+          "text_excerpt": "V-1: Improper following distance (primary). No alcohol, no drugs. Not distracted per driver statement (hands-free only; no call active).",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "No exclusions apparent on the face of the policy documents defeat coverage for this exposure.",
+      "probability": 0.9,
+      "reasoning": "The documents do not reveal any apparent basis for exclusion. The operation was commercial pickup/delivery use, matching the scheduled class use. The driver was not impaired. No pollution, intentional act, or workers' compensation issues are apparent. UM/UIM was rejected, which is not relevant here (Reyes is a third-party claimant, not an insured). The residual 0.10 accounts for the absence of the full ISO CA 00 01 policy form language in the file \u2014 endorsements or exclusions not visible in the declarations page could theoretically apply \u2014 and for the pending MVR confirmation noted above.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-001",
+          "locator": "Declarations Page \u2014 Schedule of Covered Autos / Use",
+          "text_excerpt": "Use: pickup/delivery \u2014 general commodities. Liability + Comp + Collision.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-002",
+          "locator": "Traffic Crash Report \u2014 Contributing Factors",
+          "text_excerpt": "No alcohol, no drugs. Not distracted per driver statement (hands-free only; no call active).",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-001",
+          "locator": "Declarations Page \u2014 UM/UIM",
+          "text_excerpt": "UNINSURED/UNDERINSURED MOTORIST:\n  Bodily Injury \u2014 Florida Statutory ........... Rejected (signed UM rejection form on file)",
+          "relation": "contextual"
+        }
+      ]
+    },
+    {
+      "claim_text": "The applicable BI limit is $1,000,000 per accident with a $0 deductible.",
+      "probability": 1.0,
+      "reasoning": "The declarations page states the combined single limit for bodily injury/property damage is $1,000,000 per accident with a $0 deductible. This matches the coverage part data for CP-NWL-2023-BI.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-001",
+          "locator": "Declarations Page \u2014 Liability Coverage",
+          "text_excerpt": "Bodily Injury / Property Damage Combined Single Limit ..... $1,000,000\n  Each Accident                                              $1,000,000\n  Deductible (Liability) ............................................. $0",
+          "relation": "supports"
+        }
+      ]
+    }
+  ],
+  "synthesis": {
+    "outcomes": [
+      {
+        "claim_text": "Clean coverage \u2014 all coverage prerequisites are met; the exposure should be handled on the merits without reservation.",
+        "probability": 0.87,
+        "reasoning": "The loss date falls within the policy period; Unit 14 is a specifically described covered auto with liability coverage; the driver was on an authorized, on-duty return leg per the dispatch log and his own recorded statement; there is a documented bodily injury to a third party arising from the covered vehicle's operation; no obvious exclusion applies. The primary open item is confirmation of the annual MVR pull and the full policy form, neither of which presently signals a coverage problem.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-004",
+            "locator": "Dispatch Log \u2014 Authorization",
+            "text_excerpt": "Authorization: Marcus Aliyah is the assigned driver of Unit 14 for the 2023-03-13 BR-Mon-A route. No reassignment, no swap. Vehicle use during the return leg (Adamo \u2192 Causeway terminal) is on-duty per Northwind operations manual \u00a74.3 (truck must be returned to terminal before driver clock-out).",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-001",
+            "locator": "Declarations Page \u2014 Liability Coverage",
+            "text_excerpt": "Bodily Injury / Property Damage Combined Single Limit ..... $1,000,000\n  Each Accident                                              $1,000,000\n  Deductible (Liability) ............................................. $0",
+            "relation": "supports"
+          }
+        ]
+      },
+      {
+        "claim_text": "Reservation of Rights \u2014 coverage is likely owed but a specific condition or potential exclusion warrants a written reservation while investigation continues.",
+        "probability": 0.11,
+        "reasoning": "A reservation posture could be appropriate if the annual MVR pull reveals a CDL suspension or disqualification that was undisclosed at policy issuance, or if review of the full CA 00 01 form and endorsements surfaces an exclusion not visible in the declarations. The driver eligibility provision requires an annual MVR pull; the file does not yet contain that document. Additionally, the full endorsement schedule (CA 99 03) has not been provided; its contents are unknown beyond the excerpt. These are investigative gaps rather than confirmed coverage problems, supporting a low but non-trivial ROR probability.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-001",
+            "locator": "Declarations Page \u2014 Driver Eligibility",
+            "text_excerpt": "All scheduled drivers must hold a valid CDL Class B for Unit 14. Annual MVR pull by Producer. Drivers must be 23 years of age or older with three years documented commercial driving experience.",
+            "relation": "contextual"
+          },
+          {
+            "document_id": "DOC-004",
+            "locator": "Dispatch Log \u2014 Driver / CDL",
+            "text_excerpt": "Unit 14   Driver: M. Aliyah (CDL #A2241-FL, exp. 2024-08-31)",
+            "relation": "contextual"
+          }
+        ]
+      },
+      {
+        "claim_text": "Denial \u2014 coverage does not apply to this exposure.",
+        "probability": 0.02,
+        "reasoning": "On the current record there is no affirmative basis for denial. The residual 0.02 reflects only the theoretical possibility that a disqualifying MVR finding or a currently unseen policy exclusion could emerge from documents not yet in the file.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-001",
+            "locator": "Declarations Page \u2014 Driver Eligibility",
+            "text_excerpt": "All scheduled drivers must hold a valid CDL Class B for Unit 14. Annual MVR pull by Producer. Drivers must be 23 years of age or older with three years documented commercial driving experience.",
+            "relation": "contextual"
+          }
+        ]
+      }
+    ],
+    "would_shift_distribution": [
+      "Receipt and review of the annual MVR pull for Marcus Aliyah \u2014 a clean MVR would shift mass toward clean coverage; a suspended or disqualified CDL would shift mass toward ROR or denial.",
+      "Receipt of the full CA 00 01 policy form and all endorsements (particularly the CA 99 03 schedule) \u2014 any undisclosed exclusion applicable to this loss type would shift mass toward ROR or denial.",
+      "Medical records and treatment confirmation from Tampa General \u2014 confirmation of a diagnosed injury (vs. 'possible injury') is relevant to damages but does not change the coverage determination.",
+      "Evidence of any personal deviation on the return route \u2014 would shift mass toward ROR if the deviation is material and triggers a frolic/detour analysis under the policy's business use classification.",
+      "Confirmation that the signed UM rejection form was properly executed \u2014 relevant only if an underinsured motorist theory were raised by the named insured, not by the third-party claimant."
+    ]
+  },
+  "coverage_analysis_memo": {
+    "body": "COVERAGE ANALYSIS MEMORANDUM\n\nFile:           CLM-2023-04471\nExposure:       EXP-2023-04471-REYES-BI\nPolicy:         NWL-CA-024471 (ISO CA 00 01)\nNamed Insured:  Northwind Logistics, LLC\nClaimant:       Janet M. Reyes\nLoss Date:      March 13, 2023\nReviewed:       January 31, 2025\nPrepared by:    Argos Coverage Specialist (AI-assisted)\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nI. COVERAGE IN EFFECT\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThe policy was in force on the loss date. The declarations page establishes a policy period of 01/01/2023 12:01 A.M. through 01/01/2024 12:01 A.M. (DOC-001). The crash occurred at 16:42 on 03/13/2023 (DOC-002), which falls squarely within the policy period.\n\nLiability coverage is written on Symbol 7 (Specifically Described Autos) with a combined single limit of $1,000,000 per accident and a $0 deductible (DOC-001).\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nII. COVERED AUTO\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nUnit 14 \u2014 a 2019 Freightliner M2-106 box truck (24-ft), VIN 1FVACWDT9KHKL4218 \u2014 is expressly scheduled on the declarations page with liability, comprehensive, and collision coverage (DOC-001). The police report confirms the involved vehicle is the same unit: 2019 Freightliner M2-106, owned by Northwind Logistics LLC, insured under policy NWL-CA-024471 (DOC-002). Vehicle identity is not in question.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIII. DRIVER AUTHORIZATION AND USE\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nMarcus Aliyah (CDL #A2241-FL, exp. 2024-08-31) was the assigned and sole authorized driver of Unit 14 on 03/13/2023 for the BR-Mon-A route (DOC-004). The dispatch log expressly confirms: \"No reassignment, no swap. Vehicle use during the return leg (Adamo \u2192 Causeway terminal) is on-duty per Northwind operations manual \u00a74.3 (truck must be returned to terminal before driver clock-out)\" (DOC-004).\n\nAliyah's recorded statement is consistent: \"I was returning to the terminal. That's, uh, that's the protocol. Log the truck in, do the post-trip inspection, drop the keys\" (DOC-003). The crash location \u2014 Causeway Blvd at Bermuda Ave \u2014 is confirmed on the inbound route from the final delivery at 4471 E Adamo Dr to the Tampa-Causeway terminal, with no indication of deviation (DOC-003; DOC-004).\n\nThe scheduled use class for Unit 14 is \"pickup/delivery \u2014 general commodities\" (DOC-001). The return-to-terminal leg following a completed delivery route falls within this use classification.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIV. DRIVER ELIGIBILITY\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThe declarations page requires all scheduled drivers to hold a valid CDL Class B, be 23 or older, and have three years of documented commercial driving experience, with an annual MVR pull by the producer (DOC-001). Aliyah's CDL is on file (Class A, #A2241-FL, valid through 08/31/2024 \u2014 DOC-004), he was 47 at the time of the loss (DOC-002), and he reported four years of employment with Northwind (DOC-003). A CDL Class A satisfies the Class B minimum requirement.\n\nOpen item: The current file does not contain the annual MVR pull. This is the primary investigative gap. Until the MVR is confirmed clean, a narrow basis for reservation exists.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nV. LOSS EVENT AND CLAIMANT INJURY\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nUnit 14 rear-ended claimant Reyes's 2022 Honda Civic at the T-intersection of Causeway Blvd and Bermuda Ave. Aliyah was cited for FSS 316.0895(1) \u2014 Following Too Closely (DOC-002). Contributing factors: V-1 improper following distance (primary); no alcohol, drugs, or distraction (DOC-002). Reyes complained of neck and lower-back pain, was transported to Tampa General, and was coded 'Possible Injury (C)' (DOC-002). The causal nexus between the covered vehicle's operation and the bodily injury claim is clearly established on the available record.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nVI. POTENTIALLY APPLICABLE EXCLUSIONS\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nNo exclusion on the face of the declarations page presently applies. There is no indication of: intentional act; pollution (DOC-001 lists CA 23 17 broadened pollution, which is an extension, not an exclusion relevant here); workers' compensation; contractual liability outside the ordinary course; or impairment. The UM/UIM rejection (DOC-001) is irrelevant to this third-party bodily injury exposure. The full ISO CA 00 01 form and the CA 99 03 endorsement schedule have not been provided to this reviewer; a complete exclusion analysis is pending receipt of those documents.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nVII. LIMIT AND DEDUCTIBLE APPLICABLE\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nCoverage Part: CP-NWL-2023-BI (auto BI, targeted by this exposure).\nLimit: $1,000,000 per accident combined single limit.\nDeductible: $0.\nNote: The CSL structure means the $1,000,000 is shared across BI and PD arising from this accident. The PD coverage part (CP-NWL-2023-PD) carries a $1,000 deductible and $500,000 limit; any property damage component of the Reyes claim would be addressed under that part.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nVIII. OUTSTANDING INVESTIGATIVE ITEMS\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n1. Annual MVR for Marcus Aliyah \u2014 obtain from producer (Gulf Coast Commercial Brokerage) to confirm CDL validity and absence of disqualifying violations.\n2. Full policy form (ISO CA 00 01) and CA 99 03 endorsement schedule \u2014 confirm no exclusions are triggered.\n3. Tampa General medical records for Janet Reyes \u2014 required for damages assessment (not a coverage prerequisite, but needed for reserve-setting).\n4. Any recorded or written statement from Reyes \u2014 standard intake.\n5. V-1 post-accident inspection report and tow/repair records \u2014 may be relevant to any subrogation or comparative fault analysis.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIX. COVERAGE PROBABILITY DISTRIBUTION\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nClean Coverage:  87%\nROR:             11%\nDenial:           2%\n\nThe dominant probability is clean coverage given the strength of the currently available record. The ROR probability is driven exclusively by the pending MVR confirmation and the absence of the full policy form \u2014 both are retrievable items. The denial probability is residual and hypothetical on the present record.\n",
+    "citations": [
+      {
+        "document_id": "DOC-001",
+        "locator": "Declarations Page \u2014 Policy Period",
+        "text_excerpt": "Policy Period: 01/01/2023 12:01 A.M. to 01/01/2024 12:01 A.M. (Standard Time)",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-001",
+        "locator": "Declarations Page \u2014 Liability Coverage",
+        "text_excerpt": "Bodily Injury / Property Damage Combined Single Limit ..... $1,000,000\n  Each Accident                                              $1,000,000\n  Deductible (Liability) ............................................. $0",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-001",
+        "locator": "Declarations Page \u2014 Schedule of Covered Autos",
+        "text_excerpt": "Unit 14: 2019 Freightliner M2-106, VIN 1FVACWDT9KHKL4218, GVWR 24,500 lbs, Body: Box truck (24-ft), Garage: Tampa terminal, Class 2-D-T-1 (radius \u2264 200 mi, secondary class T \u2014 Truck), Use: pickup/delivery \u2014 general commodities. Liability + Comp + Collision.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-002",
+        "locator": "Traffic Crash Report \u2014 Vehicles / V-1",
+        "text_excerpt": "V-1: 2019 Freightliner M2-106 (24-ft box truck, no trailer), tag FL-TRK-Q4218. Owner: Northwind Logistics LLC. Insurer: per policy NWL-CA-024471. Driver: Aliyah, Marcus J., M/47, FL CDL A2241, DOB 12/04/1975.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-002",
+        "locator": "Traffic Crash Report \u2014 Citations / Violations",
+        "text_excerpt": "V-1 driver Aliyah cited under FSS 316.0895(1) \u2014 Following Too Closely.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-002",
+        "locator": "Traffic Crash Report \u2014 Injuries",
+        "text_excerpt": "V-2 driver Reyes complained of neck and lower-back pain on scene; transported non-emergency by HCFR to Tampa General. Coded \"Possible Injury (C).\"",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-003",
+        "locator": "Recorded Statement \u2014 Aliyah, purpose of trip",
+        "text_excerpt": "I was returning to the terminal. That's, uh, that's the protocol. Log the truck in, do the post-trip inspection, drop the keys. Before I, you know, before I clock out.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-004",
+        "locator": "Dispatch Log \u2014 Authorization",
+        "text_excerpt": "Authorization: Marcus Aliyah is the assigned driver of Unit 14 for the 2023-03-13 BR-Mon-A route. No reassignment, no swap. Vehicle use during the return leg (Adamo \u2192 Causeway terminal) is on-duty per Northwind operations manual \u00a74.3 (truck must be returned to terminal before driver clock-out).",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-004",
+        "locator": "Dispatch Log \u2014 Driver / CDL",
+        "text_excerpt": "Unit 14   Driver: M. Aliyah (CDL #A2241-FL, exp. 2024-08-31)",
+        "relation": "supports"
+      }
+    ]
+  },
+  "ror_letter": {
+    "body": "RESERVATION OF RIGHTS LETTER\n[DRAFT \u2014 For Adjuster Review and Determination]\n\n[DATE]\n\nNorthwind Logistics, LLC\n4218 Causeway Blvd\nTampa, FL 33619\n\nRe:   Insured:        Northwind Logistics, LLC\n      Policy No.:     NWL-CA-024471\n      Claim No.:      CLM-2023-04471\n      Date of Loss:   March 13, 2023\n      Claimant:       Janet M. Reyes\n      Coverage Part:  Auto Bodily Injury Liability (CP-NWL-2023-BI)\n\nDear Northwind Logistics, LLC:\n\n[CARRIER NAME] (\"the Company\") has received notice of a bodily injury claim arising out of a traffic accident on March 13, 2023, involving Unit 14 (2019 Freightliner M2-106) operated by your employee Marcus Aliyah on Causeway Blvd at Bermuda Ave, Tampa, Florida.\n\nThe Company is conducting a good-faith investigation of this matter under Policy No. NWL-CA-024471 (ISO CA 00 01 Form). While that investigation continues, the Company wishes to advise you of certain policy conditions and provisions that may be relevant to the determination of coverage, and to inform you that the Company reserves all of its rights under the policy, at law, and in equity, while it continues its investigation.\n\nSPECIFIC RESERVATION BASES\n\n1. Driver Eligibility \u2014 Annual MVR Condition\n\nThe Declarations Page of the policy states: \"All scheduled drivers must hold a valid CDL Class B for Unit 14. Annual MVR pull by Producer. Drivers must be 23 years of age or older with three years documented commercial driving experience.\"\n\nThe Company's investigation confirms that Marcus Aliyah held CDL #A2241-FL (expiration 08/31/2024) as of the date of loss. However, the current file does not include the most recently completed annual Motor Vehicle Record (MVR) pull required by the above provision. The Company has requested this record from the producer of record, Gulf Coast Commercial Brokerage, Inc. Until the MVR is reviewed and confirmed, the Company cannot fully evaluate whether the driver eligibility condition was satisfied at the time of the loss. In the event the MVR review reveals a basis for a coverage defense \u2014 including but not limited to a suspended, revoked, or otherwise disqualified license \u2014 the Company expressly reserves its right to disclaim coverage on that basis.\n\n2. Full Policy Form and Endorsement Schedule Not Yet Reviewed\n\nThe Company's review has been conducted on the basis of the Declarations Page and the documents identified above. The full text of the ISO CA 00 01 policy form and the complete CA 99 03 endorsement schedule have not yet been reviewed in their entirety. The Company reserves all rights under any provision, condition, or exclusion of the policy that may be determined to apply upon completion of that review.\n\nRESERVATION OF RIGHTS \u2014 GENERAL\n\nThe Company's decision to investigate this claim, and its continued handling of this matter, shall not constitute a waiver of, or estoppel with respect to, any policy term, condition, exclusion, or defense. The Company expressly reserves all of its rights under the policy and under applicable Florida law, including the right to deny coverage in whole or in part if the investigation reveals a basis for doing so.\n\nYou have an obligation under the policy to cooperate with the Company's investigation, including providing requested documents and making witnesses available for recorded statements. Please ensure that the annual MVR documentation for Marcus Aliyah is forwarded to the Company through your broker at your earliest opportunity.\n\nIf you have questions or wish to discuss this matter, please contact the undersigned claim specialist.\n\nSincerely,\n\n[Claim Specialist Name]\n[Title]\n[Carrier Name]\n[Address]\n[Phone / Email]\n\ncc: Gulf Coast Commercial Brokerage, Inc. (Producer of Record)\n    [Defense Counsel, if assigned]\n\nNOTE TO ADJUSTER: This draft letter is predicated on two investigative gaps only: (1) the pending annual MVR pull and (2) the absence of the full policy form in the file. If the MVR returns clean and the full policy form is reviewed without identifying a new exclusion, this reservation basis may be resolved without the need to sustain a formal ROR posture. This draft does not constitute a coverage position or a recommendation.",
+    "citations": [
+      {
+        "document_id": "DOC-001",
+        "locator": "Declarations Page \u2014 Driver Eligibility",
+        "text_excerpt": "All scheduled drivers must hold a valid CDL Class B for Unit 14. Annual MVR pull by Producer. Drivers must be 23 years of age or older with three years documented commercial driving experience.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-004",
+        "locator": "Dispatch Log \u2014 Driver / CDL",
+        "text_excerpt": "Unit 14   Driver: M. Aliyah (CDL #A2241-FL, exp. 2024-08-31)",
+        "relation": "contextual"
+      },
+      {
+        "document_id": "DOC-001",
+        "locator": "Declarations Page \u2014 Covered Autos Symbols",
+        "text_excerpt": "Liability (Sym. 7) ............. Specifically Described Autos",
+        "relation": "contextual"
+      }
+    ]
+  },
+  "denial_letter": {
+    "body": "COVERAGE DENIAL LETTER\n[DRAFT \u2014 For Adjuster Review and Determination]\n[NOTE TO ADJUSTER: This draft is prepared because denial carries a non-zero (2%) probability on the current record. It is not a coverage position or a recommendation. This draft should only be issued if investigation confirms a disqualifying basis \u2014 most likely a suspended/revoked CDL or a material misrepresentation at policy issuance. Do not issue without independent legal and underwriting review.]\n\n[DATE]\n\nNorthwind Logistics, LLC\n4218 Causeway Blvd\nTampa, FL 33619\n\nRe:   Insured:        Northwind Logistics, LLC\n      Policy No.:     NWL-CA-024471\n      Claim No.:      CLM-2023-04471\n      Date of Loss:   March 13, 2023\n      Claimant:       Janet M. Reyes\n      Coverage Part:  Auto Bodily Injury Liability (CP-NWL-2023-BI)\n\nDear Northwind Logistics, LLC:\n\n[CARRIER NAME] (\"the Company\") has completed its investigation of the above-referenced claim arising out of the motor vehicle accident on March 13, 2023, involving Unit 14 (2019 Freightliner M2-106) operated by Marcus Aliyah on Causeway Blvd at Bermuda Ave, Tampa, Florida.\n\nBased on that investigation, the Company has determined that coverage is not available for this claim under Policy No. NWL-CA-024471 for the reason(s) set forth below.\n\n[DENIAL BASIS \u2014 TO BE COMPLETED BY ADJUSTER UPON CONFIRMATION OF SPECIFIC GROUND]\n\nBasis 1 (Driver Eligibility \u2014 Hypothetical): The Declarations Page of the policy provides: \"All scheduled drivers must hold a valid CDL Class B for Unit 14. Annual MVR pull by Producer. Drivers must be 23 years of age or older with three years documented commercial driving experience.\" Investigation has revealed that Marcus Aliyah [INSERT CONFIRMED FINDING \u2014 e.g., held a suspended CDL / was not a scheduled driver / did not satisfy the experience requirement] at the time of the loss. Because the driver operating Unit 14 did not satisfy the policy's driver eligibility requirements, no coverage is available under the liability coverage part for this accident.\n\nBasis 2 (Policy Exclusion \u2014 Hypothetical): [TO BE COMPLETED upon review of full ISO CA 00 01 form and endorsements if a specific exclusion is identified.]\n\nRIGHTS OF THE CLAIMANT / NOTICE\n\nPursuant to applicable Florida law and the terms of the policy, the Company advises that this determination affects the insured's right to a defense and indemnity under the policy for claims asserted by Janet M. Reyes. [CARRIER/COUNSEL TO CONFIRM FLORIDA DIRECT ACTION REQUIREMENTS AND CLAIMANT NOTICE OBLIGATIONS UNDER FLA. STAT. \u00a7627.4136 OR OTHER APPLICABLE PROVISIONS.]\n\nThe Company has acted in good faith in conducting its investigation. If you believe this determination is in error, or if you have additional information you wish the Company to consider, please contact the undersigned within [X] days.\n\nAll rights of the Company under the policy and applicable law are reserved.\n\nSincerely,\n\n[Claim Specialist Name]\n[Title]\n[Carrier Name]\n[Address]\n[Phone / Email]\n\ncc: Gulf Coast Commercial Brokerage, Inc.\n    Janet M. Reyes (or counsel of record)\n    [Defense Counsel]\n\nNOTE TO ADJUSTER: This denial letter template is provided for contingency purposes only. The denial probability on the current file is 2%, based solely on theoretical findings not yet in evidence. Issuance of this letter requires: (1) confirmed factual basis for denial; (2) review by coverage counsel; (3) compliance with Florida bad faith statutes (Fla. Stat. \u00a7624.155) and timely notice requirements. Do not issue this letter on the current record.",
+    "citations": [
+      {
+        "document_id": "DOC-001",
+        "locator": "Declarations Page \u2014 Driver Eligibility",
+        "text_excerpt": "All scheduled drivers must hold a valid CDL Class B for Unit 14. Annual MVR pull by Producer. Drivers must be 23 years of age or older with three years documented commercial driving experience.",
+        "relation": "contextual"
+      },
+      {
+        "document_id": "DOC-001",
+        "locator": "Declarations Page \u2014 Covered Autos Symbols",
+        "text_excerpt": "Liability (Sym. 7) ............. Specifically Described Autos",
+        "relation": "contextual"
+      }
+    ]
+  }
+}

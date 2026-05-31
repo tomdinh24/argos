@@ -38,7 +38,7 @@ Six specialists and two supporting services.
 ```
                   ┌───────────────────────────────────────────┐
                   │  Substrate (Foundry)                       │
-                  │  ─ ClaimExposure (7 status dimensions)    │
+                  │  ─ CoverageRequest (7 status dimensions)    │
                   │  ─ LiabilityAssessment chain              │
                   │  ─ FinancialTransaction + FinancialPosting│
                   │  ─ Document + DocumentExtraction          │
@@ -82,7 +82,7 @@ Every specialist output is shaped as a `LegallyBearingClaim` (§3): probability 
 | Specialist | Trigger | Output | Auto-apply |
 |---|---|---|---|
 | **Brief** | Any state change on the claim (doc arrival, ledger change, status change, new AgentAction) | `ClaimBrief { story, since_last_touch_diff, missing_info, pending_communications, specialist_recommendations_summary, citations }` | Always refreshes (it's a view, not a mutation). Citations required for every diff item. |
-| **Coverage** | New claim with policy linkage; new endorsement; new evidence touching exclusions | `CoverageAnalysis { evidence[], per_question_probabilities[], outcome_path_probabilities{clean, ROR, denial}, would_shift_distribution, draft_memo, draft_letters{ROR, denial}, citations[] }` | **Never.** Adjuster always clicks. AI surfaces evidence + probability; human owns the decision. |
+| **Coverage** | New claim with policy linkage; new endorsement; new evidence touching exclusions | `CoverageReport { evidence[], per_question_probabilities[], outcome_path_probabilities{clean, ROR, denial}, would_shift_distribution, draft_memo, draft_letters{ROR, denial}, citations[] }` | **Never.** Adjuster always clicks. AI surfaces evidence + probability; human owns the decision. |
 | **Liability** | Police report arrival; new statement; evidence touching fault analysis | `LiabilityAnalysis { evidence[], per_question_probabilities[], fault_allocation_distribution, would_shift_distribution, draft_assessment, citations[] }` | **Never.** Adjuster always clicks. AI surfaces evidence + distribution; human picks the point. |
 | **Reserve** | New evidence affecting reserve adequacy; daily review past `review_cadence_days` | `ReserveAnalysis { per_component[], notice_obligations_triggered, authority_required_level, citations[] }` | Below handler authority → auto-applied. Above → AuthorityRequest. |
 | **Recovery** | LossOccurrence created; doc arrival affecting recovery analysis | `RecoveryAnalysis { opportunity_probability, recovery_type, evidence[], sol_status, evidence_preservation_alerts, draft_demand, citations[] }` | Detection / surfacing → auto-applied. Pursuit / referral → always human (legal action). |
@@ -94,7 +94,7 @@ Not specialists — they don't emit `LegallyBearingClaim` outputs. They power th
 
 | Service | Job | Where it runs |
 |---|---|---|
-| **Priority Scorer** | Rank the queue of open claims by what the adjuster should work next. Candidate features: statutory clocks, diary deadlines, reserve adequacy drift, financial exposure, AgentAction backlog, inactivity risk, negotiation cadence. Output: ordered ClaimExposure IDs with **reason chips** derived from per-claim feature attribution. | Ranking is a learned problem from day one. We hold opinions about which features matter (priors / weight biases) but the actual weights come out of training against eval signal — does the predicted rank correlate with the order adjusters work in, with hindsight of which work order produced the best outcomes? Both the feature set and what counts as "good outcome" are revisable as we learn what adjusters actually optimize for. |
+| **Priority Scorer** | Rank the queue of open claims by what the adjuster should work next. Candidate features: statutory clocks, diary deadlines, reserve adequacy drift, financial exposure, AgentAction backlog, inactivity risk, negotiation cadence. Output: ordered CoverageRequest IDs with **reason chips** derived from per-claim feature attribution. | Ranking is a learned problem from day one. We hold opinions about which features matter (priors / weight biases) but the actual weights come out of training against eval signal — does the predicted rank correlate with the order adjusters work in, with hindsight of which work order produced the best outcomes? Both the feature set and what counts as "good outcome" are revisable as we learn what adjusters actually optimize for. |
 | **Correspondence service** | Route outbound communications by legal weight. Routine recipients (body shop, medical provider, insured, tow, police records) → auto-send. Adversarial recipients (claimant's counsel, opposing counsel, court) → auto-draft, queue for human approval. Track receipt against `DiaryTask` deadlines; auto-fire follow-ups. | Railway FastAPI service. Templated routine messages; LLM-drafted adversarial ones (which themselves go through the `LegallyBearingClaim` contract). |
 
 ### §2.3 Why six specialists, not three
@@ -218,7 +218,7 @@ Recommendations cannot be calibrated this way. This is one of the strongest argu
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
 │ 1. TRIGGER                                                              │
-│    ─ Event: document_received on ClaimExposure                          │
+│    ─ Event: document_received on CoverageRequest                          │
 │    ─ Scheduled: daily review for exposures past review_cadence_days     │
 │    ─ Manual: workspace user clicks "re-run reserve specialist"          │
 └─────────────────────────────────────────────────────────────────────────┘
@@ -226,8 +226,8 @@ Recommendations cannot be calibrated this way. This is one of the strongest argu
                               ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
 │ 2. READ SUBSTRATE (via Foundry Functions through OSDK)                  │
-│    ─ get_exposure_layer_b_snapshot(exposure_id, as_of):                 │
-│        • ClaimExposure with all 7 status dimensions                     │
+│    ─ get_exposure_layer_b_snapshot(request_id, as_of):                 │
+│        • CoverageRequest with all 7 status dimensions                     │
 │        • Latest LiabilityAssessment in the chain                        │
 │        • FinancialSnapshot from get_financials_as_of                    │
 │        • All Documents received <= as_of with their DocumentExtraction  │
@@ -292,7 +292,7 @@ Recommendations cannot be calibrated this way. This is one of the strongest argu
 │      specialist: 'reserve',                                              │
 │      prompt_version: '1.0.3',                                            │
 │      model_id: 'claude-sonnet-4-6',                                      │
-│      exposure_id,                                                        │
+│      request_id,                                                        │
 │      claim_id,                                                           │
 │      input_hash,                                                         │
 │      output_json: recommendation,                                        │
@@ -377,10 +377,10 @@ Each specialist has the same tool surface. Tools are either Foundry Functions (r
 
 | Function | What it returns |
 |---|---|
-| `get_exposure_layer_b_snapshot(exposure_id, as_of)` | Full Layer B view for one exposure as of a point in time |
-| `get_financials_as_of(exposure_id, valid_at, recorded_at)` | Bitemporal ledger snapshot per component |
+| `get_exposure_layer_b_snapshot(request_id, as_of)` | Full Layer B view for one exposure as of a point in time |
+| `get_financials_as_of(request_id, valid_at, recorded_at)` | Bitemporal ledger snapshot per component |
 | `get_applicable_config(client_program_id, specialist, as_of)` | Effective SpecialistConfig at as_of |
-| `get_aggregate_limits(claim_id, coverage_part_id)` | Consumed / remaining / breach status across sibling exposures |
+| `get_aggregate_limits(claim_id, coverage_id)` | Consumed / remaining / breach status across sibling exposures |
 | `get_audit_trail(claim_id)` | Chronological AgentAction history for one claim |
 
 ### §6.2 Write tools (Action Types triggered via OSDK)
@@ -423,7 +423,7 @@ YOUR ROLE
 ─ Specify the authority level required to apply your recommendation
 
 YOUR ONTOLOGY
-[Brief description of ClaimExposure, LiabilityAssessment, FinancialTransaction
+[Brief description of CoverageRequest, LiabilityAssessment, FinancialTransaction
 shapes, and the seven status dimensions on the exposure]
 
 YOUR OUTPUT SCHEMA
@@ -449,7 +449,7 @@ Length: ~3000-5000 tokens for the full system prompt. Cached for 1-hour TTL; reu
 ### §7.2 User template (per-invocation, not cached)
 
 ```
-EXPOSURE TO REVIEW: {{exposure_id}}
+EXPOSURE TO REVIEW: {{request_id}}
 
 CURRENT STATE
 {{layer_b_snapshot_json}}
@@ -476,7 +476,7 @@ Composed from the §3 primitives. Every component change and every notice obliga
 
 ```typescript
 ReserveAnalysis = {
-  exposure_id: string,
+  request_id: string,
   reviewed_as_of: ISO8601,
 
   per_component: Array<{
@@ -519,8 +519,8 @@ Same Reserve runtime sequence (§4) with a different prompt and output schema. T
 Output:
 
 ```typescript
-CoverageAnalysis = {
-  exposure_id: string,
+CoverageReport = {
+  request_id: string,
   reviewed_as_of: ISO8601,
 
   evidence_found: Array<EvidenceCitation>,  // Layer 1 of the cockpit render
@@ -555,7 +555,7 @@ The schema validator enforces `outcome_path_distribution.paths` probabilities su
 
 ```typescript
 LiabilityAnalysis = {
-  exposure_id: string,
+  request_id: string,
   reviewed_as_of: ISO8601,
   jurisdiction: string,
   comparative_fault_rule: 'pure' | 'modified_50' | 'modified_51' | 'contributory',
@@ -600,7 +600,7 @@ Brief composes the per-claim summary that anchors the cockpit. It is the only sp
 
 ```typescript
 ClaimBrief = {
-  exposure_id: string,
+  request_id: string,
   generated_at: ISO8601,
 
   story_paragraph: string,                  // one-paragraph narrative
@@ -665,7 +665,7 @@ From [data-layer.md §7](./data-layer.md). Each layer is computed by a different
 
 ### §8.2 Layer B — Observed file state by date
 
-- **Source:** computed by `get_exposure_layer_b_snapshot(exposure_id, as_of)` Foundry Function
+- **Source:** computed by `get_exposure_layer_b_snapshot(request_id, as_of)` Foundry Function
 - **Filters:** documents with `received_date <= as_of`; ledger entries with `recorded_at <= as_of`; status dimensions current at `as_of`
 - **Visibility:** the specialist's only input
 

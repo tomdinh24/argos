@@ -1,0 +1,21 @@
+rank,request_id,reason_short
+1,REQ-001,1-hour service deadline on serious exposure requires immediate same-morning action
+2,REQ-004,3-day legal deadline on serious claim is a non-recoverable clock
+3,REQ-002,4-hour service deadline is firing today and should be cleared before midday
+4,REQ-003,6-hour service deadline still expires today and needs timely handling
+5,REQ-005,7-day legal deadline is close enough to protect now before the weekend
+6,REQ-006,14-day legal deadline is approaching and should be positioned today
+7,REQ-016,Litigated and represented serious file has an overdue task needing prompt control
+8,REQ-018,Complaint with represented claimant creates escalation risk despite lower severity
+9,REQ-017,Litigated represented serious file with high incurred and future legal clock needs attention
+10,REQ-012,Serious claim has been untouched 30 days with no claimant contact
+11,REQ-007,Catastrophic $1.75M exposure warrants proactive review even without a firing clock
+12,REQ-009,Serious $875K exposure should not sit idle beyond routine diary
+13,REQ-008,Serious $585K exposure merits attention after hard deadlines and escalations
+14,REQ-011,Standard file is stale with 25 days since claimant contact
+15,REQ-015,Serious file has three new documents waiting and 36 hours since last activity
+16,REQ-014,Serious file has new documents to review but no urgent clock
+17,REQ-010,Standard file is stale but lower exposure and no escalation flags
+18,REQ-013,Standard file has one new document but limited urgency
+19,REQ-019,Minor low-value file is current with recent claimant contact
+20,REQ-020,Minor lowest-value file is most current and least urgent today

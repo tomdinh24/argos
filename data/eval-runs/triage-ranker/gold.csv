@@ -1,0 +1,21 @@
+rank,request_id,reason_short
+1,REQ-001,SLA breaches in 1h — most imminent clock, act immediately
+2,REQ-004,Statute in 3d on serious $120k claim — irreversible deadline, start protective work today
+3,REQ-017,Litigation+rep+statute(45d)+$350k — litigation/statute combo is auto top-3
+4,REQ-002,SLA breaches in 4h today — hard service clock
+5,REQ-016,Active litigation+rep, $200k, overdue diary task — daily legal exposure
+6,REQ-003,SLA breaches in 6h today — hard service clock
+7,REQ-005,Statute in 7d, $40k — second-tier irreversible deadline
+8,REQ-018,Complaint+rep — regulatory clock and reputational risk, needs same-day acknowledgment
+9,REQ-006,Statute in 14d — deadline on horizon, begin queueing
+10,REQ-007,Catastrophic $1.75M aged claim — top reserve exposure, no firing clock
+11,REQ-009,Serious $875k — very high exposure, no deadline
+12,REQ-008,Serious $585k — high exposure, no deadline
+13,REQ-012,Serious $60k dark 30d/no contact 30d — neglect & bad-faith drift
+14,REQ-015,Serious $90k with 3 new docs — material evidence likely, highest doc volume
+15,REQ-011,Standard $35k dark 21d/no contact 25d — staleness risk
+16,REQ-014,Serious $55k with 2 new docs — review fresh evidence
+17,REQ-010,Standard $20k dark 15d/no contact 20d — staleness risk
+18,REQ-013,Standard $18k with 1 new doc — low-volume evidence check
+19,REQ-019,Minor $3,500, fresh, no flags — low priority
+20,REQ-020,Minor $1,250, freshest, no flags — lowest priority

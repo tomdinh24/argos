@@ -1,0 +1,77 @@
+{
+  "variant": "clean",
+  "runs": 5,
+  "timestamp_utc": "2026-05-30T21:58:02.576924+00:00",
+  "per_run": [
+    {
+      "run": 1,
+      "clean": 0.87,
+      "ROR": 0.87,
+      "denial": 0.02,
+      "n_assessments": 7,
+      "n_evidence_citations": 14,
+      "model": "claude-sonnet-4-6",
+      "attempts": 1
+    },
+    {
+      "run": 2,
+      "clean": 0.91,
+      "ROR": 0.07,
+      "denial": 0.02,
+      "n_assessments": 7,
+      "n_evidence_citations": 15,
+      "model": "claude-sonnet-4-6",
+      "attempts": 1
+    },
+    {
+      "run": 3,
+      "clean": 0.88,
+      "ROR": 0.88,
+      "denial": 0.02,
+      "n_assessments": 7,
+      "n_evidence_citations": 18,
+      "model": "claude-sonnet-4-6",
+      "attempts": 1
+    },
+    {
+      "run": 4,
+      "clean": 0.88,
+      "ROR": 0.88,
+      "denial": 0.02,
+      "n_assessments": 7,
+      "n_evidence_citations": 17,
+      "model": "claude-sonnet-4-6",
+      "attempts": 1
+    },
+    {
+      "run": 5,
+      "clean": 0.88,
+      "ROR": 0.1,
+      "denial": 0.02,
+      "n_assessments": 8,
+      "n_evidence_citations": 18,
+      "model": "claude-sonnet-4-6",
+      "attempts": 1
+    }
+  ],
+  "stats": {
+    "clean": {
+      "mean": 0.884,
+      "stdev": 0.015165750888103114,
+      "min": 0.87,
+      "max": 0.91
+    },
+    "ROR": {
+      "mean": 0.56,
+      "stdev": 0.43376260788592647,
+      "min": 0.07,
+      "max": 0.88
+    },
+    "denial": {
+      "mean": 0.02,
+      "stdev": 0.0,
+      "min": 0.02,
+      "max": 0.02
+    }
+  }
+}

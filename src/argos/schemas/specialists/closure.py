@@ -42,7 +42,7 @@ class ClosureDefect(BaseModel):
 
 
 class ClosureAnalysis(BaseModel):
-    exposure_id: str
+    request_id: str
     reviewed_as_of: datetime
 
     ready_to_close: Assessment = Field(

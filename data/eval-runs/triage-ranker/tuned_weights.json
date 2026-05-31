@@ -1,0 +1,38 @@
+{
+  "seed": 42,
+  "n_random_samples": 5000,
+  "weight_bounds": [
+    0.0,
+    8.0
+  ],
+  "winner_origin_idx": 4074,
+  "winner": {
+    "w_sla": 7.80944,
+    "w_stat": 7.483831,
+    "w_aged": 3.274273,
+    "w_diary": 1.845423,
+    "w_sev": 1.064472,
+    "w_amt": 5.950562,
+    "w_reserve": 5.972249,
+    "w_contact": 0.91033,
+    "w_unread": 2.112656,
+    "w_lit": 1.6233,
+    "w_rep": 3.798441,
+    "w_compl": 2.688605
+  },
+  "winner_metrics": {
+    "top7_jaccard": 1.0,
+    "kendall_tau": 0.873684,
+    "l2_from_uniform": 12.483921
+  },
+  "anchors_evaluated": [
+    {
+      "name": "uniform-1.0",
+      "top7": 0.2727272727272727
+    },
+    {
+      "name": "clock-biased",
+      "top7": 0.75
+    }
+  ]
+}

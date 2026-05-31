@@ -1,0 +1,21 @@
+rank,request_id,reason_short
+1,REQ-001,1 hour service deadline on serious file must be handled before 10 AM
+2,REQ-004,3 day legal deadline on serious file needs action before the weekend
+3,REQ-002,4 hour service deadline expires early afternoon
+4,REQ-003,6 hour service deadline expires today
+5,REQ-005,7 day legal deadline should be protected now
+6,REQ-016,Serious litigated represented file has an overdue task
+7,REQ-018,Represented claimant complaint needs prompt escalation response
+8,REQ-006,14 day legal deadline needs a plan and calendar protection
+9,REQ-017,Litigated represented serious file has high exposure and a legal clock
+10,REQ-012,Serious file is dormant 30 days with no claimant contact
+11,REQ-015,Serious file has three unreviewed new documents
+12,REQ-014,Serious file has two unreviewed new documents
+13,REQ-007,Catastrophic 1.75M exposure warrants same day review despite recent touch
+14,REQ-009,Serious 875K exposure should be monitored after hard clocks
+15,REQ-008,Serious 585K exposure but no current deadline or new activity
+16,REQ-011,Standard file stale 25 days since claimant contact
+17,REQ-010,Standard file stale 20 days since claimant contact
+18,REQ-013,Standard file has one new document with no other flags
+19,REQ-019,Minor low exposure file is recent and unflagged
+20,REQ-020,Minor lowest exposure file is most recently touched and unflagged

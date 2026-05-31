@@ -119,14 +119,14 @@ OSDK TS client
    │ HTTPS + Foundry token
    ▼
 Foundry Ontology
-   │ Returns: Claim + linked ClaimExposures + ClaimPartyRoles
+   │ Returns: Claim + linked CoverageRequests + ClaimPartyRoles
    ▼
 Next.js Server Component
    │ Renders shell with claim metadata
    ▼
 Client-side fetch (parallel):
    ├─ Financial snapshot ──▶ OSDK ──▶ Foundry Function:
-   │                                  get_financials_as_of(exposure_id, NOW, NOW)
+   │                                  get_financials_as_of(request_id, NOW, NOW)
    ├─ Documents ──▶ OSDK ──▶ Foundry Ontology: Document + DocumentExtraction
    ├─ Audit trail ──▶ OSDK ──▶ Foundry Function: get_audit_trail(claim_id)
    └─ Recommendations ──▶ OSDK ──▶ Foundry Ontology: AgentAction WHERE claim_id = ?
@@ -180,12 +180,12 @@ Event fires (new document ingested, or scheduled review job)
    │
    ▼
 Railway FastAPI receives POST /specialist/reserve/run
-   │ Body: { exposure_id, as_of }
+   │ Body: { request_id, as_of }
    ▼
 Specialist runner (Python):
    │
    ├─ Read Layer B via OSDK:
-   │    ├─ get_exposure_layer_b_snapshot(exposure_id, as_of)
+   │    ├─ get_exposure_layer_b_snapshot(request_id, as_of)
    │    └─ get_applicable_config(client_program_id, 'reserve', as_of)
    │
    ├─ Hash input → input_hash (SHA256 of Layer-B JSON)
@@ -207,7 +207,7 @@ Specialist runner (Python):
    ├─ Emit AgentAction via OSDK Action Type:
    │    EmitAgentAction(
    │      specialist='reserve',
-   │      exposure_id,
+   │      request_id,
    │      output_json,
    │      confidence,
    │      reasoning_trace,

@@ -103,7 +103,7 @@ class PendingCommunication(BaseModel):
 
 
 class ClaimBrief(BaseModel):
-    exposure_id: str | None = Field(
+    request_id: str | None = Field(
         default=None,
         description="None when the brief is claim-scoped rather than exposure-scoped",
     )

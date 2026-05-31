@@ -33,14 +33,14 @@ class CoverageDraft(BaseModel):
     citations: list[EvidenceCitation] = Field(min_length=1)
 
 
-class CoverageAnalysis(BaseModel):
-    """Coverage specialist's complete output for one exposure.
+class CoverageReport(BaseModel):
+    """Coverage specialist's complete output for one coverage request.
 
     There is no `recommended_path` field. By design. The schema is enforced;
     a future change that tries to add one fails the §7.4 contract.
     """
 
-    exposure_id: str
+    request_id: str
     reviewed_as_of: datetime
 
     evidence_found: list[EvidenceCitation] = Field(
