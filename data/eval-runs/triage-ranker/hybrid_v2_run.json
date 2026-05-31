@@ -1,0 +1,60 @@
+{
+  "run_timestamp": "2026-05-31T04:36:51.350201+00:00",
+  "judge_model": "gpt-5.5-pro",
+  "top_n": 10,
+  "schema_valid": true,
+  "v2_top_n_ordering": [
+    "REQ-001",
+    "REQ-004",
+    "REQ-017",
+    "REQ-018",
+    "REQ-002",
+    "REQ-016",
+    "REQ-003",
+    "REQ-005",
+    "REQ-006",
+    "REQ-007"
+  ],
+  "s1_top_n_ordering": [
+    "REQ-017",
+    "REQ-001",
+    "REQ-016",
+    "REQ-004",
+    "REQ-002",
+    "REQ-003",
+    "REQ-005",
+    "REQ-006",
+    "REQ-007",
+    "REQ-018"
+  ],
+  "results": [
+    {
+      "gold": "gpt5",
+      "s1_top7": 0.75,
+      "s1_k": 6,
+      "s1_tau": 0.8105263157894737,
+      "v2_top7": 0.5555555555555556,
+      "v2_k": 5,
+      "v2_tau": 0.8105263157894737,
+      "k_delta": -1,
+      "tau_delta": 0.0,
+      "v1_tau_locked": 0.811,
+      "tau_in_tolerance": true
+    },
+    {
+      "gold": "gpt55pro",
+      "s1_top7": 0.75,
+      "s1_k": 6,
+      "s1_tau": 0.7473684210526316,
+      "v2_top7": 0.75,
+      "v2_k": 6,
+      "v2_tau": 0.7684210526315789,
+      "k_delta": 0,
+      "tau_delta": 0.021052631578947323,
+      "v1_tau_locked": 0.747,
+      "tau_in_tolerance": true
+    }
+  ],
+  "verdict": "DO NOT SHIP \u2014 v2 regresses below the k=6 baseline; LLM re-rank is introducing noise.",
+  "judge_raw_response": "```csv\nrank,request_id,reason_short\n1,REQ-001,1-hour service deadline requires immediate action\n2,REQ-004,Legal deadline in 3 days needs action before the weekend\n3,REQ-017,Litigated represented serious file with 45-day legal clock under 60 days\n4,REQ-018,Represented claimant complaint needs same-day acknowledgment\n5,REQ-002,4-hour service deadline due early afternoon\n6,REQ-016,Litigated represented serious file has an overdue task\n7,REQ-003,6-hour service deadline still due today\n8,REQ-005,7-day legal deadline needs pre-weekend handling\n9,REQ-006,14-day legal deadline is the next remaining clock\n10,REQ-007,Catastrophic exposure but no immediate deadline or escalation\n```"
+}

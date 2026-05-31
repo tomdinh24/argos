@@ -310,6 +310,54 @@ noise). That's a credible base for the today's-work slice. The k=7
 result against Opus was inflated by same-family-tuning bias. Building
 hybrid v2 (LLM materiality re-rank on the top slice) is justified.
 
+## Hybrid v2 run — 2026-05-30
+
+Per the locked spec (`docs/specs/triage-ranker-hybrid-v2.md`) and locked
+thresholds (`docs/evals/triage-ranker-hybrid-v2-thresholds.md`), v2 was
+run once: tuned-S1 top-10 handed to GPT-5.5-pro as materiality judge,
+re-ranked slice spliced back in front of S1's tail. Scored against the
+same two independent golds used in v1 verification.
+
+| gold | S1 k | v2 k | Δk | S1 tau | v2 tau | Δtau | tau in tolerance? |
+|---|---|---|---|---|---|---|---|
+| gpt5 | 6 | **5** | **−1** | +0.811 | +0.811 | +0.000 | yes |
+| gpt55pro | 6 | 6 | 0 | +0.747 | +0.768 | +0.021 | yes |
+
+**Verdict per locked thresholds: DO NOT SHIP V2.** v2 regressed below
+the k=6 baseline on the GPT-5 gold and held flat on the GPT-5.5-pro
+gold. Per the rule "k≤5 on either → do not ship," v2 fails on its first
+run. Per the locked single-run rule, no re-run is permitted.
+
+**What the judge did.** GPT-5.5-pro promoted REQ-017 (lit+rep+statute-45d)
+and REQ-018 (complaint+rep) into its top-7 by applying explicit
+"litigation+statute under 60 days = top-3" and "complaint+rep needs
+same-day acknowledgment" rules — judgment the linear scorer cannot apply.
+This matched GPT-5.5-pro-as-gold's instinct on REQ-018, but kicked out
+REQ-005 and REQ-006 (statute-7d and statute-14d) that GPT-5-as-gold had
+in its top-7. The v2 judge has its own priority interpretation; it
+aligned with one gold and diverged from the other.
+
+**Read in plain English.** Three different LLMs (Opus, GPT-5,
+GPT-5.5-pro) produced three different gold rankings with three different
+"marginal seventh" picks. The v2 judge (a fourth LLM call, also
+GPT-5.5-pro but in re-rank mode with more context) picked yet another
+ordering that disagreed with two of the three. This is the diagnostic:
+the contested top-slice is **genuine adjuster judgment ambiguity**, not
+a calibration problem the linear scorer can't reach. No single judge —
+LLM or otherwise — closes the disagreement, because the disagreement
+isn't about what the features say; it's about how a particular adjuster
+weighs litigation-risk vs time-pressure vs escalation-flags vs incurred
+exposure.
+
+**Net of v1 + v2 verdicts:** ship deterministic S1 with the tuned
+weights from `tuned_weights.json`. v2 is dead — the LLM materiality
+re-rank as designed does not earn its keep on independent golds. v3, if
+it exists, should reframe the question: not "can an LLM pick better than
+the linear scorer," but "can an LLM consistently apply a STATED
+adjuster-style policy that the linear scorer can't express." That's a
+constrained judgment problem (apply this policy) rather than an open
+judgment problem (pick the best 7), and it might generalize better.
+
 ## Known inert feature in the tuned vector
 
 `w_reserve = 5.972` is a dead weight. `reserve_adequacy_gap` is
