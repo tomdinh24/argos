@@ -53,32 +53,26 @@ _PAIR1_CTX = ClaimContext(
     ),
 )
 
+# REVISED 2026-05-31: stripped of all physical-evidence content (skid
+# marks, post-impact displacement, EMS transport) per v2 thresholds doc
+# (docs/evals/document-reader-anchor-pairs-v2-thresholds.md). The
+# original v1 body leaked liability-relevant content into the Variant A
+# control, causing a false-fail. v2 Variant A is a pure procedural
+# shell with no findings.
 _PAIR1_OPENING = (
     "TAMPA POLICE DEPARTMENT — TRAFFIC CRASH REPORT\n"
     "Case #: TPD-2026-04-22-3081\n"
     "Date of incident: 04/22/2026 16:42 EDT\n"
-    "Location: Causeway Blvd × Bermuda Ave (uncontrolled intersection)\n"
-    "Weather: Clear, dry pavement. Daylight conditions.\n\n"
-    "VEHICLES:\n"
-    "V-1: 2019 Freightliner M2-106, white, VIN 1FVACWDT5KHKR8821, "
-    "registered to Coastal Logistics LLC. Driver: licensed CDL operator, "
-    "no apparent injury. Disabling damage to front bumper, hood, and "
-    "radiator.\n"
-    "V-2: 2022 Honda Civic LX, silver, VIN 19XFC2F58NE042193, registered "
-    "to claimant. Driver: complains of neck pain, transported to "
-    "Tampa General Hospital for evaluation. Disabling damage to driver "
-    "side B-pillar, front-quarter panel, and driver door.\n\n"
-    "NARRATIVE:\n"
-    "Officer arrived on scene at 16:51 EDT in response to dispatch call "
-    "of two-vehicle collision with possible injury. V-1 was found "
-    "stationary in the intersection facing north; V-2 was found 22 feet "
-    "east of the intersection center, rotated approximately 80 degrees "
-    "from initial heading. Skid marks visible from V-1 totaling 14 feet "
-    "leading to point of impact. No skid marks observed from V-2.\n\n"
-    "Both drivers were ambulatory at scene. EMS evaluated and transported "
-    "V-2 driver to Tampa General Hospital as a precaution. V-1 driver "
-    "declined medical attention. Both drivers cooperated with the "
-    "investigation."
+    "Location: Causeway Blvd × Bermuda Ave\n\n"
+    "Officer responded to dispatch call of a two-vehicle collision. "
+    "Two vehicles identified at scene; both drivers present and "
+    "cooperative. Driver information, license details, and insurance "
+    "information collected from both parties. Vehicle identifiers, "
+    "registration, and insurance carrier recorded.\n\n"
+    "No injuries claimed at scene by either driver. Vehicles were "
+    "moved off the roadway pending tow.\n\n"
+    "Investigation ongoing. Supplemental report to follow upon "
+    "completion of scene reconstruction."
 )
 
 _PAIR1_ADDED = (
@@ -214,22 +208,24 @@ _PAIR3_CTX = ClaimContext(
     ),
 )
 
+# REVISED 2026-05-31: stripped of all specific medical-specials and
+# lost-wages totals per v2 thresholds doc
+# (docs/evals/document-reader-anchor-pairs-v2-thresholds.md). The
+# original opening leaked damages-relevant numbers into both variants;
+# Variant A is now the shared opening + courtesy close, Variant B is
+# the shared opening + the policy-limits demand sentence. The pair
+# differs by exactly one added material event again.
 _PAIR3_OPENING = (
-    "RE: Settlement Demand — [Claimant] v. [Your Insured]\n"
+    "RE: [Claimant] v. [Your Insured]\n"
     "Date of Loss: January 8, 2026\n"
     "Your Claim Number: CLM-ANCHOR-DAM-003\n\n"
     "Dear Claims Representative,\n\n"
-    "This letter follows up on our prior correspondence regarding the "
-    "above-referenced matter. As you know, our client was rear-ended on "
-    "January 8, 2026 by your insured driver and has suffered ongoing "
-    "cervical and lumbar injuries as a direct result.\n\n"
-    "Since our last correspondence, our client has completed an "
-    "additional 14 sessions of physical therapy and 6 sessions of "
-    "chiropractic adjustment. Total medical specials to date stand at "
-    "$18,742.50 across providers; ongoing treatment is anticipated. "
-    "Our client continues to experience pain that limits her ability to "
-    "perform her work as a dental hygienist, with documented lost wages "
-    "of $4,200.00 to date."
+    "Following up on our prior correspondence regarding the above "
+    "matter. We continue to represent the claimant and remain "
+    "available to discuss the file at your convenience.\n\n"
+    "Please confirm receipt of the medical authorization we provided "
+    "last month so that our records are aligned. If anything further "
+    "is needed from our office, please let us know."
 )
 
 _PAIR3_ADDED = (
@@ -250,9 +246,7 @@ PAIR3_DAMAGES = AnchorPair(
         received_date="2026-05-12",
         body_text=(
             _PAIR3_OPENING
-            + "\n\nWe remain open to dialogue regarding resolution and "
-            "look forward to your response.\n\nSincerely,\n"
-            "/s/ Marcus Reyes\nMarcus Reyes, Esq.\n"
+            + "\n\nSincerely,\n/s/ Marcus Reyes\nMarcus Reyes, Esq.\n"
             "Reyes & Patel, P.A."
         ),
     ),
