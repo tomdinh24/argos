@@ -1,0 +1,177 @@
+{
+  "run_timestamp": "2026-05-31T22:51:40.352609+00:00",
+  "spec": "docs/specs/triage-ranker-policy-engine.md",
+  "integration_thresholds": "docs/evals/triage-policy-engine-with-reader-integrated-thresholds.md",
+  "tuned_weights_path": "data/eval-runs/triage-ranker/tuned_weights.json",
+  "q1_reader_output": {
+    "verdict": "PASS",
+    "docs_screened": 9,
+    "audit": [
+      {
+        "document_id": "DOC-007-01",
+        "claim_id": "CLM-007",
+        "expected_material": false,
+        "actual_material": false,
+        "expected_posture": null,
+        "actual_posture": null,
+        "reason": "Routine internal file note documenting a mutual status-update voicemail exchange with claimant counsel; no new substantive content or posture-changing information.",
+        "text_excerpt": "",
+        "material_match": true,
+        "posture_match": true,
+        "all_passed": true
+      },
+      {
+        "document_id": "DOC-007-02",
+        "claim_id": "CLM-007",
+        "expected_material": true,
+        "actual_material": true,
+        "expected_posture": "reserve",
+        "actual_posture": "reserve",
+        "reason": "New MRI findings confirm C5-C6 disc herniation with neurosurgical referral and surgical cost estimate of $85,000\u2013$120,000, plus pending thoracic evaluation; reserve posture changes on this catastrophic claim.",
+        "text_excerpt": "MRI dated 2026-05-15 reveals C5-C6 disc herniation with nerve root impingement. Patient has been referred to neurosurgical consultation. Surgical intervention may be indicated if conservative treatment fails over the next 60 days. Estimated cost of cervical discectomy and fusion: $85,000\u2013$120,000. Patient is also being evaluated for possible thoracic involvement; additional imaging pending.",
+        "material_match": true,
+        "posture_match": true,
+        "all_passed": true
+      },
+      {
+        "document_id": "DOC-008-01",
+        "claim_id": "CLM-008",
+        "expected_material": false,
+        "actual_material": false,
+        "expected_posture": null,
+        "actual_posture": null,
+        "reason": "Other carrier's counsel acknowledges receipt of tender and commits to a coverage position within 30 days; no acceptance, denial, or reservation of rights issued \u2014 purely a procedural acknowledgment with no posture-changing content.",
+        "text_excerpt": "",
+        "material_match": true,
+        "posture_match": true,
+        "all_passed": true
+      },
+      {
+        "document_id": "DOC-013-01",
+        "claim_id": "CLM-013",
+        "expected_material": false,
+        "actual_material": false,
+        "expected_posture": null,
+        "actual_posture": null,
+        "reason": "Routine status update from claimant counsel; no new treatment details, demand figures, liability information, or coverage disputes presented.",
+        "text_excerpt": "",
+        "material_match": true,
+        "posture_match": true,
+        "all_passed": true
+      },
+      {
+        "document_id": "DOC-014-01",
+        "claim_id": "CLM-014",
+        "expected_material": false,
+        "actual_material": false,
+        "expected_posture": null,
+        "actual_posture": null,
+        "reason": "Routine correspondence from claimant counsel confirming representation and requesting receipt acknowledgment of previously submitted medical authorizations; no new posture-changing content.",
+        "text_excerpt": "",
+        "material_match": true,
+        "posture_match": true,
+        "all_passed": true
+      },
+      {
+        "document_id": "DOC-014-02",
+        "claim_id": "CLM-014",
+        "expected_material": true,
+        "actual_material": true,
+        "expected_posture": "damages",
+        "actual_posture": "damages",
+        "reason": "Claimant counsel issued a specific $175,000 settlement demand \u2014 more than triple the current $55,000 reserve \u2014 with a 30-day deadline and litigation threat; damages posture changes and reserve reassessment is required.",
+        "text_excerpt": "our client demands $175,000.00 to fully resolve all claims against your insured. This demand is open for thirty (30) days from the date of this letter, after which our client reserves the right to proceed with formal litigation.",
+        "material_match": true,
+        "posture_match": true,
+        "all_passed": true
+      },
+      {
+        "document_id": "DOC-015-01",
+        "claim_id": "CLM-015",
+        "expected_material": false,
+        "actual_material": false,
+        "expected_posture": null,
+        "actual_posture": null,
+        "reason": "Routine scheduling inquiry from claimant counsel regarding IME logistics; no new posture-changing content on liability, coverage, damages, or reserves.",
+        "text_excerpt": "",
+        "material_match": true,
+        "posture_match": true,
+        "all_passed": true
+      },
+      {
+        "document_id": "DOC-015-02",
+        "claim_id": "CLM-015",
+        "expected_material": false,
+        "actual_material": false,
+        "expected_posture": null,
+        "actual_posture": null,
+        "reason": "Routine acknowledgment from claimant counsel confirming receipt of status letter with no new information; no posture-changing content.",
+        "text_excerpt": "",
+        "material_match": true,
+        "posture_match": true,
+        "all_passed": true
+      },
+      {
+        "document_id": "DOC-015-03",
+        "claim_id": "CLM-015",
+        "expected_material": true,
+        "actual_material": true,
+        "expected_posture": "coverage",
+        "actual_posture": "coverage",
+        "reason": "Co-defendant carrier (Northstar Casualty) formally denied tender of defense and indemnity, eliminating any expected contribution to defense costs or indemnity; coverage posture changes.",
+        "text_excerpt": "Northstar Casualty declines your tender of defense and indemnity. Our position is that the cooperative-defense obligations in the underlying agreement do not extend to claims arising from your insured's independent acts. We will not be participating in defense or indemnity.",
+        "material_match": true,
+        "posture_match": true,
+        "all_passed": true
+      }
+    ],
+    "material_counts": {
+      "CLM-007": 1,
+      "CLM-014": 1,
+      "CLM-015": 1
+    }
+  },
+  "q2_baseline_buckets": {
+    "verdict": "PASS",
+    "gold": {
+      "REQ-007": 6,
+      "REQ-008": 6,
+      "REQ-013": 7,
+      "REQ-014": 7,
+      "REQ-015": 7
+    },
+    "actual": {
+      "REQ-007": 6,
+      "REQ-008": 6,
+      "REQ-013": 7,
+      "REQ-014": 7,
+      "REQ-015": 7
+    }
+  },
+  "q3_integrated_buckets": {
+    "verdict": "PASS",
+    "gold": {
+      "REQ-007": 6,
+      "REQ-008": 7,
+      "REQ-013": 7,
+      "REQ-014": 7,
+      "REQ-015": 7
+    },
+    "actual": {
+      "REQ-007": 6,
+      "REQ-008": 7,
+      "REQ-013": 7,
+      "REQ-014": 7,
+      "REQ-015": 7
+    }
+  },
+  "bucket_changes": [
+    {
+      "request_id": "REQ-008",
+      "before": 6,
+      "after": 7
+    }
+  ],
+  "composite_verdict": "SHIP \u2014 Reader + policy engine integration works end-to-end. Q1: all 9 Reader calls match pre-registered predictions. Q2: extended-fixture baseline matches pre-registered baseline gold. Q3: Reader integration correctly promotes REQ-007 and demotes REQ-008. Policy engine stays pure (no LLM in rank_policy); Reader supplies one feature; engine applies the rules.",
+  "all_passed": true
+}
