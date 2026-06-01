@@ -1,0 +1,273 @@
+"""Tests for the specialist orchestrator (Job, JobQueue, Dispatcher,
+SpecialistRunner).
+
+No live API calls. The runner is exercised with a stub specialist
+registry so the orchestration logic is validated independent of any
+real LLM call.
+"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import pytest
+
+from argos.ontology.synthetic_caseload import build_caseload
+from argos.schemas.specialists.document_reader import MaterialityCall
+from argos.services.orchestrator.dispatcher import dispatch
+from argos.services.orchestrator.job import Job, JobStatus
+from argos.services.orchestrator.queue import JobQueue
+from argos.services.orchestrator.runner import SpecialistRunner
+
+
+# ---------------------------------------------------------------------------
+# Job + idempotency key
+# ---------------------------------------------------------------------------
+
+
+class TestJob:
+    def test_job_id_auto_generated(self):
+        a = Job(specialist="coverage", claim_id="C1", triggered_by_doc_id="D1", posture_changed="coverage")
+        b = Job(specialist="coverage", claim_id="C1", triggered_by_doc_id="D1", posture_changed="coverage")
+        assert a.job_id != b.job_id
+        assert a.job_id.startswith("JOB-")
+
+    def test_idempotency_key_is_triple(self):
+        j = Job(specialist="reserve", claim_id="C2", triggered_by_doc_id="D5", posture_changed="reserve")
+        assert j.idempotency_key() == ("reserve", "C2", "D5")
+
+    def test_starts_pending(self):
+        j = Job(specialist="coverage", claim_id="C1", triggered_by_doc_id="D1", posture_changed="coverage")
+        assert j.status == JobStatus.PENDING
+        assert j.started_at is None and j.completed_at is None
+
+    def test_round_trip_through_dict(self):
+        j = Job(specialist="coverage", claim_id="C1", triggered_by_doc_id="D1", posture_changed="coverage")
+        restored = Job.from_dict(j.to_dict())
+        assert restored.job_id == j.job_id
+        assert restored.specialist == j.specialist
+        assert restored.status == j.status
+
+
+# ---------------------------------------------------------------------------
+# JobQueue
+# ---------------------------------------------------------------------------
+
+
+class TestJobQueueBasics:
+    def test_enqueue_appends(self):
+        q = JobQueue()
+        j = Job(specialist="coverage", claim_id="C1", triggered_by_doc_id="D1", posture_changed="coverage")
+        q.enqueue(j)
+        assert q.all_jobs() == [j]
+        assert q.pending() == [j]
+
+    def test_next_pending_returns_oldest_pending(self):
+        q = JobQueue()
+        a = Job(specialist="coverage", claim_id="C1", triggered_by_doc_id="D1", posture_changed="coverage")
+        b = Job(specialist="coverage", claim_id="C2", triggered_by_doc_id="D2", posture_changed="coverage")
+        q.enqueue(a); q.enqueue(b)
+        assert q.next_pending() == a
+        q.mark_running(a.job_id)
+        # next pending now skips running
+        assert q.next_pending() == b
+
+    def test_status_transitions(self):
+        q = JobQueue()
+        j = Job(specialist="coverage", claim_id="C1", triggered_by_doc_id="D1", posture_changed="coverage")
+        q.enqueue(j)
+        q.mark_running(j.job_id)
+        assert j.status == JobStatus.RUNNING and j.started_at is not None
+        q.mark_done(j.job_id, result_path="/tmp/x.json", result_summary="ok")
+        assert j.status == JobStatus.DONE and j.completed_at is not None
+        assert j.result_path == "/tmp/x.json"
+
+
+class TestJobQueueIdempotency:
+    def test_duplicate_triple_returns_existing_job(self):
+        q = JobQueue()
+        a = Job(specialist="coverage", claim_id="C1", triggered_by_doc_id="D1", posture_changed="coverage")
+        b = Job(specialist="coverage", claim_id="C1", triggered_by_doc_id="D1", posture_changed="coverage")
+        q.enqueue(a)
+        result = q.enqueue(b)
+        assert result is a  # the existing job, not the new one
+        assert len(q.all_jobs()) == 1
+
+    def test_done_job_does_not_block_new_enqueue_on_same_triple(self):
+        q = JobQueue()
+        a = Job(specialist="coverage", claim_id="C1", triggered_by_doc_id="D1", posture_changed="coverage")
+        q.enqueue(a)
+        q.mark_done(a.job_id, result_summary="ok")
+        b = Job(specialist="coverage", claim_id="C1", triggered_by_doc_id="D1", posture_changed="coverage")
+        result = q.enqueue(b)
+        assert result is b  # new job allowed because the prior one is DONE
+        assert len(q.all_jobs()) == 2
+
+    def test_different_specialist_same_doc_creates_separate_jobs(self):
+        q = JobQueue()
+        a = Job(specialist="reserve", claim_id="C1", triggered_by_doc_id="D1", posture_changed="damages")
+        b = Job(specialist="liability", claim_id="C1", triggered_by_doc_id="D1", posture_changed="damages")
+        q.enqueue(a); q.enqueue(b)
+        assert len(q.all_jobs()) == 2
+
+
+class TestJobQueuePersistence:
+    def test_round_trip_through_disk(self, tmp_path: Path):
+        path = tmp_path / "queue.json"
+        q1 = JobQueue(path)
+        j = Job(specialist="coverage", claim_id="C1", triggered_by_doc_id="D1", posture_changed="coverage")
+        q1.enqueue(j)
+        q1.mark_running(j.job_id)
+
+        q2 = JobQueue(path)
+        loaded = q2.all_jobs()
+        assert len(loaded) == 1
+        assert loaded[0].job_id == j.job_id
+        assert loaded[0].status == JobStatus.RUNNING
+
+
+# ---------------------------------------------------------------------------
+# Dispatcher (pure function)
+# ---------------------------------------------------------------------------
+
+
+def _call(material: bool, posture: str | None, doc_id: str = "D1") -> MaterialityCall:
+    return MaterialityCall(
+        document_id=doc_id,
+        material=material,
+        posture_changed=posture,
+        reason="r" if not material else "material reason",
+        text_excerpt="" if not material else "quoted sentence",
+    )
+
+
+class TestDispatcher:
+    def test_not_material_returns_empty(self):
+        jobs = dispatch(_call(False, None), claim_id="C1")
+        assert jobs == []
+
+    def test_coverage_posture_enqueues_coverage_only(self):
+        jobs = dispatch(_call(True, "coverage"), claim_id="C1")
+        assert len(jobs) == 1
+        assert jobs[0].specialist == "coverage"
+        assert jobs[0].claim_id == "C1"
+        assert jobs[0].triggered_by_doc_id == "D1"
+
+    def test_reserve_posture_enqueues_reserve_only(self):
+        jobs = dispatch(_call(True, "reserve"), claim_id="C1")
+        assert [j.specialist for j in jobs] == ["reserve"]
+
+    def test_liability_posture_enqueues_liability_only(self):
+        jobs = dispatch(_call(True, "liability"), claim_id="C1")
+        assert [j.specialist for j in jobs] == ["liability"]
+
+    def test_damages_posture_enqueues_reserve_and_liability(self):
+        jobs = dispatch(_call(True, "damages"), claim_id="C1")
+        assert {j.specialist for j in jobs} == {"reserve", "liability"}
+
+
+# ---------------------------------------------------------------------------
+# Runner (with stub specialist registry — no live API)
+# ---------------------------------------------------------------------------
+
+
+def _make_stub_registry():
+    """Stub specialists that record what they were called with."""
+    calls: list[tuple[str, str]] = []
+
+    def make_stub(name: str):
+        def stub(caseload, claim_id):
+            calls.append((name, claim_id))
+            return f"stub {name} ran on {claim_id}", {"specialist": name, "claim_id": claim_id}
+        return stub
+
+    registry = {
+        "coverage": make_stub("coverage"),
+        "reserve": make_stub("reserve"),
+        "liability": make_stub("liability"),
+    }
+    return registry, calls
+
+
+class TestSpecialistRunner:
+    def test_process_one_runs_and_persists_result(self, tmp_path: Path):
+        registry, calls = _make_stub_registry()
+        q = JobQueue()
+        j = Job(specialist="coverage", claim_id="CLM-001", triggered_by_doc_id="D1", posture_changed="coverage")
+        q.enqueue(j)
+        runner = SpecialistRunner(q, build_caseload(), tmp_path, registry=registry)
+
+        processed = runner.process_one()
+        assert processed is not None
+        assert processed.status == JobStatus.DONE
+        assert processed.result_summary == "stub coverage ran on CLM-001"
+        # Result file exists
+        result_path = tmp_path / "CLM-001" / "coverage.json"
+        assert result_path.exists()
+        assert json.loads(result_path.read_text())["claim_id"] == "CLM-001"
+        # Stub was called with the right args
+        assert calls == [("coverage", "CLM-001")]
+
+    def test_process_all_drains_the_queue(self, tmp_path: Path):
+        registry, calls = _make_stub_registry()
+        q = JobQueue()
+        for cid, spec in [("CLM-001", "coverage"), ("CLM-002", "reserve"), ("CLM-003", "liability")]:
+            q.enqueue(Job(specialist=spec, claim_id=cid, triggered_by_doc_id="D1", posture_changed=spec))
+        runner = SpecialistRunner(q, build_caseload(), tmp_path, registry=registry)
+
+        processed = runner.process_all()
+        assert len(processed) == 3
+        assert all(p.status == JobStatus.DONE for p in processed)
+        assert {c[0] for c in calls} == {"coverage", "reserve", "liability"}
+        assert q.pending() == []
+
+    def test_runner_marks_failed_on_specialist_exception(self, tmp_path: Path):
+        def boom(_caseload, _claim_id):
+            raise RuntimeError("specialist crashed")
+        registry = {"coverage": boom}
+        q = JobQueue()
+        j = Job(specialist="coverage", claim_id="CLM-001", triggered_by_doc_id="D1", posture_changed="coverage")
+        q.enqueue(j)
+        runner = SpecialistRunner(q, build_caseload(), tmp_path, registry=registry)
+
+        processed = runner.process_one()
+        assert processed.status == JobStatus.FAILED
+        assert "specialist crashed" in (processed.error or "")
+        # No result file written
+        assert not (tmp_path / "CLM-001" / "coverage.json").exists()
+
+    def test_unknown_specialist_marks_failed(self, tmp_path: Path):
+        q = JobQueue()
+        j = Job(specialist="nonexistent", claim_id="CLM-001", triggered_by_doc_id="D1", posture_changed="coverage")
+        q.enqueue(j)
+        runner = SpecialistRunner(q, build_caseload(), tmp_path, registry={})
+
+        processed = runner.process_one()
+        assert processed.status == JobStatus.FAILED
+        assert "No specialist registered" in (processed.error or "")
+
+
+# ---------------------------------------------------------------------------
+# Adapter (no live API)
+# ---------------------------------------------------------------------------
+
+
+class TestCaseloadAdapter:
+    def test_adapts_caseload_claim_to_synthetic_claim(self):
+        from argos.services.orchestrator.adapter import caseload_to_synthetic_claim
+
+        caseload = build_caseload()
+        # Pick any claim that has at least one document in the v3 fixture
+        # (REQ-013/014/015 carry placeholder docs in v3)
+        synth = caseload_to_synthetic_claim(caseload, "CLM-013")
+        assert synth.request.claim_id == "CLM-013"
+        assert synth.policy.jurisdiction_state == "FL"
+        assert len(synth.coverages) >= 1
+        assert synth.coverages[0].coverage_id == synth.request.coverage_id
+
+    def test_adapter_raises_on_unknown_claim(self):
+        from argos.services.orchestrator.adapter import caseload_to_synthetic_claim
+
+        caseload = build_caseload()
+        with pytest.raises(ValueError):
+            caseload_to_synthetic_claim(caseload, "CLM-999")

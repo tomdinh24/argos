@@ -1,0 +1,275 @@
+{
+  "request_id": "REQ-015",
+  "reviewed_as_of": "2026-05-29T23:59:00Z",
+  "evidence_found": [
+    {
+      "document_id": "DOC-015-01",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Body, paragraph 1",
+      "text_excerpt": "Please advise on scheduling for the IME we discussed. Our office can accommodate most weekday windows in the next two weeks.",
+      "relation": "contextual"
+    },
+    {
+      "document_id": "DOC-015-02",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Body, paragraph 1",
+      "text_excerpt": "Confirming receipt of your last status letter. Our office has no new updates to provide at this time. We will revert when we have additional information.",
+      "relation": "contextual"
+    },
+    {
+      "document_id": "DOC-015-03",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Body, paragraphs 1\u20132",
+      "text_excerpt": "Northstar Casualty declines your tender of defense and indemnity. Our position is that the cooperative-defense obligations in the underlying agreement do not extend to claims arising from your insured's independent acts. We will not be participating in defense or indemnity.",
+      "relation": "contextual"
+    }
+  ],
+  "assessments": [
+    {
+      "claim_text": "The loss date of 2026-04-13 falls within the policy period (2026-01-01 to 2026-12-31), satisfying the in-force requirement.",
+      "probability": 0.99,
+      "reasoning": "The policy period is documented as effective_from 2026-01-01 through effective_to 2026-12-31, status in_force. The loss date of 2026-04-13 falls squarely within that window. No document contradicts this. Probability of non-satisfaction is negligible.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-015-01",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "received_date field",
+          "text_excerpt": "received_date: 2026-05-29",
+          "relation": "contextual"
+        }
+      ]
+    },
+    {
+      "claim_text": "The claim presents as an auto bodily injury loss, matching the coverage type (auto_BI) under CP-AUTO-BI-STANDARD.",
+      "probability": 0.95,
+      "reasoning": "The intake summary characterizes this as an 'Auto bodily injury claim, severity tier serious.' The targeted coverage is CP-AUTO-BI-STANDARD with coverage_type auto_BI. No document in the file contradicts this characterization. Residual uncertainty reflects the absence of a police report, medical records, or other fact-of-loss documentation in the file at this time.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-015-01",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Body, paragraph 1",
+          "text_excerpt": "Please advise on scheduling for the IME we discussed. Our office can accommodate most weekday windows in the next two weeks.",
+          "relation": "contextual"
+        }
+      ]
+    },
+    {
+      "claim_text": "Claimant is represented by counsel (T. Olsen, Esq.), notwithstanding the intake flag of represented: False \u2014 this discrepancy warrants reconciliation.",
+      "probability": 0.97,
+      "reasoning": "Both DOC-015-01 and DOC-015-02 are signed by 'T. Olsen, Esq.' and originate from 'claimant_counsel,' indicating the claimant has legal representation. The intake summary flags represented: False, which is internally inconsistent with the file documents. This discrepancy should be resolved before finalizing coverage posture, as it may affect reservation-of-rights notice obligations under Florida law.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-015-01",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Signature line",
+          "text_excerpt": "/s/ T. Olsen, Esq.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-015-02",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Signature line",
+          "text_excerpt": "/s/ T. Olsen, Esq.",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "Northstar Casualty has declined the tender of defense and indemnity, meaning this carrier will bear the full defense and indemnity exposure without contribution from a co-defendant carrier.",
+      "probability": 0.97,
+      "reasoning": "DOC-015-03 is an unambiguous declination of tender from Northstar Casualty, asserting that cooperative-defense obligations do not extend to claims arising from the insured's independent acts. No rebuttal or counter-position appears in the file. The practical effect is that this policy's limits stand alone for defense and indemnity unless the tender is successfully challenged.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-015-03",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Body, paragraph 2",
+          "text_excerpt": "Northstar Casualty declines your tender of defense and indemnity. Our position is that the cooperative-defense obligations in the underlying agreement do not extend to claims arising from your insured's independent acts. We will not be participating in defense or indemnity.",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "The file lacks sufficient facts-of-loss documentation (police report, accident report, recorded statement, medical records) to confirm coverage is owed without reservation.",
+      "probability": 0.88,
+      "reasoning": "The three documents on file are all correspondence items \u2014 two scheduling/status letters from claimant counsel and one tender-declination. No accident report, recorded statement, medical records, or liability investigation documents have been produced. The severity tier is 'serious,' and an IME has been discussed (DOC-015-01), but no IME report is yet in the file. The gap in factual documentation creates material uncertainty that typically supports issuance of a reservation-of-rights letter to preserve all coverage defenses while investigation continues.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-015-02",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Body, paragraph 1",
+          "text_excerpt": "Our office has no new updates to provide at this time. We will revert when we have additional information.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-015-01",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Body, paragraph 1",
+          "text_excerpt": "Please advise on scheduling for the IME we discussed. Our office can accommodate most weekday windows in the next two weeks.",
+          "relation": "contextual"
+        }
+      ]
+    }
+  ],
+  "synthesis": {
+    "outcomes": [
+      {
+        "claim_text": "Clean coverage \u2014 policy responds without reservation.",
+        "probability": 0.25,
+        "reasoning": "The threshold conditions (in-force policy, loss within period, auto_BI coverage type match) are satisfied. If facts-of-loss investigation confirms the loss arose from a covered auto accident involving the named insured with no policy exclusions implicated, clean coverage is appropriate. However, the current evidentiary record is too thin to reach this conclusion with confidence: no accident report, no recorded statement, no liability confirmation, no medical records, and a represented-claimant data discrepancy. Clean coverage probability is accordingly low at this stage.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-015-01",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Body, paragraph 1",
+            "text_excerpt": "Please advise on scheduling for the IME we discussed. Our office can accommodate most weekday windows in the next two weeks.",
+            "relation": "contextual"
+          }
+        ]
+      },
+      {
+        "claim_text": "Reservation of Rights \u2014 policy responds subject to reservation while investigation is completed.",
+        "probability": 0.65,
+        "reasoning": "The combination of (1) serious-severity bodily injury with thin investigative file, (2) the represented-claimant data discrepancy, (3) Northstar Casualty's declination of tender creating sole-carrier exposure, and (4) the absence of any facts-of-loss documentation all counsel that material coverage questions remain open. A ROR preserves all available defenses under the policy while the carrier continues its investigation, consistent with Florida's notice-prejudice and good-faith claims-handling framework. This is the highest-probability outcome given current file status.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-015-03",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Body, paragraph 2",
+            "text_excerpt": "Northstar Casualty declines your tender of defense and indemnity. Our position is that the cooperative-defense obligations in the underlying agreement do not extend to claims arising from your insured's independent acts. We will not be participating in defense or indemnity.",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-015-02",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Body, paragraph 1",
+            "text_excerpt": "Our office has no new updates to provide at this time. We will revert when we have additional information.",
+            "relation": "contextual"
+          }
+        ]
+      },
+      {
+        "claim_text": "Denial \u2014 coverage does not apply.",
+        "probability": 0.1,
+        "reasoning": "No document currently before the file affirmatively establishes a policy exclusion, condition breach, or coverage defense that would support outright denial. However, the file is at an early investigative stage; denial probability is assigned a non-trivial weight (10%) to reflect the possibility that facts-of-loss investigation could uncover a coverage bar (e.g., intentional-acts exclusion, non-covered vehicle, policy condition breach). Northstar Casualty's characterization of 'independent acts' in DOC-015-03 may be worth probing in that context, though that document reflects the co-carrier's position, not a finding of fact.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-015-03",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Body, paragraph 2",
+            "text_excerpt": "Our position is that the cooperative-defense obligations in the underlying agreement do not extend to claims arising from your insured's independent acts.",
+            "relation": "contextual"
+          }
+        ]
+      }
+    ],
+    "would_shift_distribution": [
+      "Production of accident/police report confirming covered auto and covered insured involved \u2014 would shift mass toward clean coverage.",
+      "Recorded statement or IME report confirming mechanism of injury and absence of exclusionary conduct \u2014 would shift toward clean coverage.",
+      "Discovery of a policy exclusion applicable to the facts (e.g., intentional acts, non-covered vehicle) \u2014 would shift mass toward denial.",
+      "Resolution of the represented-claimant data discrepancy (intake flag: represented=False vs. two attorney letters on file) \u2014 affects ROR notice obligations and timing.",
+      "Successful challenge to Northstar Casualty's tender declination \u2014 contextually relevant to exposure allocation but does not directly shift coverage outcome distribution.",
+      "Identification of additional defendants or indemnitors \u2014 could shift exposure allocation without affecting this policy's coverage determination."
+    ]
+  },
+  "coverage_analysis_memo": {
+    "body": "COVERAGE ANALYSIS MEMORANDUM\n\nTO: File \u2014 REQ-015 / CLM-015\nFROM: Coverage Specialist (Argos)\nDATE: 2026-05-29\nRE: Auto Bodily Injury Coverage Analysis \u2014 POL-PLACEHOLDER-2026 / PLACEHOLDER-001\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nI. THRESHOLD COVERAGE CONDITIONS\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nPolicy PLACEHOLDER-001 (form CA00, FL) was in-force from 2026-01-01 through 2026-12-31. The reported loss date of 2026-04-13 falls within the policy period. The coverage request targets CP-AUTO-BI-STANDARD, which provides auto bodily injury coverage with limits of $300,000 per person / $1,000,000 per occurrence / $1,000,000 aggregate, with a $0 deductible and no SIR. Threshold conditions of in-force policy and matching coverage type are facially satisfied.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nII. DOCUMENTS REVIEWED\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n1. DOC-015-01 (correspondence, claimant counsel, received 2026-05-29): IME scheduling inquiry from T. Olsen, Esq.\n2. DOC-015-02 (correspondence, claimant counsel, received 2026-05-29): Status confirmation letter from T. Olsen, Esq. \u2014 no new updates.\n3. DOC-015-03 (correspondence, other carrier counsel, received 2026-05-29): Tender declination from Northstar Casualty / S. Wright, Coverage Counsel.\n\nNo accident report, police report, recorded statement, medical records, liability investigation, or IME report has been received as of the review date.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIII. KEY FINDINGS\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nA. Represented-Claimant Data Discrepancy\nThe intake record flags represented: False, yet both DOC-015-01 and DOC-015-02 originate from 'claimant_counsel' and are signed by '/s/ T. Olsen, Esq.' This discrepancy requires immediate reconciliation. If the claimant is in fact represented, Florida's statutory and common-law good-faith obligations may affect the timing and form of coverage communications.\n\nB. Northstar Casualty Tender Declination\nDOC-015-03 reflects that Northstar Casualty, a co-defendant carrier, has declined the tender of defense and indemnity on the basis that 'the cooperative-defense obligations in the underlying agreement do not extend to claims arising from your insured's independent acts.' This places the full scope of defense and indemnity exposure on this policy (subject to applicable limits) unless the declination is successfully challenged. The reference to 'independent acts' may be a factual assertion worth examining in the liability investigation.\n\nC. Thin Investigative File\nThe file contains only correspondence. No facts-of-loss documentation has been produced. An IME has been discussed (DOC-015-01) but not yet scheduled or completed. The claim is characterized as 'serious' severity. The absence of a liability investigation, recorded statement, and medical records means that material coverage questions \u2014 including potential exclusions, conditions, and the precise mechanism of the loss \u2014 remain open.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIV. COVERAGE PROBABILITY DISTRIBUTION\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\u2022 Clean Coverage:          25%\n\u2022 Reservation of Rights:   65%\n\u2022 Denial:                  10%\n\nThe ROR outcome carries the highest probability weight given the incomplete investigative record, the represented-claimant discrepancy, and the sole-carrier exposure resulting from Northstar's tender declination. The denial weight reflects the possibility that facts-of-loss investigation could surface a coverage bar; no such bar has been identified on the current record.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nV. INFORMATION NEEDED TO RESOLVE UNCERTAINTY\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n1. Accident/police report confirming the covered auto, covered insured, and loss mechanism.\n2. Recorded statement from insured.\n3. Medical records and treating provider documentation.\n4. IME scheduling and report (IME discussed in DOC-015-01).\n5. Correction/reconciliation of represented-claimant intake flag.\n6. Legal assessment of Northstar Casualty's tender declination rationale (DOC-015-03).\n7. Review of the 'underlying contract' referenced in DOC-015-03 for indemnification or contribution obligations.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nVI. LIMITS REFERENCE\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIf coverage applies: $300,000 per person / $1,000,000 per occurrence / $1,000,000 aggregate. Deductible: $0. SIR: None.\n\nThis memo is prepared for adjuster review and does not constitute a coverage determination or legal advice.",
+    "citations": [
+      {
+        "document_id": "DOC-015-01",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Body, paragraph 1",
+        "text_excerpt": "Please advise on scheduling for the IME we discussed. Our office can accommodate most weekday windows in the next two weeks.",
+        "relation": "contextual"
+      },
+      {
+        "document_id": "DOC-015-02",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Body, paragraph 1",
+        "text_excerpt": "Confirming receipt of your last status letter. Our office has no new updates to provide at this time. We will revert when we have additional information.",
+        "relation": "contextual"
+      },
+      {
+        "document_id": "DOC-015-03",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Body, paragraphs 1\u20132",
+        "text_excerpt": "Northstar Casualty declines your tender of defense and indemnity. Our position is that the cooperative-defense obligations in the underlying agreement do not extend to claims arising from your insured's independent acts. We will not be participating in defense or indemnity.",
+        "relation": "contextual"
+      }
+    ]
+  },
+  "ror_letter": {
+    "body": "RESERVATION OF RIGHTS LETTER\n[DRAFT \u2014 FOR ADJUSTER REVIEW ONLY]\n\n[Date]\n\nVia [Certified Mail / Email]\n\n[Insured Name and Address]\n[Claimant Counsel: T. Olsen, Esq. \u2014 if applicable per Florida requirements]\n\nRE:   Claim No.:       CLM-015\n      Policy No.:      PLACEHOLDER-001\n      Named Insured:   [Named Insured Name]\n      Date of Loss:    April 13, 2026\n      Claimant:        PTY-CLM-015\n\nDear [Insured / Addressee]:\n\nThis letter is written on behalf of [Carrier Name] ('the Company') in connection with the above-referenced claim. The Company is investigating the claim and wishes to advise you of the following.\n\n1. POLICY AND COVERAGE\nPolicy No. PLACEHOLDER-001 (form CA00) was issued to [Named Insured] for the period January 1, 2026 through December 31, 2026. Coverage Part CP-AUTO-BI-STANDARD provides auto bodily injury liability coverage with limits of $300,000 per person / $1,000,000 per occurrence and a $1,000,000 aggregate, subject to a $0 deductible. The Company acknowledges that the reported loss date of April 13, 2026 falls within the policy period.\n\n2. STATUS OF INVESTIGATION\nThe Company's investigation of this claim is ongoing. As of the date of this letter, the file does not contain an accident or police report, a recorded statement from the insured, medical records, or a completed independent medical examination ('IME'), notwithstanding that an IME has been discussed with claimant's counsel. As claimant's counsel noted in correspondence received May 29, 2026: 'Our office has no new updates to provide at this time. We will revert when we have additional information.' Additionally, the IME scheduling requested by claimant's counsel remains pending.\n\n3. BASIS FOR RESERVATION\nBecause the facts of loss, the mechanism of injury, potential policy exclusions, and all conditions precedent to coverage have not yet been fully established, the Company reserves its rights under the policy with respect to any and all coverage defenses that may apply, including but not limited to:\n\n   a. Any exclusion applicable to the circumstances of the loss as they may be developed through investigation;\n   b. Any condition of the policy that may not have been satisfied;\n   c. Any other coverage defense identified through ongoing investigation.\n\nThe Company further notes that correspondence received May 29, 2026 from Northstar Casualty (a co-defendant carrier) reflects a declination of the tender of defense and indemnity, stating: 'Northstar Casualty declines your tender of defense and indemnity. Our position is that the cooperative-defense obligations in the underlying agreement do not extend to claims arising from your insured's independent acts.' The Company is evaluating that declination and reserves all rights arising therefrom.\n\n4. NO WAIVER\nBy undertaking defense or investigation of this matter, the Company does not waive, and expressly reserves, any and all rights, defenses, and positions under the policy, at law, or in equity. This reservation of rights does not constitute a denial of coverage.\n\n5. COOPERATION\nThe policy requires the insured's full cooperation in the investigation and defense of this claim. The Company requests that the insured promptly: (a) provide a recorded statement; (b) make available all documents and information relating to the loss; and (c) cooperate in the scheduling and completion of the IME.\n\n6. INDEPENDENT COUNSEL\nBecause the Company is issuing this reservation of rights, [the insured may be entitled to independent counsel under applicable Florida law / please consult with your own attorney regarding your rights under this reservation]. [Carrier to confirm applicability and adjust language per Florida Fla. Stat. \u00a7 627.426 and applicable case law.]\n\nThe Company will continue to investigate this claim and will advise you of any further developments. If you have questions, please contact the undersigned.\n\nSincerely,\n\n[Claims Representative Name]\n[Title]\n[Company Name]\n[Address]\n[Phone / Email]\n\n[DRAFT \u2014 NOT FOR ISSUANCE WITHOUT ADJUSTER AND COUNSEL REVIEW]",
+    "citations": [
+      {
+        "document_id": "DOC-015-02",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Body, paragraph 1",
+        "text_excerpt": "Our office has no new updates to provide at this time. We will revert when we have additional information.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-015-01",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Body, paragraph 1",
+        "text_excerpt": "Please advise on scheduling for the IME we discussed. Our office can accommodate most weekday windows in the next two weeks.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-015-03",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Body, paragraphs 1\u20132",
+        "text_excerpt": "Northstar Casualty declines your tender of defense and indemnity. Our position is that the cooperative-defense obligations in the underlying agreement do not extend to claims arising from your insured's independent acts. We will not be participating in defense or indemnity.",
+        "relation": "supports"
+      }
+    ]
+  },
+  "denial_letter": {
+    "body": "COVERAGE DENIAL LETTER\n[DRAFT \u2014 FOR ADJUSTER REVIEW ONLY]\n[NOTE: THIS DRAFT IS PREPARED BECAUSE DENIAL CARRIES NON-TRIVIAL PROBABILITY (10%) ON CURRENT FILE. NO COVERAGE BAR HAS BEEN IDENTIFIED ON THE PRESENT RECORD. THIS DRAFT SHOULD NOT BE ISSUED WITHOUT FURTHER INVESTIGATION CONFIRMING A SPECIFIC COVERAGE DEFENSE.]\n\n[Date]\n\nVia [Certified Mail / Email]\n\n[Insured Name and Address]\n\nRE:   Claim No.:       CLM-015\n      Policy No.:      PLACEHOLDER-001\n      Named Insured:   [Named Insured Name]\n      Date of Loss:    April 13, 2026\n      Claimant:        PTY-CLM-015\n\nDear [Insured / Addressee]:\n\nThis letter is written on behalf of [Carrier Name] ('the Company') with respect to the above-referenced claim for auto bodily injury alleged to have occurred on April 13, 2026.\n\n[PLACEHOLDER \u2014 COVERAGE BAR TO BE IDENTIFIED]\nThis draft is a template only. A denial letter is appropriate only if investigation confirms a specific, articulable coverage defense \u2014 for example, a policy exclusion (such as an intentional-acts exclusion), a condition breach (such as failure to cooperate), a coverage territory issue, a non-covered vehicle, or another identified bar. As of the current review date (2026-05-29), no such bar has been identified in the file documents.\n\nThe file currently contains only correspondence:\n- DOC-015-01: IME scheduling inquiry from claimant's counsel (T. Olsen, Esq.), stating: 'Please advise on scheduling for the IME we discussed.'\n- DOC-015-02: Status letter from claimant's counsel, stating: 'Our office has no new updates to provide at this time.'\n- DOC-015-03: Tender declination from Northstar Casualty, which references 'claims arising from your insured's independent acts' \u2014 a characterization that may warrant further investigation but does not, standing alone, establish a coverage defense under this policy.\n\nUpon completion of investigation, if a specific coverage defense is confirmed, this draft should be revised to:\n  (a) State the specific policy provision(s) upon which denial is based;\n  (b) Describe the specific facts supporting application of that provision;\n  (c) Comply with Florida's claim denial notice requirements (Fla. Stat. \u00a7 627.426, \u00a7 627.70131);\n  (d) Be reviewed by coverage counsel before issuance.\n\n[DRAFT \u2014 NOT FOR ISSUANCE WITHOUT ADJUSTER AND COUNSEL REVIEW]\n\nSincerely,\n\n[Claims Representative Name]\n[Title]\n[Company Name]\n[Address]\n[Phone / Email]",
+    "citations": [
+      {
+        "document_id": "DOC-015-03",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Body, paragraph 2",
+        "text_excerpt": "Our position is that the cooperative-defense obligations in the underlying agreement do not extend to claims arising from your insured's independent acts.",
+        "relation": "contextual"
+      },
+      {
+        "document_id": "DOC-015-01",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Body, paragraph 1",
+        "text_excerpt": "Please advise on scheduling for the IME we discussed. Our office can accommodate most weekday windows in the next two weeks.",
+        "relation": "contextual"
+      },
+      {
+        "document_id": "DOC-015-02",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Body, paragraph 1",
+        "text_excerpt": "Our office has no new updates to provide at this time. We will revert when we have additional information.",
+        "relation": "contextual"
+      }
+    ]
+  }
+}

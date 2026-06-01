@@ -1,0 +1,60 @@
+{
+  "jobs": [
+    {
+      "job_id": "JOB-9f30309a264c",
+      "specialist": "reserve",
+      "claim_id": "CLM-007",
+      "triggered_by_doc_id": "DOC-007-02",
+      "posture_changed": "reserve",
+      "status": "done",
+      "created_at": "2026-06-01T01:02:35.343624+00:00",
+      "started_at": "2026-06-01T01:02:35.346187+00:00",
+      "completed_at": "2026-06-01T01:02:35.351279+00:00",
+      "result_path": "/Users/tomlam/Projects/argos/data/orchestrator-demo/specialist-results/CLM-007/reserve.json",
+      "result_summary": "[stub] reserve specialist not yet implemented; job recorded for CLM-007",
+      "error": null
+    },
+    {
+      "job_id": "JOB-c51a53ed116a",
+      "specialist": "reserve",
+      "claim_id": "CLM-014",
+      "triggered_by_doc_id": "DOC-014-02",
+      "posture_changed": "damages",
+      "status": "done",
+      "created_at": "2026-06-01T01:02:35.344444+00:00",
+      "started_at": "2026-06-01T01:02:35.351526+00:00",
+      "completed_at": "2026-06-01T01:02:35.352058+00:00",
+      "result_path": "/Users/tomlam/Projects/argos/data/orchestrator-demo/specialist-results/CLM-014/reserve.json",
+      "result_summary": "[stub] reserve specialist not yet implemented; job recorded for CLM-014",
+      "error": null
+    },
+    {
+      "job_id": "JOB-4f0ab76a0ac5",
+      "specialist": "liability",
+      "claim_id": "CLM-014",
+      "triggered_by_doc_id": "DOC-014-02",
+      "posture_changed": "damages",
+      "status": "done",
+      "created_at": "2026-06-01T01:02:35.344454+00:00",
+      "started_at": "2026-06-01T01:02:35.352261+00:00",
+      "completed_at": "2026-06-01T01:02:35.353014+00:00",
+      "result_path": "/Users/tomlam/Projects/argos/data/orchestrator-demo/specialist-results/CLM-014/liability.json",
+      "result_summary": "[stub] liability specialist not yet implemented; job recorded for CLM-014",
+      "error": null
+    },
+    {
+      "job_id": "JOB-d39770020e70",
+      "specialist": "coverage",
+      "claim_id": "CLM-015",
+      "triggered_by_doc_id": "DOC-015-03",
+      "posture_changed": "coverage",
+      "status": "done",
+      "created_at": "2026-06-01T01:02:35.345557+00:00",
+      "started_at": "2026-06-01T01:02:35.353424+00:00",
+      "completed_at": "2026-06-01T01:04:19.612225+00:00",
+      "result_path": "/Users/tomlam/Projects/argos/data/orchestrator-demo/specialist-results/CLM-015/coverage.json",
+      "result_summary": "Coverage analysis for CLM-015: clean=0.25, attempts=1",
+      "error": null
+    }
+  ]
+}
