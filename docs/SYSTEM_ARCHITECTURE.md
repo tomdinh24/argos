@@ -2,16 +2,94 @@
 tags:
   - project/argos
   - type/architecture
-  - status/draft
+  - status/living
 created: 2026-05-28
-updated: 2026-05-28
+updated: 2026-06-02
 aliases:
   - System Architecture
 ---
 
 # System Architecture — Claims Operations Intelligence Layer (Argos)
 
-> Infrastructure, request flow, deployment topology, security model, failure modes, and scaling story for the build defined by [TECH_PLAN.md](./TECH_PLAN.md). Companion to [AGENT_ARCHITECTURE.md](./AGENT_ARCHITECTURE.md).
+> **Single source of truth for current state.** Infrastructure, request
+> flow, deployment topology, security model, failure modes, and
+> scaling story for the build defined by [TECH_PLAN.md](./TECH_PLAN.md).
+> Companion to [AGENT_ARCHITECTURE.md](./AGENT_ARCHITECTURE.md) (workflow
+> internals + per-workflow contracts).
+
+---
+
+## §0 — Current state (always read this first)
+
+> **This document mixes two horizons.** §0 below is the **as-is**
+> snapshot — what code exists right now. §2 onward describes the
+> **target** Foundry + Vercel + Railway deployment that the as-is code
+> will project onto. Don't confuse them. When you propose work, anchor
+> in §0; when you propose roadmap, anchor in §2+.
+
+### §0.1 — Status table (workflow + infra)
+
+| Component | Layer | Status | Code path |
+|---|---|---|---|
+| **Ontology objects (Pydantic)** | data | 16 of ~26 target | [`ontology/types.py`](../src/argos/ontology/types.py) — Policy, PolicyPeriod, PolicyCoverage, CoverageRequest, Document, SyntheticClaim, Claim, AgentAction, WorkItem, ServiceDeadline, ScheduledTask, LedgerEntry, Communication, LegalDeadline, OutboundRequest, Caseload |
+| **Brief workflow** | workflow | shipped | [`workflows/brief/`](../src/argos/workflows/brief/) |
+| **Coverage workflow** | workflow | shipped | [`workflows/coverage.py`](../src/argos/workflows/coverage.py) |
+| **Liability workflow** | workflow | shipped (deterministic core + extractor + runner) | [`workflows/liability.py`](../src/argos/workflows/liability.py), [`services/liability/`](../src/argos/services/liability/) |
+| **Reserve workflow** | workflow | shipped (LLM extractor + Python calculator) | [`workflows/reserve.py`](../src/argos/workflows/reserve.py) |
+| **Recovery workflow** | workflow | shipped 2026-06-02 (deterministic core + extractor + runner) | [`workflows/recovery.py`](../src/argos/workflows/recovery.py), [`services/recovery/`](../src/argos/services/recovery/) |
+| **Closure workflow** | workflow | schema only — runtime NOT built | [`schemas/workflows/closure.py`](../src/argos/schemas/workflows/closure.py) (no `workflows/closure.py`) |
+| **Outreach Drafter** | correspondence | shipped (v2: bullet rule sharpened, reasoning_effort=low) | [`workflows/outreach_drafter.py`](../src/argos/workflows/outreach_drafter.py) |
+| **Reply Parser** | correspondence | shipped | [`workflows/reply_parser.py`](../src/argos/workflows/reply_parser.py) |
+| **Document Reader** | supporting | shipped | [`workflows/document_reader.py`](../src/argos/workflows/document_reader.py) |
+| **Intake Reader** | supporting | shipped | [`workflows/intake_reader.py`](../src/argos/workflows/intake_reader.py) |
+| **Triage policy engine** | supporting | shipped (deterministic gates; LLM hybrid v2 killed) | [`services/triage/policy_engine.py`](../src/argos/services/triage/policy_engine.py) |
+| **Dispatcher** | orchestration | shipped — but no `recovery` posture wired | [`services/orchestrator/dispatcher.py`](../src/argos/services/orchestrator/dispatcher.py); `POSTURE_TO_WORKFLOWS` maps coverage/reserve/liability/damages only |
+| **Runner registry** | orchestration | shipped; includes coverage/reserve/liability/recovery/brief | [`services/orchestrator/runner.py`](../src/argos/services/orchestrator/runner.py) |
+| **InfoGap (policy spine)** | orchestration | shipped | [`services/orchestrator/info_gap.py`](../src/argos/services/orchestrator/info_gap.py) |
+| **DraftOutreach action wire** | orchestration | shipped | [`services/orchestrator/draft_handler.py`](../src/argos/services/orchestrator/draft_handler.py) |
+| **IngestReply action wire** | orchestration | shipped | [`services/orchestrator/reply_handler.py`](../src/argos/services/orchestrator/reply_handler.py) |
+| **Correspondence Advance** | orchestration | shipped | [`services/orchestrator/correspondence_loop.py`](../src/argos/services/orchestrator/correspondence_loop.py) |
+| **Claim Advance (cross-stream)** | orchestration | shipped | [`services/orchestrator/claim_advance.py`](../src/argos/services/orchestrator/claim_advance.py) |
+| **Coverage writeback** | action | shipped | [`services/orchestrator/coverage_actions.py`](../src/argos/services/orchestrator/coverage_actions.py) |
+| **Reserve / Liability / Recovery / Closure writebacks** | action | NOT built | — |
+| **AgentAction audit log writes** | action | NOT built — schema exists, nothing appends | [`ontology/types.py:161`](../src/argos/ontology/types.py#L161) |
+| **Overdue OBR sweep** | action | NOT built | — |
+| **Typed `pending_recommendations` on Caseload** | data | NOT built (JSON files on disk today) | `data/workflow-results/{claim_id}/{workflow}.json` |
+| **Eval suite (anchor-pair thresholds)** | eval | partial — Coverage, Document Reader, Triage, Brief have thresholds. NOT built for Liability, Reserve, Recovery, Closure | [`docs/evals/`](./evals/) |
+| **AF signatory roster** | data | seed-only (9 NAICs) — no refresh path | [`services/recovery/constants.py`](../src/argos/services/recovery/constants.py) |
+| **FastAPI service** (`/workflow/{name}/run`) | infra | NOT built — runner is in-process only | — |
+| **Foundry tenant** (Ontology, Action Types, Code Repos, AIP Evals) | infra | NOT built — Pydantic-only today | — |
+| **Vercel / Next.js cockpit** | infra | NOT built — pytest is the demo today | — |
+| **Railway worker** | infra | NOT built | — |
+
+### §0.2 — What ships next (ranked, per 2026-06-02 audit)
+
+1. **Closure workflow** — sixth specialist. Closes the open→closed loop in the demo. Same shape as Recovery: extractor → policy engine (block-list of unresolved defects) → calculator → ledger → rationale → runner adapter.
+2. **Dispatcher Recovery routing** — add `subrogation` posture to `POSTURE_TO_WORKFLOWS` and wire `liability → ["liability", "recovery"]` so Liability completion re-evaluates Recovery.
+3. **Reserve / Liability / Recovery / Closure writebacks** — symmetric to `apply_coverage_decision`. Each appends `AgentAction` + flips a posture field on `claim`.
+4. **AgentAction audit log writes** — every workflow run appends a typed row. Cross-workflow lineage; system-level Boecher/Ruiz audit trail.
+5. **Eval suites for L/R/R/C** — anchor-pair thresholds + golden cases for Liability, Reserve, Recovery, Closure. Until built, the workflows ship "trust me" — not interview-defensible.
+6. **AF signatory roster refresh path** — scrape AF's signatory list quarterly, version the roster.
+7. **Overdue OBR sweep** — `OutboundRequest.status → "overdue"` transition function.
+8. **Typed `pending_recommendations` collection** — promotes JSON-files-on-disk to first-class Caseload field. Load-bearing only when Foundry projection starts.
+9. **Foundry projection** — promote 10 missing object types (LossOccurrence, Party, CoverageDecision, ReserveTransaction, RecoveryTarget, ClosureDefect, AuthorityRequest, BadFaithSignal, ExposureLayerSnapshot, FinancialSnapshot) from nested fields → first-class ontology objects. Build Action Types, OSDK shims, AIP Evals. Multi-week — only after items 1–7 are done.
+10. **Vercel cockpit (Next.js)** — the interview surface. Build after Foundry projection so it has typed objects to render.
+
+### §0.3 — Maintenance protocol
+
+> **This doc is living.** Every PR that ships a workflow, changes
+> dispatcher routing, adds an Action Type, modifies the ontology, or
+> moves something from "NOT built" → "shipped" must update §0.1 and
+> §0.2 in the same commit. The doc IS the source of truth — if §0.1
+> says "shipped" and the code doesn't match, the doc is wrong, fix the
+> doc.
+>
+> **Update conventions:**
+> - Status values: `shipped` / `shipped (with caveat in parens)` / `partial` / `NOT built` / `schema only` / `killed`.
+> - When a row moves from "NOT built" → "shipped," include the commit SHA in the date stamp on the row.
+> - Bump the `updated:` frontmatter date.
+> - Append a one-line entry to `_Registry/log.md` in the Tom OS vault noting the architecture change (not the implementation detail — the architectural fact).
+> - Do NOT version this doc (`v1.2`, `v2`). It's living. Use git history for the timeline.
 
 ---
 

@@ -2,16 +2,25 @@
 tags:
   - project/argos
   - type/architecture
-  - status/draft
+  - status/living
 created: 2026-05-28
-updated: 2026-05-28
+updated: 2026-06-02
 aliases:
   - Agent Architecture
+  - Workflow Architecture
 ---
 
-# Agent Architecture — Claims Operations Intelligence Layer (Argos)
+# Workflow Architecture — Claims Operations Intelligence Layer (Argos)
 
-> Specialist topology, runtime, prompt structure, tool surfaces, state-machine boundaries, eval wiring, failure modes. Companion to [SYSTEM_ARCHITECTURE.md](./SYSTEM_ARCHITECTURE.md).
+> Workflow topology, runtime, prompt structure, tool surfaces,
+> state-machine boundaries, eval wiring, failure modes. **Companion to**
+> [SYSTEM_ARCHITECTURE.md](./SYSTEM_ARCHITECTURE.md) — when this doc and
+> SYSTEM_ARCHITECTURE.md §0.1 disagree on what's shipped,
+> SYSTEM_ARCHITECTURE.md wins. Update both in the same commit.
+>
+> **Terminology:** "agents" in the title is historical. These are
+> **workflows** — deterministic Python with LLM calls at named
+> boundaries. The filename stays as-is to preserve git/import history.
 
 ---
 
@@ -40,15 +49,24 @@ This document answers, for the agent layer:
 > before proposing new work — recent-session context is biased
 > by what we just touched.
 
-**Analytical specialists (shipped, eval-grounded):**
-- Brief — `src/argos/workflows/brief.py`
-- Coverage — `src/argos/workflows/coverage.py`
-- Liability — `src/argos/workflows/liability.py`
-- Reserve — `src/argos/workflows/reserve.py`
-- Recovery / Closure — designed, not yet built
+> **Terminology note.** These are **workflows**, not agents. They run
+> as deterministic Python with LLM calls at named boundaries. See
+> SYSTEM_ARCHITECTURE.md §0.1 for the canonical status table that this
+> section mirrors. When the two disagree, SYSTEM_ARCHITECTURE.md wins
+> — it is the maintained source of truth.
 
-**Correspondence specialists (shipped):**
-- Outreach Drafter — `src/argos/workflows/outreach_drafter.py`
+**Analytical workflows (shipped, eval-grounded):**
+- Brief — `src/argos/workflows/brief/`
+- Coverage — `src/argos/workflows/coverage.py`
+- Liability — `src/argos/workflows/liability.py` (shipped 2026-06-01: deterministic core + extractor + runner)
+- Reserve — `src/argos/workflows/reserve.py` (shipped 2026-06-01: LLM extractor + Python calculator)
+- Recovery — `src/argos/workflows/recovery.py` (shipped 2026-06-02: deterministic core + extractor + runner)
+
+**Designed, not yet built:**
+- Closure — schema at `src/argos/schemas/workflows/closure.py`; workflow runtime + runner adapter NOT built
+
+**Correspondence workflows (shipped):**
+- Outreach Drafter — `src/argos/workflows/outreach_drafter.py` (v2: bullet rule sharpened, reasoning_effort=low)
 - Reply Parser — `src/argos/workflows/reply_parser.py`
 
 **Orchestration wires (shipped):**
@@ -77,25 +95,14 @@ This document answers, for the agent layer:
   See `docs/specs/triage-ranker-hybrid-v2.md`.
 
 **Not yet built (functional layer gaps):**
-- Reserve workflow — schema exists (`ReserveAnalysis`); runner has
-  a `_stub_workflow("reserve")` placeholder returning
-  `{"status": "not_implemented"}`. Re-trigger correctly enqueues
-  Reserve Jobs for it; the stub marks them done with no analysis.
-- Liability workflow — same shape; schema exists, runner stub
-  returns not_implemented
-- Reserve writeback — symmetric to `apply_coverage_decision`;
-  meaningful only once the Reserve workflow ships
-- Liability writeback — symmetric; meaningful only once the
-  Liability workflow ships
-- Typed recommendation collection on `Caseload` — today Coverage
-  results land as JSON files at `data/workflow-results/{claim_id}/`.
-  Brief reads them from disk. A typed `pending_recommendations`
-  collection on the caseload becomes necessary when going to
-  Foundry (which wants ontology objects, not files), but works
-  as files at the functional layer.
-- `AgentAction` audit log writes — schema exists, nothing appends
-- Overdue sweep — `OutboundRequest.status = "overdue"` transition
-  function does not exist
+- Closure workflow — schema exists; runtime + runner adapter NOT built. Runner currently has no `closure` entry, so dispatcher-emitted Closure jobs would fail with "No workflow registered." Last analytical workflow before the demo loop closes.
+- Dispatcher Recovery routing — `POSTURE_TO_WORKFLOWS` in `dispatcher.py` lacks a `subrogation` posture and a `liability → ["liability", "recovery"]` chain. Recovery jobs only fire via direct registry call today, not from new evidence.
+- Reserve / Liability / Recovery / Closure writebacks — symmetric to `apply_coverage_decision`. Each should append an `AgentAction` row + flip a posture field on `Claim`. Without them, cockpit clicks have nothing to commit.
+- `AgentAction` audit log writes — schema exists at `ontology/types.py:161`; nothing appends. Cross-workflow lineage / system-level Boecher-Ruiz audit trail.
+- Eval suites for Liability, Reserve, Recovery, Closure — anchor-pair thresholds + golden cases. Documented patterns exist (`docs/evals/methodology.md`); per-workflow suites do not.
+- AF signatory roster refresh — `services/recovery/constants.py` ships a seed of 9 NAICs. No quarterly scrape of AF's published list.
+- Typed `pending_recommendations` collection on `Caseload` — today workflow results land as JSON files at `data/workflow-results/{claim_id}/`. Brief reads them from disk. A typed collection becomes necessary when going to Foundry; works as files at the functional layer.
+- Overdue sweep — `OutboundRequest.status = "overdue"` transition function does not exist.
 
 **Topology summary:**
 Two specialist families — **six analytical specialists** that emit
