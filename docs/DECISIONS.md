@@ -44,6 +44,129 @@ and surface the conflict.
 
 ---
 
+## 2026-06-02 — Recovery workflow architecture: extractor + policy engine + recoverable-basis calculator + diligence ledger
+
+**Decision:** Recovery is the sixth analytical specialist, following the same
+4-stage shape Tom validated for Liability and Reserve:
+
+1. **Stage A — LLM extractor (Software 3.0):** reads FNOL packet, policy
+   declarations, police / crash report (§316.066 admissibility flag),
+   repair / medical bill registers, EOBs, and any rental / fleet / loaner
+   agreement. Classifies tortfeasor vehicle per §627.732(3) (body type +
+   primary-use test, NOT weight). Extracts VIN, owner / operator split,
+   omnibus-insured candidates, resident-relative roster, recall signal,
+   EDR-availability signal, and any release / settlement language.
+   Emits structured `RecoveryInputs` only — no pursue / abstain judgment.
+
+2. **Stage B1 — Python policy engine (Software 1.0):** applies 15 FL
+   doctrines as deterministic step-function gates against
+   `RecoveryInputs` + upstream `LiabilityAssessment` + `ReserveAnalysis` +
+   Coverage state. Each gate emits pass / fail + cite + variance flag.
+
+3. **Stage B2 — Python calculator (Software 1.0):** pure math.
+   Recoverable basis = §768.0427-capped damages − PIP collateral source −
+   made-whole shortfall, apportioned per Liability's fault percentages
+   across five layered targets (operator policy, §324.021(9)(b)3 owner
+   vicarious cap layer, owner direct-negligence uncapped, Fabre
+   non-parties, product-defect / recall). Net economics = gross × P(recovery)
+   − fee drag − fee-shifting exposure. SOL + AF + §768.76 + §627.727(6)
+   countdowns computed against today's date.
+
+4. **Stage C — Diligence ledger + templated rationale:** byte-reproducible.
+   Co-equal artifact (not a side effect) discoverable under
+   *Allstate v. Boecher* + *Allstate v. Ruiz*. Doubles as defense exhibit
+   in downstream bad-faith litigation. Includes AF signatory check
+   timestamp + source, anti-subrogation per-coverage-section cross-
+   reference, made-whole computation, decision rationale, preservation
+   hold status, sources cited, open requests, and evidence-not-obtained
+   positive record.
+
+**Why:** Recovery's analytical work is overwhelmingly doctrinal
+gate-checking + apportioned math against external clocks. Free-form LLM
+ranking of subro targets is precisely the failure mode
+[[policy-engine-first-then-llm-extraction]] identifies — vendor scoring
+tools (CCC Safekeep, Shift, Athenium) already commoditize identification
+scores. The Argos wedge is the LAYER ABOVE: deterministic FL-aware gates
++ calibrated probability per layer + sourced evidence +
+Boecher-discoverable diligence trail. Specialty TPAs leak recovery dollars
+at the FRONT of the funnel (FNOL-stage missed identification + handler-
+owned subro pattern + post-HB-837 regime change not re-baselined), not
+the back; an AI-native layer that runs the gates deterministically before
+any external demand is the leverage point.
+
+**Output framing:** Recovery never auto-commits. Recommendation literal is
+`pursue | route_to_af | route_to_litigation | route_to_negotiated_demand |
+abstain | senior_review_required`. The diligence ledger + per-gate
+evidence + per-layer apportionment are the primary surfaces the adjuster
+reviews. Authority is keyed off **net apportioned recoverable** (not
+gross damages) — Recovery is the money-back surface, the ceiling is what
+we can actually get back.
+
+**Triggers** (event-driven first, calendar fallback): `FNOL_THIRD_PARTY_SIGNAL`
+(emits preservation hold only — no quantified recommendation pre-Liability);
+`LIABILITY_SUBRO_REFERRAL_HINT` (primary); `RESERVE_INDEMNITY_PAID`
+(triggers made-whole re-eval); `EXTERNAL_COUNTERPARTY_EVENT` (tortfeasor
+carrier tender / claimant §768.76 notice / AF dismissal — each starts a
+30-day or 60-day external clock); `SOL_THRESHOLD_CROSSED` (T-90 / T-60 /
+T-30 against 2yr post-HB-837 or 4yr pre-HB-837 clock); `SALVAGE_RELEASE_REQUEST`
+(blocks release until *Valcin* preservation documented); `CALENDAR_DIARY_90_DAY`.
+
+**FL-specific doctrines (15) implemented as policy-engine gates:**
+HB 837 51% bar (§768.81(6)); HB 837 negligence SOL selector (§95.11(4)(a) —
+2yr post / 4yr pre); anti-subrogation rule (per coverage section);
+made-whole doctrine (*Schonau v. GEICO* — limited-fund-only, freestanding
+direct claim survives); PIP subrogability carve-out (§627.7405 commercial
+vehicle only, taxicab excluded, classified per §627.732(3));
+UM preservation 30-day (§627.727(6)); collateral-source 30-day (§768.76(7));
+§324.021(9)(b)3 vicarious cap ($100K/$300K + $50K PD + conditional $500K
+econ); §768.81(3) joint-and-several abolition + Fabre apportionment;
+§627.737 verbal threshold; §768.0427 paid-not-billed (HB 837); AF
+compulsory jurisdiction ($100K cap + 60-day refile); *Valcin / Martino*
+spoliation preservation duty; deny+subrogate interlock (§624.155 +
+*Harvey v. GEICO* — HB 837 third-party safe harbor does NOT extend to
+Recovery conduct); *WQBA* step-into-shoes defenses (pre-tender release
+extinguishes recovery).
+
+**Variance zones (9)** where calculator does NOT silently commit:
+comparative-fault cliff buffer [45%, 55%]; commercial-vehicle
+classification ambiguity; anti-subrogation per-coverage-section ambiguity;
+SOL accrual-vs-filing split (loss date within 30 days of 3/24/2023);
+made-whole with partial settlement; deny+subrogate; AF signatory
+unverifiable; products-liability repose boundary; release / pre-tender
+settlement detected.
+
+**Anti-patterns rejected** (12 total — see spec). The three most
+load-bearing: free-form LLM ranking of subro targets; billed-amount
+recoverable basis (§768.0427 strips this); demand letter before
+omnibus-insured cross-reference (anti-subro gate runs BEFORE any external
+communication).
+
+**Out of scope (v1):** workers' comp / GL / commercial property subro
+lines (line-specific doctrine warrants its own specialist); non-FL losses
+(FL-only by design; cross-state needs lane-and-SOL selection logic);
+UM-subro nuances outside §627.727(6); real-time AF signatory roster sync
+(v1 ships seeded roster); calibrated P(recovery) per-program tuning
+against settled-outcome corpora (v1 ships seeded scalars); cross-stream
+Coverage roster real-time sync (snapshot semantics in v1).
+
+**Code touched (planned):** `docs/specs/recovery-workflow.md` (this spec);
+`src/argos/schemas/workflows/recovery.py` (full refactor — `RecoveryInputs`
++ `RecoveryAssessment` + nested types); `src/argos/services/recovery/`
+(`constants.py`, `policy_engine.py`, `apportionment_calculator.py`,
+`diligence_ledger.py`, `rationale.py`); `src/argos/workflows/recovery.py`
+(extractor + runtime); `src/argos/services/orchestrator/runner.py` (wire
+`_run_recovery_via_adapter`); test suites mirroring Liability's structure.
+The Liability implementation pattern (commits 9c0c1ea + c68df11) is the
+template.
+
+**Palantir mapping:** RecoveryInputs / RecoveryAssessment → Ontology
+object types; doctrine gates → Functions; preservation hold + AF filing
++ demand letter → Action Types; AF signatory roster + NHTSA recall lookup
+→ Functions wrapping external data; Boecher-discoverable diligence ledger
+→ first-class Ontology object with discovery-survivable schema.
+
+---
+
 ## 2026-06-01 — Liability workflow architecture: extractor + policy engine + apportionment calculator + diligence ledger
 
 **Decision:** Liability follows the Reserve precedent (LLM extractor + Python
