@@ -411,34 +411,61 @@ class TestRecoverySchema:
 
 
 class TestClosureSchema:
-    def test_minimal_valid_ready(self) -> None:
-        analysis = ClosureAnalysis(
+    def test_minimal_ready_to_close(self) -> None:
+        from argos.schemas.workflows.closure import (
+            AuthorityRouting as _AR,
+            ClosureAssessment, ClosureDiligenceLedger,
+        )
+        a = ClosureAssessment(
             request_id="exp-1",
             reviewed_as_of=NOW,
-            ready_to_close=_assessment("File is ready to close", 0.96),
+            recommendation="ready_to_close_without_payment",
+            ready_probability=0.96,
+            indemnity_status="ready",
+            oir_classification="closed_without_payment",
+            diligence_ledger=ClosureDiligenceLedger(),
+            authority_tier_required=_AR(
+                committable_at_examiner=True,
+                required_tier="examiner",
+            ),
         )
-        assert analysis.blocking_defects == []
+        assert a.blocking_defects == []
+        assert a.recommendation == "ready_to_close_without_payment"
 
     def test_with_blocking_defects(self) -> None:
-        analysis = ClosureAnalysis(
+        from argos.schemas.workflows.closure import (
+            AuthorityRouting as _AR,
+            BlockingDefect, ClosureAssessment, ClosureDiligenceLedger,
+        )
+        a = ClosureAssessment(
             request_id="exp-1",
             reviewed_as_of=NOW,
-            ready_to_close=_assessment("File is ready to close", 0.12),
+            recommendation="blocked_by_defects",
+            ready_probability=0.04,
+            indemnity_status="open",
+            diligence_ledger=ClosureDiligenceLedger(),
+            authority_tier_required=_AR(
+                committable_at_examiner=False,
+                required_tier="senior_examiner",
+            ),
             blocking_defects=[
-                ClosureDefect(
-                    kind="open_recovery",
-                    description="Recovery R-4218-1 status=potential, never resolved",
-                    evidence_citations=[_doc_citation()],
-                    resolution_hint="Resolve the recovery (pursue or abandon)",
+                BlockingDefect(
+                    gate_id="open_crn_within_cure_window",
+                    tier="A",
+                    description="Open CRN day 12 of 60 cure window",
+                    statute_or_case_cite="Fla. Stat. §624.155(3)",
+                    remediation_action="Document specific cure of alleged violation OR pay full damages",
                 ),
-                ClosureDefect(
-                    kind="outstanding_reserve",
-                    description="Outstanding indemnity = $2,400",
-                    evidence_citations=[_doc_citation("doc-ledger")],
+                BlockingDefect(
+                    gate_id="medicare_msp_unresolved",
+                    tier="B",
+                    description="Medicare beneficiary, no CMS Final Demand on file",
+                    statute_or_case_cite="42 U.S.C. §1395y(b)(2)+(b)(3)",
+                    remediation_action="Obtain CMS Final Demand letter; pay or dispute within 60 days",
                 ),
             ],
         )
-        assert len(analysis.blocking_defects) == 2
+        assert len(a.blocking_defects) == 2
 
 
 class TestBriefSchema:
