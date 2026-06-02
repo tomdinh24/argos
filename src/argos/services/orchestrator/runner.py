@@ -29,6 +29,7 @@ from argos.services.orchestrator.job import Job
 from argos.services.orchestrator.queue import JobQueue
 from argos.workflows.brief.brief import run_brief
 from argos.workflows.coverage import run_coverage
+from argos.workflows.liability import run_liability
 from argos.workflows.reserve import run_reserve
 
 
@@ -78,6 +79,37 @@ def _run_reserve_via_adapter(caseload: Caseload, claim_id: str) -> WorkflowResul
     return summary, result.analysis.model_dump(mode="json")
 
 
+def _run_liability_via_adapter(caseload: Caseload, claim_id: str) -> WorkflowResult:
+    """Real Liability call: extractor → policy engine → calculator → ledger →
+    templated rationale."""
+    synth = caseload_to_synthetic_claim(caseload, claim_id)
+    claim_meta = next(
+        (c for c in caseload.claims if c.claim_id == claim_id), None,
+    )
+    result = run_liability(synth, claim_meta=claim_meta)
+    insured_id = next(
+        (
+            pid
+            for pid, ap in result.assessment.apportionment.items()
+            if pid.startswith("P-insured") or "insured" in pid.lower()
+        ),
+        next(iter(result.assessment.apportionment), None),
+    )
+    insured_pct = (
+        result.assessment.apportionment[insured_id].fault_pct
+        if insured_id is not None else "n/a"
+    )
+    summary = (
+        f"Liability for {claim_id}: insured_fault={insured_pct}%, "
+        f"regime={result.assessment.applicable_regime.statute}, "
+        f"bar_basis={result.assessment.applicable_regime.bar_basis}, "
+        f"variance_flags={len(result.assessment.variance_flags)}, "
+        f"authority={result.assessment.authority_tier_required.required_tier}, "
+        f"extractor_attempts={result.extractor_attempts}"
+    )
+    return summary, result.assessment.model_dump(mode="json")
+
+
 def _make_brief_runner(results_root: Path) -> WorkflowFn:
     """Build a Brief workflow closure that knows where to read other
     workflows' results from. Brief is a read-only assembler, so it
@@ -120,7 +152,7 @@ def _stub_workflow(name: str) -> WorkflowFn:
 WORKFLOW_REGISTRY: dict[str, WorkflowFn] = {
     "coverage": _run_coverage_via_adapter,
     "reserve": _run_reserve_via_adapter,
-    "liability": _stub_workflow("liability"),
+    "liability": _run_liability_via_adapter,
 }
 
 
