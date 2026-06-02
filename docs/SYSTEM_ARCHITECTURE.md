@@ -64,7 +64,7 @@ aliases:
 
 ### §0.2 — What ships next (ranked, per 2026-06-02 audit)
 
-1. **Closure workflow** — sixth specialist. Closes the open→closed loop in the demo. Same shape as Recovery: extractor → policy engine (block-list of unresolved defects) → calculator → ledger → rationale → runner adapter.
+1. **Closure workflow** — sixth specialist. **Design spec committed 2026-06-02** (`docs/specs/closure-workflow.md` + DECISIONS entry), grounded in a 6-dimensional research workflow (54 confirmed findings). 25 deterministic gates across 6 tiers (statutory FL + federal lien/MSP + release evidence + audit/authority + defense-track bifurcation + preservation/retention). Recovery decoupling confirmed (`closed_with_open_recovery` is a distinct recommendation state). Implementation in progress.
 2. **Dispatcher Recovery routing** — add `subrogation` posture to `POSTURE_TO_WORKFLOWS` and wire `liability → ["liability", "recovery"]` so Liability completion re-evaluates Recovery.
 3. **Reserve / Liability / Recovery / Closure writebacks** — symmetric to `apply_coverage_decision`. Each appends `AgentAction` + flips a posture field on `claim`.
 4. **AgentAction audit log writes** — every workflow run appends a typed row. Cross-workflow lineage; system-level Boecher/Ruiz audit trail.

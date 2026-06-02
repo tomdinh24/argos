@@ -44,6 +44,130 @@ and surface the conflict.
 
 ---
 
+## 2026-06-02 — Closure workflow architecture: extractor + 25-gate policy engine + bifurcated calculator + diligence ledger
+
+**Decision:** Closure is the sixth and terminating analytical workflow. Same
+5-stage shape as Recovery / Liability:
+
+1. **Stage A — LLM extractor:** reads claim state + committed upstream
+   assessments (Coverage, Liability, Reserve, Recovery, Brief) and emits a
+   structured `ClosureInputs` payload via Anthropic tool_use. Extractor is
+   bounded to fact extraction; it does not decide ready-to-close.
+
+2. **Stage B1 — Python policy engine:** evaluates ~25 deterministic
+   closure gates organized into 6 tiers — Tier A (statutory FL +
+   bad-faith), Tier B (federal lien/MSP), Tier C (release evidence),
+   Tier D (audit + authority), Tier E (defense-track bifurcation),
+   Tier F (preservation + retention). Each gate emits pass/fail/n_a +
+   cite + optional BlockingDefect.
+
+3. **Stage B2 — Python calculator:** computes `ready_probability` (Tier
+   weighting: single Tier A failure caps at 0.05; Tier B at 0.25; Tier C
+   at 0.50), ranks blocking defects, bifurcates `indemnity_status` /
+   `defense_status` per §624.155(6)(a), classifies into one of OIR's
+   three regulatory buckets (closed_with_payment / closed_without_payment
+   / reopened), and computes `preservation_until_date` floor.
+
+4. **Stage C — Diligence ledger + templated rationale:** Boecher / Ruiz
+   discoverable. Includes per-lien resolution records (Medicare,
+   Medicaid, WC, ERISA, hospital, VA, TRICARE), multi-claimant global-
+   settlement artifacts (Farinas / Shuster compliance), CRN state,
+   notice-delivery audit, preservation plan, OIR classification.
+
+**Recommendation surface:** 11 controlled literals
+(`ready_to_close_with_payment`, `ready_to_close_without_payment`,
+`closed_with_open_recovery`, four `soft_close_*` states for industry-
+standard pending windows, `blocked_by_defects`, `requires_senior_review`,
+`requires_legal_review`, `recommend_reopen`). Closure execution is
+**always human** — auto-close stays off in v1.
+
+**Why:** The close moment is the highest-leverage bad-faith trap in the
+FL auto BI lifecycle. Berges totality-of-circumstances pulls the entire
+handling history forward to the close decision; Ruiz strips work-product
+privilege over every artifact created up to resolution. Federal MSP law
+imposes double-damages exposure for closing a Medicare beneficiary file
+with unresolved conditional payments (42 U.S.C. §1395y(b)(2)(B)(iii) +
+(b)(3)(A); 42 C.F.R. §411.24(g)+(i)). NAIC Model 902 and FL §626.884
+make the close action regulator-auditable. The TPA examiner manually
+scans ~25 separate gates today; Closure surfaces the gate evaluations
++ ranked defects + remediation hints and routes the close-execution
+decision to the human.
+
+**Architectural calls resolved by the 2026-06-02 6-dimensional research
+workflow (54 confirmed findings):**
+
+- **Recovery decoupling — confirmed industry practice.** Open subro
+  does NOT block close. Closure emits `closed_with_open_recovery` as a
+  distinct state. Recovery survives as a separate file with its own
+  SOL clock (Crawford & Co., Amaxx).
+- **Reopen mechanics — same claim ID, not new file.** Per ClaimCenter
+  precedent. `apply_reopen_decision` flips status on the existing
+  Claim.
+- **Indemnity-close vs defense-close bifurcation.** §624.155(6)(a)
+  requires this for any multi-claimant interpleader. Schema carries
+  distinct `indemnity_status` and `defense_status` fields.
+- **Soft-close states.** Modeled as four `soft_close_pending_*`
+  literals matching industry practice (Sedgwick, Gallagher Bassett,
+  Crawford, ESIS) for pending Medicare Final Demand (60–180d
+  post-TPOC), pending Section 111 confirmation (135d window), pending
+  lien release letter, pending release execution.
+- **OIR three-bucket classification.** Closed-with-payment /
+  closed-without-payment / reopened — these are the regulatory states
+  and are first-class in the schema.
+- **Hospital lien search per-COUNTY, not statewide.** Shands v.
+  Mercury (Fla. 2012) struck down §713.50. Closure surfaces
+  `hospital_lien_county_search_status` and treats `pending` as a
+  variance flag for v1.
+
+**Refuted findings explicitly excluded:**
+
+- **Mid-Continent Cas. Co. v. Basdeo** as multi-claimant bad-faith
+  authority. Case exists but is a declaratory-judgment coverage
+  action. Use Farinas (850 So.2d 555), Shuster (591 So.2d 174),
+  Boston Old Colony (386 So.2d 783), §624.155(6) HB 837 instead.
+- **§626.989(6) SIU confidentiality** as cited verbatim — language
+  misplaced in the original research finding.
+
+**Out of scope (v1):**
+
+- Live CMS Section 111 RRE integration. Closure extracts
+  `section_111_tpoc_log` from claim docs (transmit receipts); live
+  integration deferred.
+- Statewide hospital-lien registry. None exists in FL; per-county
+  searches are manual. Closure surfaces `pending` as variance flag.
+- AgentAction backfill enforcement. D1 fires on most files initially
+  because AgentAction writes are not yet wired. v1 treats D1 as
+  warning, not block.
+- Auto-close even for trivially-closable cases. Ship OFF by default;
+  enable after golden-set calibration.
+- Distinct "reopen workflow." Reopen = existing pipeline running on a
+  closed file, with Closure auto-rerunning when an upstream output
+  materially shifts.
+
+**Code touched (planned):**
+
+- New: `src/argos/services/closure/` (policy engine, calculator,
+  ledger, rationale, constants).
+- New: `src/argos/workflows/closure.py` (extractor + run_closure
+  orchestration).
+- Refactored: `src/argos/schemas/workflows/closure.py` (full rewrite
+  of current minimal scaffold).
+- Modified: `src/argos/services/orchestrator/runner.py` (register
+  `_run_closure_via_adapter` + `_load_closure_upstream`).
+- Modified: `src/argos/services/orchestrator/dispatcher.py` (add
+  `closure` to `POSTURE_TO_WORKFLOWS` for closure-trigger postures).
+- New: `src/argos/services/orchestrator/closure_actions.py`
+  (`apply_closure_decision`, `apply_reopen_decision`).
+- New: `tests/services/closure/` (constants, policy engine, calculator,
+  ledger+rationale).
+- New: `tests/workflows/test_closure.py` (extractor + integration).
+
+Full spec at `docs/specs/closure-workflow.md`. The Liability / Recovery
+implementation pattern is the template (commits `9c0c1ea` + `c68df11`,
+`057260d` + `40f662b`).
+
+---
+
 ## 2026-06-02 — Recovery workflow architecture: extractor + policy engine + recoverable-basis calculator + diligence ledger
 
 **Decision:** Recovery is the sixth analytical specialist, following the same
