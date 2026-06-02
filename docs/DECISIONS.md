@@ -1,6 +1,6 @@
 ---
 created: 2026-06-01
-last_updated: 2026-06-01
+last_updated: 2026-06-02
 title: Argos Architecture Decisions Log
 status: living
 tags:
@@ -41,6 +41,69 @@ specialists compose.
 **Operating rule.** Code and plans should align with what's in this
 doc. If you're about to write code that contradicts an entry, stop
 and surface the conflict.
+
+---
+
+## 2026-06-02 — Eval-design policy: every emitted field is graded-or-deferred, deterministic math defaults to zero tolerance
+
+**Decision:** Two load-bearing policies that govern every workflow eval slice
+going forward (Liability is the reference implementation; Reserve, Recovery,
+Closure must inherit):
+
+1. **Every Pydantic field a workflow emits must be either (a) asserted by
+   ≥1 eval case, or (b) explicitly enumerated under "Known asterisks" in
+   the threshold doc as deliberately-not-graded, with a stated reason and
+   a revision trigger.** No field gets a free pass. Rich-interface fields
+   without test coverage are silent liability surfaces.
+
+2. **Numeric assertions on deterministic output default to `tolerance = 0`
+   (exact equality).** Widen per-case only when there's a named
+   stochastic source (LLM sampling, floating-point order-of-operations
+   sensitivity, downstream rounding outside the workflow's control).
+   Pre-emptive tolerance is a regression hole.
+
+**Why:** Both rules came out of the Liability eval slice first build
+(commit `c110de1`, follow-up `7798cc4`):
+
+- The schema field `ExposureCeiling.vicarious_cap_value` shipped uneval'd.
+  When GC-10 finally asserted it, the eval failed first run — the
+  calculator emits the per-occurrence ceiling (`$300K`), while the schema
+  field name implies per-person (`$100K`). Both numbers are statutorily
+  correct but answer different questions. A Reserve writeback consuming
+  `vicarious_cap_value` would have silently picked up an ambiguous figure.
+  The `design-rich-implement-minimal` rule needed this missing corollary.
+
+- `DEFAULT_FAULT_TOLERANCE_PP` was set to `Decimal("5")` defensively because
+  the fact-pattern anchors use averages-of-bands. After the first green run
+  I tightened to `Decimal("0")` and the suite stayed green — confirming the
+  ±5pp was hiding nothing real and would have masked any future regression
+  (e.g. an apportionment shift from 95% → 92%). Defensive tolerance on
+  deterministic Python `Decimal` math has no upside.
+
+**Out of scope:**
+
+- Layer 1 (LLM extractor) eval thresholds — deferred until a live-API
+  budget is set and a labeled corpus exists. The threshold doc carries the
+  target numbers but the harness isn't built.
+- Calibration grading (spec-vs-real-world ground truth) — deferred until
+  Argos has ≥10 real closed claims with known outcomes.
+- Whether `vicarious_cap_value` should surface both per-person and
+  per-occurrence figures — resolution deferred to the Reserve eval slice
+  (which is the first consumer that will care).
+
+**Code touched:**
+
+- `tests/evals/liability/_harness.py` — `LiabilityEvalCase`, `assert_case`,
+  `DEFAULT_FAULT_TOLERANCE_PP = Decimal("0")`.
+- `tests/evals/liability/test_golden_cases.py`, `test_adversarial.py` — 23
+  cases asserting every output field on `LiabilityOutputs`.
+- `docs/evals/liability-thresholds.md` — contract + run history + the
+  "Open gaps and revision path" section that names triggers for each
+  unresolved gap.
+- `pyproject.toml` — `eval` marker registered, default suite excluded via
+  `addopts = "-m 'not eval'"`.
+- `docs/SYSTEM_ARCHITECTURE.md` §0.1 + §0.2 — Liability slice marked
+  shipped, Reserve promoted to next.
 
 ---
 
