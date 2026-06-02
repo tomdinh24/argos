@@ -37,21 +37,22 @@ aliases:
 | **Liability workflow** | workflow | shipped (deterministic core + extractor + runner) | [`workflows/liability.py`](../src/argos/workflows/liability.py), [`services/liability/`](../src/argos/services/liability/) |
 | **Reserve workflow** | workflow | shipped (LLM extractor + Python calculator) | [`workflows/reserve.py`](../src/argos/workflows/reserve.py) |
 | **Recovery workflow** | workflow | shipped 2026-06-02 (deterministic core + extractor + runner) | [`workflows/recovery.py`](../src/argos/workflows/recovery.py), [`services/recovery/`](../src/argos/services/recovery/) |
-| **Closure workflow** | workflow | schema only — runtime NOT built | [`schemas/workflows/closure.py`](../src/argos/schemas/workflows/closure.py) (no `workflows/closure.py`) |
+| **Closure workflow** | workflow | shipped 2026-06-02 (deterministic core + extractor + runner + writeback actions) | [`workflows/closure.py`](../src/argos/workflows/closure.py), [`services/closure/`](../src/argos/services/closure/), [`services/orchestrator/closure_actions.py`](../src/argos/services/orchestrator/closure_actions.py) |
 | **Outreach Drafter** | correspondence | shipped (v2: bullet rule sharpened, reasoning_effort=low) | [`workflows/outreach_drafter.py`](../src/argos/workflows/outreach_drafter.py) |
 | **Reply Parser** | correspondence | shipped | [`workflows/reply_parser.py`](../src/argos/workflows/reply_parser.py) |
 | **Document Reader** | supporting | shipped | [`workflows/document_reader.py`](../src/argos/workflows/document_reader.py) |
 | **Intake Reader** | supporting | shipped | [`workflows/intake_reader.py`](../src/argos/workflows/intake_reader.py) |
 | **Triage policy engine** | supporting | shipped (deterministic gates; LLM hybrid v2 killed) | [`services/triage/policy_engine.py`](../src/argos/services/triage/policy_engine.py) |
 | **Dispatcher** | orchestration | shipped — but no `recovery` posture wired | [`services/orchestrator/dispatcher.py`](../src/argos/services/orchestrator/dispatcher.py); `POSTURE_TO_WORKFLOWS` maps coverage/reserve/liability/damages only |
-| **Runner registry** | orchestration | shipped; includes coverage/reserve/liability/recovery/brief | [`services/orchestrator/runner.py`](../src/argos/services/orchestrator/runner.py) |
+| **Runner registry** | orchestration | shipped; includes coverage/reserve/liability/recovery/closure/brief | [`services/orchestrator/runner.py`](../src/argos/services/orchestrator/runner.py) |
 | **InfoGap (policy spine)** | orchestration | shipped | [`services/orchestrator/info_gap.py`](../src/argos/services/orchestrator/info_gap.py) |
 | **DraftOutreach action wire** | orchestration | shipped | [`services/orchestrator/draft_handler.py`](../src/argos/services/orchestrator/draft_handler.py) |
 | **IngestReply action wire** | orchestration | shipped | [`services/orchestrator/reply_handler.py`](../src/argos/services/orchestrator/reply_handler.py) |
 | **Correspondence Advance** | orchestration | shipped | [`services/orchestrator/correspondence_loop.py`](../src/argos/services/orchestrator/correspondence_loop.py) |
 | **Claim Advance (cross-stream)** | orchestration | shipped | [`services/orchestrator/claim_advance.py`](../src/argos/services/orchestrator/claim_advance.py) |
 | **Coverage writeback** | action | shipped | [`services/orchestrator/coverage_actions.py`](../src/argos/services/orchestrator/coverage_actions.py) |
-| **Reserve / Liability / Recovery / Closure writebacks** | action | NOT built | — |
+| **Closure writeback** | action | shipped 2026-06-02 — `apply_closure_decision` + `apply_reopen_decision` | [`services/orchestrator/closure_actions.py`](../src/argos/services/orchestrator/closure_actions.py) |
+| **Reserve / Liability / Recovery writebacks** | action | NOT built | — |
 | **AgentAction audit log writes** | action | NOT built — schema exists, nothing appends | [`ontology/types.py:161`](../src/argos/ontology/types.py#L161) |
 | **Overdue OBR sweep** | action | NOT built | — |
 | **Typed `pending_recommendations` on Caseload** | data | NOT built (JSON files on disk today) | `data/workflow-results/{claim_id}/{workflow}.json` |
@@ -64,16 +65,15 @@ aliases:
 
 ### §0.2 — What ships next (ranked, per 2026-06-02 audit)
 
-1. **Closure workflow** — sixth specialist. **Design spec committed 2026-06-02** (`docs/specs/closure-workflow.md` + DECISIONS entry), grounded in a 6-dimensional research workflow (54 confirmed findings). 25 deterministic gates across 6 tiers (statutory FL + federal lien/MSP + release evidence + audit/authority + defense-track bifurcation + preservation/retention). Recovery decoupling confirmed (`closed_with_open_recovery` is a distinct recommendation state). Implementation in progress.
-2. **Dispatcher Recovery routing** — add `subrogation` posture to `POSTURE_TO_WORKFLOWS` and wire `liability → ["liability", "recovery"]` so Liability completion re-evaluates Recovery.
-3. **Reserve / Liability / Recovery / Closure writebacks** — symmetric to `apply_coverage_decision`. Each appends `AgentAction` + flips a posture field on `claim`.
-4. **AgentAction audit log writes** — every workflow run appends a typed row. Cross-workflow lineage; system-level Boecher/Ruiz audit trail.
-5. **Eval suites for L/R/R/C** — anchor-pair thresholds + golden cases for Liability, Reserve, Recovery, Closure. Until built, the workflows ship "trust me" — not interview-defensible.
-6. **AF signatory roster refresh path** — scrape AF's signatory list quarterly, version the roster.
-7. **Overdue OBR sweep** — `OutboundRequest.status → "overdue"` transition function.
-8. **Typed `pending_recommendations` collection** — promotes JSON-files-on-disk to first-class Caseload field. Load-bearing only when Foundry projection starts.
-9. **Foundry projection** — promote 10 missing object types (LossOccurrence, Party, CoverageDecision, ReserveTransaction, RecoveryTarget, ClosureDefect, AuthorityRequest, BadFaithSignal, ExposureLayerSnapshot, FinancialSnapshot) from nested fields → first-class ontology objects. Build Action Types, OSDK shims, AIP Evals. Multi-week — only after items 1–7 are done.
-10. **Vercel cockpit (Next.js)** — the interview surface. Build after Foundry projection so it has typed objects to render.
+1. **Dispatcher Recovery routing** — add `subrogation` posture to `POSTURE_TO_WORKFLOWS` and wire `liability → ["liability", "recovery"]` so Liability completion re-evaluates Recovery.
+2. **Reserve / Liability / Recovery writebacks** — symmetric to `apply_coverage_decision` and the now-shipped `apply_closure_decision`. Each appends `AgentAction` + flips a posture field on `claim`.
+3. **AgentAction audit log writes** — every workflow run appends a typed row. Cross-workflow lineage; system-level Boecher/Ruiz audit trail. Promotes Closure gate D1 from warning → blocker.
+4. **Eval suites for L/R/R/C** — anchor-pair thresholds + golden cases for Liability, Reserve, Recovery, Closure. Until built, the workflows ship "trust me" — not interview-defensible.
+5. **AF signatory roster refresh path** — scrape AF's signatory list quarterly, version the roster.
+6. **Overdue OBR sweep** — `OutboundRequest.status → "overdue"` transition function.
+7. **Typed `pending_recommendations` collection** — promotes JSON-files-on-disk to first-class Caseload field. Load-bearing only when Foundry projection starts.
+8. **Foundry projection** — promote 10 missing object types (LossOccurrence, Party, CoverageDecision, ReserveTransaction, RecoveryTarget, ClosureDefect, AuthorityRequest, BadFaithSignal, ExposureLayerSnapshot, FinancialSnapshot) from nested fields → first-class ontology objects. Build Action Types, OSDK shims, AIP Evals. Multi-week — only after items 1–6 are done.
+9. **Vercel cockpit (Next.js)** — the interview surface. Build after Foundry projection so it has typed objects to render.
 
 ### §0.3 — Maintenance protocol
 

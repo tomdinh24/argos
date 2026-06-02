@@ -28,7 +28,16 @@ from argos.services.orchestrator.adapter import caseload_to_synthetic_claim
 from argos.services.orchestrator.job import Job
 from argos.services.orchestrator.queue import JobQueue
 from argos.workflows.brief.brief import run_brief
+from argos.workflows.closure import run_closure
 from argos.workflows.coverage import run_coverage
+from argos.schemas.workflows.closure import (
+    ClosureUpstreamContext,
+    UpstreamBriefSnapshotForClosure,
+    UpstreamCoverageSnapshotForClosure,
+    UpstreamLiabilitySnapshotForClosure,
+    UpstreamRecoverySnapshotForClosure,
+    UpstreamReserveSnapshotForClosure,
+)
 from argos.schemas.workflows.recovery import (
     RecoveryUpstreamContext,
     UpstreamCoverageSnapshot,
@@ -209,6 +218,130 @@ def _make_recovery_runner(results_root: Path) -> WorkflowFn:
     return run
 
 
+def _load_closure_upstream(
+    results_root: Path, claim_id: str,
+) -> ClosureUpstreamContext:
+    """Load Coverage/Liability/Reserve/Recovery/Brief results from prior
+    runs into the small typed snapshots Closure consumes. Each snapshot
+    is optional — missing prior runs degrade gracefully (the policy
+    engine treats None as "no upstream signal")."""
+    claim_dir = results_root / claim_id
+    coverage_snap: UpstreamCoverageSnapshotForClosure | None = None
+    liability_snap: UpstreamLiabilitySnapshotForClosure | None = None
+    reserve_snap: UpstreamReserveSnapshotForClosure | None = None
+    recovery_snap: UpstreamRecoverySnapshotForClosure | None = None
+    brief_snap: UpstreamBriefSnapshotForClosure | None = None
+
+    cov_path = claim_dir / "coverage.json"
+    if cov_path.exists():
+        try:
+            data = json.loads(cov_path.read_text())
+            outcomes = data.get("synthesis", {}).get("outcomes", []) or []
+            clean_prob = outcomes[0].get("probability", 1.0) if outcomes else 1.0
+            decision = "granted" if clean_prob >= 0.5 else "uncommitted"
+            coverage_snap = UpstreamCoverageSnapshotForClosure(
+                decision_committed=clean_prob >= 0.5,
+                decision=decision,  # type: ignore[arg-type]
+            )
+        except (json.JSONDecodeError, KeyError, TypeError, IndexError):
+            pass
+
+    lia_path = claim_dir / "liability.json"
+    if lia_path.exists():
+        try:
+            data = json.loads(lia_path.read_text())
+            regime = data.get("applicable_regime", {}) or {}
+            apport = data.get("apportionment", {}) or {}
+            insured_id = next(
+                (pid for pid in apport if "insured" in pid.lower()), None,
+            )
+            insured_pct = (
+                apport[insured_id].get("fault_pct") if insured_id else None
+            )
+            liability_snap = UpstreamLiabilitySnapshotForClosure(
+                apportionment_committed=bool(apport),
+                regime_statute=regime.get("statute", "unknown"),
+                insured_fault_pct=insured_pct,
+            )
+        except (json.JSONDecodeError, KeyError, TypeError):
+            pass
+
+    res_path = claim_dir / "reserve.json"
+    if res_path.exists():
+        try:
+            data = json.loads(res_path.read_text())
+            paid = {}
+            outstanding = {}
+            for c in data.get("per_component", []) or []:
+                paid[c["component"]] = c.get("paid_to_date", 0)
+                outstanding[c["component"]] = (
+                    c.get("recommended_outstanding_band", {}).get("p50", 0)
+                )
+            reserve_snap = UpstreamReserveSnapshotForClosure(
+                paid_indemnity_by_component=paid,
+                outstanding_indemnity_by_component=outstanding,
+            )
+        except (json.JSONDecodeError, KeyError, TypeError):
+            pass
+
+    rec_path = claim_dir / "recovery.json"
+    if rec_path.exists():
+        try:
+            data = json.loads(rec_path.read_text())
+            recovery_snap = UpstreamRecoverySnapshotForClosure(
+                pursuit_decision_committed=True,
+                decision=data.get("recommendation", "uncommitted"),  # type: ignore[arg-type]
+            )
+        except (json.JSONDecodeError, KeyError, TypeError):
+            pass
+
+    brief_path = claim_dir / "brief.json"
+    if brief_path.exists():
+        try:
+            data = json.loads(brief_path.read_text())
+            brief_snap = UpstreamBriefSnapshotForClosure(
+                open_obrs_with_legal_weight=0,
+                open_obrs_informational=0,
+                agent_action_count=len(
+                    data.get("workflow_recommendations_summary", []) or [],
+                ),
+            )
+        except (json.JSONDecodeError, KeyError, TypeError):
+            pass
+
+    return ClosureUpstreamContext(
+        coverage=coverage_snap,
+        liability=liability_snap,
+        reserve=reserve_snap,
+        recovery=recovery_snap,
+        brief=brief_snap,
+    )
+
+
+def _make_closure_runner(results_root: Path) -> WorkflowFn:
+    """Build a Closure workflow closure that knows where to read upstream
+    Coverage/Liability/Reserve/Recovery/Brief results from. Closure
+    consumes every prior workflow; missing snapshots degrade to a
+    conservative recommendation."""
+    def run(caseload: Caseload, claim_id: str) -> WorkflowResult:
+        synth = caseload_to_synthetic_claim(caseload, claim_id)
+        claim_meta = next(
+            (c for c in caseload.claims if c.claim_id == claim_id), None,
+        )
+        upstream = _load_closure_upstream(results_root, claim_id)
+        result = run_closure(synth, upstream=upstream, claim_meta=claim_meta)
+        summary = (
+            f"Closure for {claim_id}: recommendation={result.assessment.recommendation}, "
+            f"ready_p={result.assessment.ready_probability:.2f}, "
+            f"oir={result.assessment.oir_classification}, "
+            f"defects={len(result.assessment.blocking_defects)}, "
+            f"authority={result.assessment.authority_tier_required.required_tier}, "
+            f"extractor_attempts={result.extractor_attempts}"
+        )
+        return summary, result.assessment.model_dump(mode="json")
+    return run
+
+
 def _make_brief_runner(results_root: Path) -> WorkflowFn:
     """Build a Brief workflow closure that knows where to read other
     workflows' results from. Brief is a read-only assembler, so it
@@ -277,6 +410,7 @@ class WorkflowRunner:
             registry = {
                 **WORKFLOW_REGISTRY,
                 "recovery": _make_recovery_runner(results_root),
+                "closure": _make_closure_runner(results_root),
                 "brief": _make_brief_runner(results_root),
             }
         self.registry = registry
