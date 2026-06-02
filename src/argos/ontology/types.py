@@ -156,6 +156,43 @@ class Claim(BaseModel):
             "claim so the posture transition is automatic."
         ),
     )
+    reserve_decision_committed: bool = Field(
+        default=False,
+        description=(
+            "True once the adjuster has committed the Reserve workflow's "
+            "recommended outstanding band. Set by `apply_reserve_decision`. "
+            "Consumed by Closure (verifies reserve adequacy at close)."
+        ),
+    )
+    liability_apportionment_committed: bool = Field(
+        default=False,
+        description=(
+            "True once the adjuster has committed the Liability workflow's "
+            "apportionment (fault percentages per party). Set by "
+            "`apply_liability_decision`. Consumed by Closure A2 gate and "
+            "by Recovery's recoverable-basis math."
+        ),
+    )
+    recovery_pursuit_decision_committed: bool = Field(
+        default=False,
+        description=(
+            "True once the adjuster has committed the Recovery workflow's "
+            "pursuit decision (pursue / route_to_af / abstain / etc.). "
+            "Set by `apply_recovery_decision`. Consumed by Closure's "
+            "`closed_with_open_recovery` decoupling logic."
+        ),
+    )
+    recovery_pursuit_decision: Literal[
+        "pursue", "route_to_af", "route_to_litigation",
+        "route_to_negotiated_demand", "abstain", "senior_review_required",
+        "uncommitted",
+    ] = Field(
+        default="uncommitted",
+        description=(
+            "The specific Recovery pursuit decision. Mirrored from the "
+            "RecoveryAssessment.recommendation when the adjuster commits."
+        ),
+    )
 
 
 class AgentAction(BaseModel):
