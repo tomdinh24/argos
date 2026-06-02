@@ -7,7 +7,8 @@ exist; these tests live with the schemas.
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
+from decimal import Decimal
 
 import pytest
 from pydantic import ValidationError
@@ -34,10 +35,15 @@ from argos.schemas.workflows.coverage import (
     CoverageDraft,
 )
 from argos.schemas.workflows.liability import (
-    FaultAllocationBucket,
-    FaultAllocationSynthesis,
-    LiabilityAnalysis,
-    LiabilityDraft,
+    ApplicableRegime,
+    ApportionmentEntry,
+    AuthorityRouting,
+    DiligenceLedger,
+    EvidencePackClassification,
+    ExposureCeiling,
+    FactPatternAnchor,
+    LiabilityAssessment,
+    LiabilityRationale,
 )
 from argos.schemas.workflows.recovery import (
     RecoveryAmountBand,
@@ -108,88 +114,112 @@ class TestCoverageSchema:
         assert "recommendation" not in CoverageReport.model_fields
 
 
+def _entry(pct: int | Decimal, low: int | Decimal, high: int | Decimal, conf: float = 0.7) -> ApportionmentEntry:
+    return ApportionmentEntry(
+        fault_pct=Decimal(pct),
+        fault_pct_band_low=Decimal(low),
+        fault_pct_band_high=Decimal(high),
+        confidence=conf,
+    )
+
+
+def _minimal_regime() -> ApplicableRegime:
+    return ApplicableRegime(
+        statute="modified_51_bar_hb837",
+        recovery_bar_triggered=False,
+        bar_basis="none",
+        date_of_loss_governing=date(2025, 6, 2),
+        explanation="HB 837 (effective 2023-03-24) governs auto-BI accruing after that date.",
+    )
+
+
+def _minimal_ceiling() -> ExposureCeiling:
+    return ExposureCeiling(
+        vicarious_cap_applies=False,
+        negligent_entrustment_uncapped_path_available=False,
+        graves_lessor_removed=False,
+    )
+
+
+def _minimal_ledger() -> DiligenceLedger:
+    return DiligenceLedger(
+        posture_percent_by_party={"P-insured": Decimal("80"), "P-claimant": Decimal("20")},
+        change_conditions=["new EDR data", "deposition transcript"],
+        next_review_date=date(2025, 8, 1),
+        next_review_trigger="EVIDENCE_LANDED_RE_EVAL",
+    )
+
+
+def _minimal_authority() -> AuthorityRouting:
+    return AuthorityRouting(
+        committable_at_examiner=True,
+        required_tier="examiner",
+        gross_exposure=Decimal("50000"),
+        net_apportioned_exposure=Decimal("40000"),
+        basis_for_tier="Within examiner band; no variance flags fired",
+    )
+
+
+def _minimal_rationale() -> LiabilityRationale:
+    return LiabilityRationale(
+        fact_pattern_anchor=FactPatternAnchor(
+            pattern="rear_end",
+            anchor_pct=Decimal("95"),
+            anchor_party_role="rear_driver",
+            controlling_authority="Birge v. Charron, 107 So. 3d 350 (Fla. 2012)",
+        ),
+        net_apportionment_walk="Anchor 95/5 → no rebuttal evidence → final 80/20 honoring police-report POI",
+    )
+
+
 class TestLiabilitySchema:
     def test_minimal_valid(self) -> None:
-        analysis = LiabilityAnalysis(
+        analysis = LiabilityAssessment(
             request_id="exp-1",
             reviewed_as_of=NOW,
-            jurisdiction="FL",
-            comparative_fault_rule="modified_51",
-            comparative_fault_rule_citation=_rule_citation(),
-            evidence_found=[_doc_citation()],
-            assessments=[_assessment("Insured following too close", 0.85)],
-            fault_allocation_synthesis=FaultAllocationSynthesis(
-                buckets=[
-                    FaultAllocationBucket(
-                        insured_fault_pct=100,
-                        claimant_fault_pct=0,
-                        probability=0.18,
-                        reasoning="Pure-rear-end interpretation",
-                        evidence_citations=[_doc_citation()],
-                    ),
-                    FaultAllocationBucket(
-                        insured_fault_pct=80,
-                        claimant_fault_pct=20,
-                        probability=0.82,
-                        reasoning="Police-report-aligned",
-                        evidence_citations=[_doc_citation("doc-2")],
-                    ),
-                ],
-            ),
-            recovery_barred_probability=0.0,
-            draft_analysis=LiabilityDraft(
-                body="...", citations=[_doc_citation()]
-            ),
+            apportionment={
+                "P-insured": _entry(80, 70, 90),
+                "P-claimant": _entry(20, 10, 30),
+            },
+            applicable_regime=_minimal_regime(),
+            exposure_ceiling=_minimal_ceiling(),
+            rationale=_minimal_rationale(),
+            diligence_ledger=_minimal_ledger(),
+            authority_tier_required=_minimal_authority(),
+            evidence_pack_classification=EvidencePackClassification(),
         )
-        assert analysis.comparative_fault_rule == "modified_51"
+        assert analysis.applicable_regime.statute == "modified_51_bar_hb837"
+        assert sum(e.fault_pct for e in analysis.apportionment.values()) == Decimal("100")
 
-    def test_rule_citation_must_be_sourced(self) -> None:
-        with pytest.raises(ValidationError, match="sourced legal rule"):
-            LiabilityAnalysis(
+    def test_apportionment_must_sum_to_100(self) -> None:
+        with pytest.raises(ValidationError, match="sum to 100"):
+            LiabilityAssessment(
                 request_id="exp-1",
                 reviewed_as_of=NOW,
-                jurisdiction="FL",
-                comparative_fault_rule="modified_51",
-                comparative_fault_rule_citation=_doc_citation(),  # doc, not rule
-                evidence_found=[_doc_citation()],
-                assessments=[_assessment("foo", 0.5)],
-                fault_allocation_synthesis=FaultAllocationSynthesis(
-                    buckets=[
-                        FaultAllocationBucket(
-                            insured_fault_pct=100,
-                            claimant_fault_pct=0,
-                            probability=0.5,
-                            reasoning="...",
-                            evidence_citations=[_doc_citation()],
-                        ),
-                        FaultAllocationBucket(
-                            insured_fault_pct=50,
-                            claimant_fault_pct=50,
-                            probability=0.5,
-                            reasoning="...",
-                            evidence_citations=[_doc_citation()],
-                        ),
-                    ],
-                ),
-                recovery_barred_probability=0.0,
-                draft_analysis=LiabilityDraft(
-                    body="...", citations=[_doc_citation()]
-                ),
+                apportionment={
+                    "P-insured": _entry(70, 60, 80),
+                    "P-claimant": _entry(20, 10, 30),
+                },
+                applicable_regime=_minimal_regime(),
+                exposure_ceiling=_minimal_ceiling(),
+                rationale=_minimal_rationale(),
+                diligence_ledger=_minimal_ledger(),
+                authority_tier_required=_minimal_authority(),
+                evidence_pack_classification=EvidencePackClassification(),
+            )
+
+    def test_apportionment_band_must_be_ordered(self) -> None:
+        with pytest.raises(ValidationError, match="ordered"):
+            ApportionmentEntry(
+                fault_pct=Decimal("80"),
+                fault_pct_band_low=Decimal("90"),
+                fault_pct_band_high=Decimal("70"),
+                confidence=0.5,
             )
 
     def test_no_recommendation_field(self) -> None:
-        assert "recommended_bucket" not in LiabilityAnalysis.model_fields
-        assert "recommended_allocation" not in LiabilityAnalysis.model_fields
-
-    def test_bucket_percentages_must_sum_to_100(self) -> None:
-        with pytest.raises(ValidationError, match="sum to 100"):
-            FaultAllocationBucket(
-                insured_fault_pct=70,
-                claimant_fault_pct=20,
-                probability=0.5,
-                reasoning="...",
-                evidence_citations=[_doc_citation()],
-            )
+        assert "recommended_bucket" not in LiabilityAssessment.model_fields
+        assert "recommended_allocation" not in LiabilityAssessment.model_fields
 
 
 class TestReserveSchema:
