@@ -25,6 +25,12 @@ from typing import Callable
 
 from argos.ontology.types import Caseload
 from argos.services.orchestrator.adapter import caseload_to_synthetic_claim
+from argos.services.orchestrator.audit_log import (
+    ANALYSIS_EMITTED,
+    VALIDATOR_FAIL,
+    append_agent_action,
+    build_agent_action,
+)
 from argos.services.orchestrator.job import Job
 from argos.services.orchestrator.queue import JobQueue
 from argos.workflows.brief.brief import run_brief
@@ -400,10 +406,17 @@ class WorkflowRunner:
         caseload: Caseload,
         results_root: Path,
         registry: dict[str, WorkflowFn] | None = None,
+        audit_log_root: Path | None = None,
     ):
         self.queue = queue
         self.caseload = caseload
         self.results_root = results_root
+        # AgentAction JSONL lives next to workflow-results by default.
+        self.audit_log_root = (
+            audit_log_root
+            if audit_log_root is not None
+            else results_root.parent / "agent-actions"
+        )
         if registry is None:
             # Brief needs the results_root bound in; build a per-instance
             # registry on top of the static default.
@@ -418,7 +431,13 @@ class WorkflowRunner:
     def process_one(self) -> Job | None:
         """Process the next pending job, if any. Returns the job
         (whatever its final state). Returns None when the queue is
-        drained."""
+        drained.
+
+        On every terminal outcome (success or failure) this appends an
+        `AgentAction` row to the per-claim audit log. Closure's Tier-D
+        ledger-completeness gate reads that log to decide whether the
+        ledger is complete enough to promote from warning → blocker.
+        """
         job = self.queue.next_pending()
         if job is None:
             return None
@@ -431,12 +450,32 @@ class WorkflowRunner:
                 job.job_id,
                 f"No workflow registered under name {job.workflow!r}",
             )
+            append_agent_action(
+                build_agent_action(
+                    claim_id=job.claim_id,
+                    workflow=job.workflow,
+                    action_type=VALIDATOR_FAIL,
+                    summary=f"No workflow registered under name {job.workflow!r}",
+                    success=False,
+                ),
+                log_root=self.audit_log_root,
+            )
             return self.queue.next_pending() and job or job  # return updated job
 
         try:
             summary, result_dict = fn(self.caseload, job.claim_id)
         except Exception as e:  # noqa: BLE001  — surface any workflow failure
             self.queue.mark_failed(job.job_id, f"{type(e).__name__}: {e}")
+            append_agent_action(
+                build_agent_action(
+                    claim_id=job.claim_id,
+                    workflow=job.workflow,
+                    action_type=VALIDATOR_FAIL,
+                    summary=f"{type(e).__name__}: {e}",
+                    success=False,
+                ),
+                log_root=self.audit_log_root,
+            )
             return job
 
         # Persist result
@@ -445,6 +484,18 @@ class WorkflowRunner:
         )
         result_path.parent.mkdir(parents=True, exist_ok=True)
         result_path.write_text(json.dumps(result_dict, indent=2, default=str))
+
+        # Audit-log the successful analysis emission.
+        append_agent_action(
+            build_agent_action(
+                claim_id=job.claim_id,
+                workflow=job.workflow,
+                action_type=ANALYSIS_EMITTED,
+                summary=summary,
+                success=True,
+            ),
+            log_root=self.audit_log_root,
+        )
 
         self.queue.mark_done(
             job.job_id,

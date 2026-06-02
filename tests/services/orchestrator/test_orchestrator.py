@@ -250,6 +250,107 @@ class TestWorkflowRunner:
         assert processed.status == JobStatus.FAILED
         assert "No workflow registered" in (processed.error or "")
 
+    def test_runner_appends_analysis_emitted_on_success(self, tmp_path: Path):
+        """Successful workflow run writes one analysis_emitted row."""
+        from argos.services.orchestrator.audit_log import (
+            ANALYSIS_EMITTED,
+            load_agent_actions,
+        )
+
+        registry, _ = _make_stub_registry()
+        q = JobQueue()
+        q.enqueue(Job(
+            workflow="coverage", claim_id="CLM-001",
+            triggered_by_doc_id="D1", posture_changed="coverage",
+        ))
+        results_root = tmp_path / "results"
+        audit_root = tmp_path / "audit"
+        runner = WorkflowRunner(
+            q, build_caseload(), results_root, registry=registry,
+            audit_log_root=audit_root,
+        )
+        runner.process_one()
+
+        rows = load_agent_actions("CLM-001", log_root=audit_root)
+        assert len(rows) == 1
+        assert rows[0].workflow == "coverage"
+        assert rows[0].action_type == ANALYSIS_EMITTED
+        assert rows[0].success is True
+        assert "stub coverage ran on CLM-001" in rows[0].summary
+
+    def test_runner_appends_validator_fail_on_specialist_exception(
+        self, tmp_path: Path,
+    ):
+        from argos.services.orchestrator.audit_log import (
+            VALIDATOR_FAIL,
+            load_agent_actions,
+        )
+
+        def boom(_caseload, _claim_id):
+            raise RuntimeError("specialist crashed")
+        q = JobQueue()
+        q.enqueue(Job(
+            workflow="coverage", claim_id="CLM-001",
+            triggered_by_doc_id="D1", posture_changed="coverage",
+        ))
+        results_root = tmp_path / "results"
+        audit_root = tmp_path / "audit"
+        runner = WorkflowRunner(
+            q, build_caseload(), results_root, registry={"coverage": boom},
+            audit_log_root=audit_root,
+        )
+        runner.process_one()
+
+        rows = load_agent_actions("CLM-001", log_root=audit_root)
+        assert len(rows) == 1
+        assert rows[0].action_type == VALIDATOR_FAIL
+        assert rows[0].success is False
+        assert "specialist crashed" in rows[0].summary
+
+    def test_runner_appends_validator_fail_on_unknown_workflow(
+        self, tmp_path: Path,
+    ):
+        from argos.services.orchestrator.audit_log import (
+            VALIDATOR_FAIL,
+            load_agent_actions,
+        )
+
+        q = JobQueue()
+        q.enqueue(Job(
+            workflow="nonexistent", claim_id="CLM-001",
+            triggered_by_doc_id="D1", posture_changed="coverage",
+        ))
+        results_root = tmp_path / "results"
+        audit_root = tmp_path / "audit"
+        runner = WorkflowRunner(
+            q, build_caseload(), results_root, registry={},
+            audit_log_root=audit_root,
+        )
+        runner.process_one()
+
+        rows = load_agent_actions("CLM-001", log_root=audit_root)
+        assert len(rows) == 1
+        assert rows[0].action_type == VALIDATOR_FAIL
+        assert "No workflow registered" in rows[0].summary
+
+    def test_audit_log_root_defaults_to_sibling_of_results_root(
+        self, tmp_path: Path,
+    ):
+        """When audit_log_root not provided, it parks next to results_root."""
+        registry, _ = _make_stub_registry()
+        q = JobQueue()
+        q.enqueue(Job(
+            workflow="coverage", claim_id="CLM-001",
+            triggered_by_doc_id="D1", posture_changed="coverage",
+        ))
+        results_root = tmp_path / "workflow-results"
+        runner = WorkflowRunner(
+            q, build_caseload(), results_root, registry=registry,
+        )
+        assert runner.audit_log_root == tmp_path / "agent-actions"
+        runner.process_one()
+        assert (tmp_path / "agent-actions" / "CLM-001.jsonl").exists()
+
 
 # ---------------------------------------------------------------------------
 # Adapter (no live API)
