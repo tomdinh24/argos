@@ -46,10 +46,21 @@ from argos.schemas.workflows.liability import (
     LiabilityRationale,
 )
 from argos.schemas.workflows.recovery import (
-    RecoveryAmountBand,
-    RecoveryAnalysis,
-    RecoveryDemandDraft,
-    SOLStatus,
+    ApplicableSolRegime,
+    AuthorityRouting as RecoveryAuthorityRouting,
+    CrossStreamConflicts,
+    DeadlineCalendar,
+    DoctrineGateResult,
+    EvidenceArtifacts,
+    ForumRouting,
+    NetEconomics,
+    OwnerOperatorSplit,
+    PreservationHold,
+    RecoverableBasis,
+    RecoveryAssessment,
+    RecoveryDiligenceLedger,
+    RecoveryInputs,
+    SubrogationLane,
 )
 from argos.schemas.workflows.reserve import (
     NoticeObligationTriggered,
@@ -260,41 +271,143 @@ class TestReserveSchema:
             ReserveBand(p10=50_000, p50=46_500, p90=42_000)
 
 
-class TestRecoverySchema:
-    def test_minimal_valid_with_sourced_sol(self) -> None:
-        analysis = RecoveryAnalysis(
-            request_id="exp-1",
-            reviewed_as_of=NOW,
-            opportunity=_assessment("Recovery opportunity exists (subrogation)", 0.88),
-            recovery_type="subrogation",
-            adverse_party_id="party-99",
-            amount_band=RecoveryAmountBand(gross_low=11_000, gross_median=14_000, gross_high=17_000),
-            sol_status=SOLStatus(
-                sourced_rule_applied=_rule_citation("FL_negligence_SOL_2023"),
-                deadline_date=NOW,
-                days_remaining=688,
-            ),
-            draft_demand=RecoveryDemandDraft(
-                body="demand body",
-                recipient_party_id="party-100",
-                citations=[_doc_citation()],
-            ),
-        )
-        assert analysis.recovery_type == "subrogation"
+def _minimal_recovery_sol_regime() -> ApplicableSolRegime:
+    return ApplicableSolRegime(
+        statute_version="post_hb837_2yr",
+        statute_cite="Fla. Stat. §95.11(4)(a) as amended by HB 837",
+        sol_deadline=date(2027, 6, 2),
+        days_remaining=365,
+    )
 
-    def test_unknown_sol_acceptable(self) -> None:
-        # Unsourced jurisdictions: specialist must surface "unknown", not assert
-        analysis = RecoveryAnalysis(
-            request_id="exp-1",
+
+def _minimal_recovery_basis() -> RecoverableBasis:
+    return RecoverableBasis(
+        section_768_0427_capped_damages=Decimal("25000"),
+        pip_collateral_source_stripped=Decimal("8000"),
+        made_whole_shortfall=Decimal("0"),
+        basis=Decimal("17000"),
+    )
+
+
+def _minimal_recovery_net() -> NetEconomics:
+    return NetEconomics(
+        gross_recoverable_total=Decimal("12000"),
+        fee_drag=Decimal("640"),
+        fee_shifting_exposure=Decimal("0"),
+        net_total=Decimal("11360"),
+        fee_model="internal_blended",
+    )
+
+
+def _minimal_recovery_forum() -> ForumRouting:
+    return ForumRouting(
+        recommendation="arbitration_forums",
+        af_signatory_check="signatory",
+        company_paid_damages=Decimal("12000"),
+        af_cap_dollars=Decimal("100000"),
+        within_af_cap=True,
+        basis="Both carriers AF signatory; under $100K cap",
+    )
+
+
+def _minimal_recovery_authority() -> RecoveryAuthorityRouting:
+    return RecoveryAuthorityRouting(
+        committable_at_examiner=True,
+        required_tier="examiner",
+        net_apportioned_recoverable=Decimal("11360"),
+        basis_for_tier="Within examiner authority; no variance flags",
+    )
+
+
+def _minimal_recovery_ledger() -> RecoveryDiligenceLedger:
+    return RecoveryDiligenceLedger(
+        decision_rationale="Rear-end, claimant 5% fault, AF route.",
+        preservation_hold_status=PreservationHold(
+            issued=True,
+            hold_scope=["vehicle", "scene_photos"],
+            blocks_salvage_release=True,
+        ),
+    )
+
+
+class TestRecoverySchema:
+    def test_minimal_valid_assessment(self) -> None:
+        analysis = RecoveryAssessment(
+            request_id="REC-1",
             reviewed_as_of=NOW,
-            opportunity=_assessment("Recovery opportunity exists", 0.75),
-            recovery_type="subrogation",
-            amount_band=RecoveryAmountBand(gross_low=8_000, gross_median=10_000, gross_high=12_000),
-            sol_status=SOLStatus(
-                unknown_note="No sourced SOL rule for this jurisdiction; please review",
+            recommendation="route_to_af",
+            subrogation_lane=SubrogationLane(
+                lane_id="legal",
+                cite="FL common-law legal subrogation",
+                defense_checklist_anchor="step-into-shoes",
             ),
+            doctrinal_gates=[
+                DoctrineGateResult(
+                    gate_id="hb837_negligence_sol",
+                    result="pass",
+                    statute_or_case_cite="Fla. Stat. §95.11(4)(a) as amended by HB 837",
+                    effect_if_fired="2-year SOL applies post 3/24/2023",
+                ),
+            ],
+            sol_regime=_minimal_recovery_sol_regime(),
+            layered_targets=[],
+            recoverable_basis=_minimal_recovery_basis(),
+            net_economics=_minimal_recovery_net(),
+            forum_routing=_minimal_recovery_forum(),
+            deadline_calendar=DeadlineCalendar(),
+            preservation_hold=PreservationHold(
+                issued=True,
+                hold_scope=["vehicle", "scene_photos"],
+            ),
+            diligence_ledger=_minimal_recovery_ledger(),
+            authority_tier_required=_minimal_recovery_authority(),
+            cross_stream_conflicts=CrossStreamConflicts(),
         )
-        assert analysis.sol_status.deadline_date is None
+        assert analysis.recommendation == "route_to_af"
+        assert analysis.recoverable_basis.basis == Decimal("17000")
+
+    def test_gate_without_cite_rejected(self) -> None:
+        with pytest.raises(ValidationError, match="statute_or_case_cite"):
+            RecoveryAssessment(
+                request_id="REC-1",
+                reviewed_as_of=NOW,
+                recommendation="abstain",
+                subrogation_lane=SubrogationLane(
+                    lane_id="legal", cite="-", defense_checklist_anchor="-",
+                ),
+                doctrinal_gates=[
+                    DoctrineGateResult(
+                        gate_id="some_gate",
+                        result="fail",
+                        statute_or_case_cite="",  # empty cite → reject
+                        effect_if_fired="some effect",
+                    ),
+                ],
+                sol_regime=_minimal_recovery_sol_regime(),
+                recoverable_basis=_minimal_recovery_basis(),
+                net_economics=_minimal_recovery_net(),
+                forum_routing=_minimal_recovery_forum(),
+                deadline_calendar=DeadlineCalendar(),
+                preservation_hold=PreservationHold(issued=False),
+                diligence_ledger=_minimal_recovery_ledger(),
+                authority_tier_required=_minimal_recovery_authority(),
+                cross_stream_conflicts=CrossStreamConflicts(),
+            )
+
+    def test_recovery_inputs_minimal_valid(self) -> None:
+        inputs = RecoveryInputs(
+            loss_date=date(2025, 6, 2),
+            loss_state="FL",
+            tortfeasor_vehicle_classification="private_passenger",
+            owner_operator_split=OwnerOperatorSplit(
+                owner_id="O-1", operator_id="O-1",
+                are_same=True, owner_type="natural_person",
+            ),
+            subrogation_lane="legal",
+            evidence_artifacts=EvidenceArtifacts(vehicle_status="in_storage_yard"),
+        )
+        assert inputs.loss_state == "FL"
+        assert inputs.subrogation_lane == "legal"
 
 
 class TestClosureSchema:
