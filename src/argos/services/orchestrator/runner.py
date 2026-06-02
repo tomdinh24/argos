@@ -30,6 +30,7 @@ from argos.services.orchestrator.audit_log import (
     VALIDATOR_FAIL,
     append_agent_action,
     build_agent_action,
+    has_workflow_evidence,
 )
 from argos.services.orchestrator.job import Job
 from argos.services.orchestrator.queue import JobQueue
@@ -324,24 +325,44 @@ def _load_closure_upstream(
     )
 
 
-def _make_closure_runner(results_root: Path) -> WorkflowFn:
+CLOSURE_UPSTREAM_WORKFLOWS = ["coverage", "liability", "reserve", "recovery"]
+
+
+def _make_closure_runner(
+    results_root: Path,
+    audit_log_root: Path,
+) -> WorkflowFn:
     """Build a Closure workflow closure that knows where to read upstream
     Coverage/Liability/Reserve/Recovery/Brief results from. Closure
     consumes every prior workflow; missing snapshots degrade to a
-    conservative recommendation."""
+    conservative recommendation.
+
+    The audit log is consulted to compute `agent_action_ledger_complete`
+    — Closure's Tier-D gate D1 fails when the upstream workflows
+    haven't emitted AgentAction(analysis_emitted) rows yet.
+    """
     def run(caseload: Caseload, claim_id: str) -> WorkflowResult:
         synth = caseload_to_synthetic_claim(caseload, claim_id)
         claim_meta = next(
             (c for c in caseload.claims if c.claim_id == claim_id), None,
         )
         upstream = _load_closure_upstream(results_root, claim_id)
-        result = run_closure(synth, upstream=upstream, claim_meta=claim_meta)
+        ledger_complete = has_workflow_evidence(
+            claim_id, CLOSURE_UPSTREAM_WORKFLOWS, log_root=audit_log_root,
+        )
+        result = run_closure(
+            synth,
+            upstream=upstream,
+            claim_meta=claim_meta,
+            agent_action_ledger_complete=ledger_complete,
+        )
         summary = (
             f"Closure for {claim_id}: recommendation={result.assessment.recommendation}, "
             f"ready_p={result.assessment.ready_probability:.2f}, "
             f"oir={result.assessment.oir_classification}, "
             f"defects={len(result.assessment.blocking_defects)}, "
             f"authority={result.assessment.authority_tier_required.required_tier}, "
+            f"ledger_complete={ledger_complete}, "
             f"extractor_attempts={result.extractor_attempts}"
         )
         return summary, result.assessment.model_dump(mode="json")
@@ -423,7 +444,9 @@ class WorkflowRunner:
             registry = {
                 **WORKFLOW_REGISTRY,
                 "recovery": _make_recovery_runner(results_root),
-                "closure": _make_closure_runner(results_root),
+                "closure": _make_closure_runner(
+                    results_root, self.audit_log_root,
+                ),
                 "brief": _make_brief_runner(results_root),
             }
         self.registry = registry

@@ -628,15 +628,16 @@ def apply_fl_closure_gates(
     # Tier D — Audit + authority
     # -----------------------------------------------------------------
 
-    # D1 — agent_action_ledger_incomplete (v1 warning, not block)
+    # D1 — agent_action_ledger_incomplete (blocking since 2026-06-02)
     if not inputs.agent_action_ledger_complete:
-        flags.append("agent_action_ledger_warning_only")
-        # v1: emit as n_a (warning) rather than fail
         gates.append(_gate(
             "agent_action_ledger_incomplete",
-            "n_a",
-            evidence_ref="AgentAction writes not yet wired (SYSTEM_ARCHITECTURE §0.1)",
-            remediation="Backfill once AgentAction action writes ship.",
+            "fail",
+            evidence_ref="No AgentAction(analysis_emitted) rows for upstream workflows",
+            remediation=(
+                "Re-run upstream workflows so each emits an AgentAction(analysis_emitted) "
+                "row. Closure cannot commit on an empty Boecher/Ruiz ledger."
+            ),
         ))
     else:
         gates.append(_gate("agent_action_ledger_incomplete", "pass"))

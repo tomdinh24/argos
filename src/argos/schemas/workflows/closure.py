@@ -115,7 +115,6 @@ VarianceFlag = Literal[
     "hospital_lien_county_search_pending",
     "powell_duty_arguably_triggered",
     "macola_post_excess_trajectory_pattern",
-    "agent_action_ledger_warning_only",  # v1 warning, not block
     "recovery_subro_only_state",
     "preservation_hold_floor_undeterminable",
     "release_executed_but_tender_pending",

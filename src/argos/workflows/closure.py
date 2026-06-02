@@ -431,6 +431,7 @@ def run_closure(
     anthropic_client: Anthropic | None = None,
     inputs_override: ClosureInputs | None = None,
     today: date | None = None,
+    agent_action_ledger_complete: bool | None = None,
 ) -> ClosureRunResult:
     """End-to-end Closure workflow.
 
@@ -459,6 +460,14 @@ def run_closure(
             max_retries=max_retries,
             anthropic_client=anthropic_client,
         )
+
+    # The runner-level audit-log probe is authoritative over whatever
+    # the extractor guessed about ledger completeness. Pass-through `None`
+    # keeps the extractor's value (used by direct callers without a log).
+    if agent_action_ledger_complete is not None:
+        inputs = inputs.model_copy(update={
+            "agent_action_ledger_complete": agent_action_ledger_complete,
+        })
 
     doctrine = apply_fl_closure_gates(
         inputs, upstream_ctx, program_config, today=today_date,

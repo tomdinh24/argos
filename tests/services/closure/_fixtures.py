@@ -115,7 +115,7 @@ def make_inputs(
         collateral_source_notice_sent_date=None,
         collateral_source_responses_logged=False,
         open_obrs=open_obrs or [],
-        agent_action_ledger_complete=False,
+        agent_action_ledger_complete=True,
         examiner_id="examiner-1",
         interpleader_indemnity_deposited=interpleader_indemnity_deposited,
         underlying_tort_actions_unresolved=underlying_tort_actions_unresolved,

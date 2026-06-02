@@ -165,6 +165,9 @@ def _minimal_closure_inputs() -> ClosureInputs:
         exposure_status=ExposureClosureState(
             bi=True, pd=True, mp=True, pip=True, um=True,
         ),
+        # Clean closure path requires the upstream AgentAction ledger to
+        # be complete (D1 is blocking as of 2026-06-02).
+        agent_action_ledger_complete=True,
     )
 
 
@@ -324,6 +327,41 @@ def test_run_closure_rationale_deterministic_with_fixed_inputs():
     )
     assert r1.assessment.rationale_text == r2.assessment.rationale_text
     assert r1.assessment.model_dump_json() == r2.assessment.model_dump_json()
+
+
+def test_run_closure_ledger_override_promotes_d1_to_fail():
+    """When the runner-level audit-log probe says ledger_complete=False,
+    Closure's D1 gate fails even if the extractor said True."""
+    inputs = _minimal_closure_inputs()  # defaults to ledger_complete=True
+    result = run_closure(
+        _minimal_synthetic_claim(),
+        upstream=_minimal_upstream(),
+        inputs_override=inputs,
+        reviewed_as_of=_FIXED_NOW,
+        agent_action_ledger_complete=False,
+    )
+    # D1 should appear as a fail in the doctrinal gates.
+    d1 = next(
+        g for g in result.assessment.doctrinal_gates
+        if g.gate_id == "agent_action_ledger_incomplete"
+    )
+    assert d1.result == "fail"
+    # And the raw input should reflect the override.
+    assert result.raw_inputs.agent_action_ledger_complete is False
+
+
+def test_run_closure_ledger_override_none_leaves_extractor_value():
+    """Omitting the override (default None) does not overwrite the
+    extractor's signal."""
+    inputs = _minimal_closure_inputs()  # ledger_complete=True
+    result = run_closure(
+        _minimal_synthetic_claim(),
+        upstream=_minimal_upstream(),
+        inputs_override=inputs,
+        reviewed_as_of=_FIXED_NOW,
+        # no agent_action_ledger_complete kwarg
+    )
+    assert result.raw_inputs.agent_action_ledger_complete is True
 
 
 def test_run_closure_without_upstream_runs_degraded():

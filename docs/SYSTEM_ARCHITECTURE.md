@@ -52,8 +52,10 @@ aliases:
 | **Claim Advance (cross-stream)** | orchestration | shipped | [`services/orchestrator/claim_advance.py`](../src/argos/services/orchestrator/claim_advance.py) |
 | **Coverage writeback** | action | shipped | [`services/orchestrator/coverage_actions.py`](../src/argos/services/orchestrator/coverage_actions.py) |
 | **Closure writeback** | action | shipped 2026-06-02 — `apply_closure_decision` + `apply_reopen_decision` | [`services/orchestrator/closure_actions.py`](../src/argos/services/orchestrator/closure_actions.py) |
-| **Reserve / Liability / Recovery writebacks** | action | NOT built | — |
-| **AgentAction audit log writes** | action | NOT built — schema exists, nothing appends | [`ontology/types.py:161`](../src/argos/ontology/types.py#L161) |
+| **Reserve writeback** | action | shipped 2026-06-02 — `apply_reserve_decision` | [`services/orchestrator/reserve_actions.py`](../src/argos/services/orchestrator/reserve_actions.py) |
+| **Liability writeback** | action | shipped 2026-06-02 — `apply_liability_decision` | [`services/orchestrator/liability_actions.py`](../src/argos/services/orchestrator/liability_actions.py) |
+| **Recovery writeback** | action | shipped 2026-06-02 — `apply_recovery_decision` | [`services/orchestrator/recovery_actions.py`](../src/argos/services/orchestrator/recovery_actions.py) |
+| **AgentAction audit log writes** | action | shipped 2026-06-02 — runner appends `analysis_emitted`/`validator_fail` per run; writebacks append `validator_pass` on commit; Closure D1 gate promoted from warning → blocker | [`services/orchestrator/audit_log.py`](../src/argos/services/orchestrator/audit_log.py) |
 | **Overdue OBR sweep** | action | NOT built | — |
 | **Typed `pending_recommendations` on Caseload** | data | NOT built (JSON files on disk today) | `data/workflow-results/{claim_id}/{workflow}.json` |
 | **Eval suite (anchor-pair thresholds)** | eval | partial — Coverage, Document Reader, Triage, Brief have thresholds. NOT built for Liability, Reserve, Recovery, Closure | [`docs/evals/`](./evals/) |
@@ -65,15 +67,13 @@ aliases:
 
 ### §0.2 — What ships next (ranked, per 2026-06-02 audit)
 
-1. **Reserve / Liability / Recovery writebacks** — symmetric to `apply_coverage_decision` and the shipped `apply_closure_decision`. Each appends `AgentAction` + flips a posture field on `claim`.
-2. **AgentAction audit log writes** — every workflow run appends a typed row. Cross-workflow lineage; system-level Boecher/Ruiz audit trail. Promotes Closure gate D1 from warning → blocker.
-3. **Eval suites for L/R/R/C** — anchor-pair thresholds + golden cases for Liability, Reserve, Recovery, Closure. Until built, the workflows ship "trust me" — not interview-defensible.
-4. **Document Reader `subrogation` posture** — extend the locked `PostureChanged` literal + add anchor-pair coverage so subro-signal docs (consent-to-settle, AF eligibility, made-whole waiver) can route directly to Recovery instead of riding the `liability` posture. Deferred behind an eval refresh.
-5. **AF signatory roster refresh path** — scrape AF's signatory list quarterly, version the roster.
-6. **Overdue OBR sweep** — `OutboundRequest.status → "overdue"` transition function.
-7. **Typed `pending_recommendations` collection** — promotes JSON-files-on-disk to first-class Caseload field. Load-bearing only when Foundry projection starts.
-8. **Foundry projection** — promote 10 missing object types (LossOccurrence, Party, CoverageDecision, ReserveTransaction, RecoveryTarget, ClosureDefect, AuthorityRequest, BadFaithSignal, ExposureLayerSnapshot, FinancialSnapshot) from nested fields → first-class ontology objects. Build Action Types, OSDK shims, AIP Evals. Multi-week — only after items 1–6 are done.
-9. **Vercel cockpit (Next.js)** — the interview surface. Build after Foundry projection so it has typed objects to render.
+1. **Eval suites for L/R/R/C** — anchor-pair thresholds + golden cases for Liability, Reserve, Recovery, Closure. Until built, the workflows ship "trust me" — not interview-defensible.
+2. **Document Reader `subrogation` posture** — extend the locked `PostureChanged` literal + add anchor-pair coverage so subro-signal docs (consent-to-settle, AF eligibility, made-whole waiver) can route directly to Recovery instead of riding the `liability` posture. Deferred behind an eval refresh.
+3. **AF signatory roster refresh path** — scrape AF's signatory list quarterly, version the roster.
+4. **Overdue OBR sweep** — `OutboundRequest.status → "overdue"` transition function.
+5. **Typed `pending_recommendations` collection** — promotes JSON-files-on-disk to first-class Caseload field. Load-bearing only when Foundry projection starts.
+6. **Foundry projection** — promote 10 missing object types (LossOccurrence, Party, CoverageDecision, ReserveTransaction, RecoveryTarget, ClosureDefect, AuthorityRequest, BadFaithSignal, ExposureLayerSnapshot, FinancialSnapshot) from nested fields → first-class ontology objects. Build Action Types, OSDK shims, AIP Evals. Multi-week — only after items 1–4 are done.
+7. **Vercel cockpit (Next.js)** — the interview surface. Build after Foundry projection so it has typed objects to render.
 
 ### §0.3 — Maintenance protocol
 
