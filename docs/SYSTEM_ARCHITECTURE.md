@@ -58,7 +58,7 @@ aliases:
 | **AgentAction audit log writes** | action | shipped 2026-06-02 — runner appends `analysis_emitted`/`validator_fail` per run; writebacks append `validator_pass` on commit; Closure D1 gate promoted from warning → blocker | [`services/orchestrator/audit_log.py`](../src/argos/services/orchestrator/audit_log.py) |
 | **Overdue OBR sweep** | action | NOT built | — |
 | **Typed `pending_recommendations` on Caseload** | data | NOT built (JSON files on disk today) | `data/workflow-results/{claim_id}/{workflow}.json` |
-| **Eval suite (anchor-pair thresholds)** | eval | partial — Coverage, Document Reader, Triage, Brief, **Liability** (15 golden + 8 adversarial, green 2026-06-02), **Reserve** (15 golden + 15 adversarial sub-cases, deterministic-core layer, green 2026-06-02). NOT built for Recovery, Closure | [`docs/evals/`](./evals/), [`tests/evals/liability/`](../tests/evals/liability/), [`tests/evals/reserve/`](../tests/evals/reserve/) |
+| **Eval suite (anchor-pair thresholds)** | eval | partial — Coverage, Document Reader, Triage, Brief, **Liability** (15 + 8, green 2026-06-02), **Reserve** (15 + 15 sub-cases, green 2026-06-02), **Recovery** (15 + 14 sub-cases, green 2026-06-02). NOT built for Closure | [`docs/evals/`](./evals/), [`tests/evals/liability/`](../tests/evals/liability/), [`tests/evals/reserve/`](../tests/evals/reserve/), [`tests/evals/recovery/`](../tests/evals/recovery/) |
 | **AF signatory roster** | data | seed-only (9 NAICs) — no refresh path | [`services/recovery/constants.py`](../src/argos/services/recovery/constants.py) |
 | **FastAPI service** (`/workflow/{name}/run`) | infra | NOT built — runner is in-process only | — |
 | **Foundry tenant** (Ontology, Action Types, Code Repos, AIP Evals) | infra | NOT built — Pydantic-only today | — |
@@ -67,7 +67,7 @@ aliases:
 
 ### §0.2 — What ships next (ranked, per 2026-06-02 audit)
 
-1. **Eval suites for Recovery + Closure** — anchor-pair thresholds + golden cases. Liability shipped 2026-06-02 (`tests/evals/liability/`, contract: `docs/evals/liability-thresholds.md`); Reserve shipped 2026-06-02 (`tests/evals/reserve/`, contract: `docs/evals/reserve-thresholds.md`). Recovery next because it consumes both Liability + Reserve and writes back to the caseload.
+1. **Eval suite for Closure** — anchor-pair thresholds + golden cases. Liability + Reserve + Recovery shipped 2026-06-02 (`tests/evals/{liability,reserve,recovery}/`, contracts in `docs/evals/`). Closure is the last analytical workflow without an eval slice; the 26-gate taxonomy + tier weighting + ready-probability calculator are the highest-stakes uncovered surface (Closure terminates the file).
 2. **Document Reader `subrogation` posture** — extend the locked `PostureChanged` literal + add anchor-pair coverage so subro-signal docs (consent-to-settle, AF eligibility, made-whole waiver) can route directly to Recovery instead of riding the `liability` posture. Deferred behind an eval refresh.
 3. **AF signatory roster refresh path** — scrape AF's signatory list quarterly, version the roster.
 4. **Overdue OBR sweep** — `OutboundRequest.status → "overdue"` transition function.
