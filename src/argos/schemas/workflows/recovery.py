@@ -403,8 +403,22 @@ class LayeredTarget(BaseModel):
 class RecoverableBasis(BaseModel):
     section_768_0427_capped_damages: Decimal
     pip_collateral_source_stripped: Decimal
-    made_whole_shortfall: Decimal
-    basis: Decimal = Field(description="capped − stripped − shortfall")
+    made_whole_shortfall: Decimal = Field(
+        description=(
+            "INFORMATIONAL ONLY in v1 — surfaces the made-whole gap for the "
+            "diligence ledger but is force-zeroed in `_compute_recoverable_basis` "
+            "and does NOT reduce `basis`. The carrier subrogation pursued "
+            "direct against the tortfeasor doesn't subtract the gap. If a "
+            "subrogation lane needs this to reduce basis, gate by lane in the "
+            "calculator and update this docstring."
+        ),
+    )
+    basis: Decimal = Field(
+        description=(
+            "capped_damages − stripped. (made_whole_shortfall is informational "
+            "and does not subtract here in v1; see field docstring.)"
+        ),
+    )
 
 
 class NetEconomics(BaseModel):

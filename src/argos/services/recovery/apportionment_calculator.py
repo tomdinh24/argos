@@ -476,6 +476,14 @@ def _recommendation(
     net_economics: NetEconomics,
     variance_flags: list[VarianceFlag],
 ) -> Recommendation:
+    # Ordering matters: `recovery_barred` short-circuits to "abstain" BEFORE
+    # the mandatory-escalation variance check fires. So a non-FL loss + bar +
+    # mandatory-escalation flag (e.g. `non_fl_loss_routed_to_abstain`) returns
+    # "abstain" as the recommendation literal — but the variance still drives
+    # authority routing to "roundtable" in `_authority_routing`. Three Recovery
+    # eval cases (GC-04, GC-09 and the WQBA-release path) probe this seam.
+    # If we ever want barred-but-escalated to surface as "senior_review_required",
+    # swap the two checks.
     if resolution.recovery_barred:
         return "abstain"
     if any(f in MANDATORY_ESCALATION_VARIANCE_FLAGS for f in variance_flags):

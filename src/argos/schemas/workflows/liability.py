@@ -348,7 +348,18 @@ class ExposureCeiling(BaseModel):
     """Vicarious caps + negligent-entrustment path."""
 
     vicarious_cap_applies: bool
-    vicarious_cap_value: Decimal | None = None
+    vicarious_cap_value: Decimal | None = Field(
+        default=None,
+        description=(
+            "Per-occurrence ceiling under §324.021(9)(b)3 — $300,000 for "
+            "natural-person owners. NOT the per-person figure ($100,000); "
+            "the calculator emits per-occurrence by default and downstream "
+            "consumers must read this field as per-occurrence. If a per-"
+            "person ceiling is needed in the future, surface a separate "
+            "vicarious_cap_value_per_person field rather than overloading "
+            "this one."
+        ),
+    )
     conditional_econ_layer: Decimal | None = None
     negligent_entrustment_uncapped_path_available: bool
     graves_lessor_removed: bool
