@@ -43,7 +43,7 @@ aliases:
 | **Document Reader** | supporting | shipped | [`workflows/document_reader.py`](../src/argos/workflows/document_reader.py) |
 | **Intake Reader** | supporting | shipped | [`workflows/intake_reader.py`](../src/argos/workflows/intake_reader.py) |
 | **Triage policy engine** | supporting | shipped (deterministic gates; LLM hybrid v2 killed) | [`services/triage/policy_engine.py`](../src/argos/services/triage/policy_engine.py) |
-| **Dispatcher** | orchestration | shipped 2026-06-02 (Recovery routing wired: `liability → [liability, recovery]`, `damages → [reserve, liability, recovery]`) | [`services/orchestrator/dispatcher.py`](../src/argos/services/orchestrator/dispatcher.py) |
+| **Dispatcher** | orchestration | shipped 2026-06-02 (Recovery routing wired: `liability → [liability, recovery]`, `damages → [reserve, liability, recovery]`, `subrogation → [recovery]`) | [`services/orchestrator/dispatcher.py`](../src/argos/services/orchestrator/dispatcher.py) |
 | **Runner registry** | orchestration | shipped; includes coverage/reserve/liability/recovery/closure/brief | [`services/orchestrator/runner.py`](../src/argos/services/orchestrator/runner.py) |
 | **InfoGap (policy spine)** | orchestration | shipped | [`services/orchestrator/info_gap.py`](../src/argos/services/orchestrator/info_gap.py) |
 | **DraftOutreach action wire** | orchestration | shipped | [`services/orchestrator/draft_handler.py`](../src/argos/services/orchestrator/draft_handler.py) |
@@ -67,7 +67,7 @@ aliases:
 
 ### §0.2 — What ships next (ranked, per 2026-06-02 audit)
 
-1. **Document Reader `subrogation` posture** — extend the locked `PostureChanged` literal + add anchor-pair coverage so subro-signal docs (consent-to-settle, AF eligibility, made-whole waiver) can route directly to Recovery instead of riding the `liability` posture. Deferred behind an eval refresh.
+1. **Document Reader `subrogation` v3 anchor-pair eval** — three new pairs locked in `docs/evals/document-reader-anchor-pairs-v3-subrogation-thresholds.md` (consent-to-settle, AF eligibility, made-whole waiver). Runtime / dispatcher / schema / prompt all shipped 2026-06-02; eval execution awaits the next intentional Reader live-API run.
 2. **AF signatory roster refresh path** — scrape AF's signatory list quarterly, version the roster.
 3. **Overdue OBR sweep** — `OutboundRequest.status → "overdue"` transition function.
 4. **Typed `pending_recommendations` collection** — promotes JSON-files-on-disk to first-class Caseload field. Load-bearing only when Foundry projection starts.

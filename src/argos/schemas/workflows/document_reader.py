@@ -21,7 +21,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
-PostureChanged = Literal["reserve", "liability", "coverage", "damages"]
+PostureChanged = Literal["reserve", "liability", "coverage", "damages", "subrogation"]
 
 
 class RelevanceCall(BaseModel):

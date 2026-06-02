@@ -4,17 +4,23 @@ Pure function over `RelevanceCall`: given one Reader output, returns
 the list of `Job` objects that should be enqueued. The mapping is
 small and fixed for v1:
 
-    posture_changed == "coverage"  → [Coverage]
-    posture_changed == "reserve"   → [Reserve]
-    posture_changed == "liability" → [Liability, Recovery]
-                                     (apportionment commit + Powell /
-                                     Berges signals re-shape recoverable
-                                     basis and bar evaluation)
-    posture_changed == "damages"   → [Reserve, Liability, Recovery]
-                                     (damages affect reserve adequacy,
-                                     liability negotiation, AND the
-                                     layered recoverable basis)
-    relevant == False              → []
+    posture_changed == "coverage"     → [Coverage]
+    posture_changed == "reserve"      → [Reserve]
+    posture_changed == "liability"    → [Liability, Recovery]
+                                        (apportionment commit + Powell /
+                                        Berges signals re-shape recoverable
+                                        basis and bar evaluation)
+    posture_changed == "damages"      → [Reserve, Liability, Recovery]
+                                        (damages affect reserve adequacy,
+                                        liability negotiation, AND the
+                                        layered recoverable basis)
+    posture_changed == "subrogation"  → [Recovery]
+                                        (subro-only artifacts — consent-to-
+                                        settle, AF eligibility, made-whole
+                                        waiver — re-shape the recoverable
+                                        basis without touching liability
+                                        apportionment or fault)
+    relevant == False                 → []
 
 Jobs returned here are NOT enqueued yet — the caller enqueues them
 through `JobQueue.enqueue()`, which enforces idempotency. Keeping the
@@ -24,11 +30,12 @@ Closure is NOT dispatcher-routed: it's adjuster-triggered (review
 surface signals "ready_to_close"), so it lives outside the
 posture-changed taxonomy. Same pattern as Brief.
 
-The Document Reader's `PostureChanged` literal stays
-(`coverage` / `reserve` / `liability` / `damages`) — adding new postures
-(`subrogation`, `closure`) requires extending the LLM-facing schema +
-adding anchor-pair coverage to the locked eval, deferred until that
-investment is justified.
+`subrogation` was added 2026-06-02 to stop subro-only docs from
+spuriously waking up Liability via the previous `liability` posture
+fallback. The schema literal extension is shipped; the anchor-pair eval
+for the new posture is locked in
+`docs/evals/document-reader-anchor-pairs-v3-subrogation-thresholds.md`
+and executes on the next live-API run.
 """
 from __future__ import annotations
 
@@ -42,6 +49,7 @@ POSTURE_TO_WORKFLOWS: dict[str, list[str]] = {
     "reserve": ["reserve"],
     "liability": ["liability", "recovery"],
     "damages": ["reserve", "liability", "recovery"],
+    "subrogation": ["recovery"],
 }
 
 

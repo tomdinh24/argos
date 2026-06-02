@@ -44,6 +44,12 @@ admission, police finding
 notice from another carrier, exclusion fact
 - "damages" — new demand number, settlement offer with figure, judgment, \
 verdict, lien notice
+- "subrogation" — recovery-only artifact that changes the recoverable basis \
+without touching fault or damages: consent-to-settle response from a lienholder \
+or co-defendant carrier, Arbitration Forums eligibility / signatory confirmation, \
+made-whole waiver signed by the claimant, subrogation file open / close from \
+another carrier. Pick `subrogation` (NOT `liability` or `damages`) when the \
+artifact is purely about who pays whom AFTER fault and damages are settled.
 
 Set `posture_changed = null` when material is false.
 
@@ -99,6 +105,18 @@ text_excerpt="Estimated cost of cervical discectomy and fusion: \
 $85,000–$120,000", \
 reason="New surgical recommendation with cost estimate; reserve posture \
 changes."
+
+MATERIAL — subrogation example:
+Document body: "...Per the terms of the underlying ERISA-governed plan, \
+the Trustees consent to your insured's settlement with the third-party \
+tortfeasor in the amount of $150,000.00, subject to the plan's first-dollar \
+reimbursement right of $42,318.74 in conditional payments..."
+Call: material=true, posture_changed="subrogation", \
+text_excerpt="Trustees consent to your insured's settlement with the \
+third-party tortfeasor in the amount of $150,000.00, subject to the plan's \
+first-dollar reimbursement right of $42,318.74 in conditional payments", \
+reason="ERISA plan consent-to-settle with first-dollar reimbursement \
+amount; recoverable basis changes — no liability or damages shift."
 
 RULES:
 - `text_excerpt` MUST be a verbatim quote (or near-verbatim, ≥80% \

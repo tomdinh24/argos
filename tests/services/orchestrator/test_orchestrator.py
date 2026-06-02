@@ -169,6 +169,14 @@ class TestDispatcher:
         jobs = dispatch(_call(True, "damages"), claim_id="C1")
         assert {j.workflow for j in jobs} == {"reserve", "liability", "recovery"}
 
+    def test_subrogation_posture_enqueues_recovery_only(self):
+        # Subro-only artifacts (consent-to-settle, AF eligibility,
+        # made-whole waiver) re-shape the recoverable basis without
+        # touching fault or damages. Liability does NOT re-run.
+        jobs = dispatch(_call(True, "subrogation"), claim_id="C1")
+        assert [j.workflow for j in jobs] == ["recovery"]
+        assert jobs[0].posture_changed == "subrogation"
+
 
 # ---------------------------------------------------------------------------
 # Runner (with stub specialist registry — no live API)
