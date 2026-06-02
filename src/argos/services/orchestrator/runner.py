@@ -29,6 +29,7 @@ from argos.services.orchestrator.job import Job
 from argos.services.orchestrator.queue import JobQueue
 from argos.workflows.brief.brief import run_brief
 from argos.workflows.coverage import run_coverage
+from argos.workflows.reserve import run_reserve
 
 
 WorkflowResult = tuple[str, dict]
@@ -50,6 +51,29 @@ def _run_coverage_via_adapter(caseload: Caseload, claim_id: str) -> WorkflowResu
         f"Coverage analysis for {claim_id}: "
         f"clean={result.analysis.synthesis.outcomes[0].probability:.2f}, "
         f"attempts={result.attempts}"
+    )
+    return summary, result.analysis.model_dump(mode="json")
+
+
+def _run_reserve_via_adapter(caseload: Caseload, claim_id: str) -> WorkflowResult:
+    """Real Reserve call: extractor → calculator → templated rationale."""
+    synth = caseload_to_synthetic_claim(caseload, claim_id)
+    claim_meta = next(
+        (c for c in caseload.claims if c.claim_id == claim_id), None,
+    )
+    result = run_reserve(synth, claim_meta=claim_meta)
+    indem_central = next(
+        (c.recommended_outstanding_band.p50 for c in result.analysis.per_component
+         if c.component == "indemnity"),
+        0.0,
+    )
+    notice_count = len(result.analysis.notice_obligations_triggered)
+    summary = (
+        f"Reserve for {claim_id}: indemnity p50=${indem_central:,.0f}, "
+        f"authority={result.analysis.authority_required_level}, "
+        f"notices={notice_count}, "
+        f"no_change={result.analysis.no_change_warranted}, "
+        f"extractor_attempts={result.extractor_attempts}"
     )
     return summary, result.analysis.model_dump(mode="json")
 
@@ -95,7 +119,7 @@ def _stub_workflow(name: str) -> WorkflowFn:
 
 WORKFLOW_REGISTRY: dict[str, WorkflowFn] = {
     "coverage": _run_coverage_via_adapter,
-    "reserve": _stub_workflow("reserve"),
+    "reserve": _run_reserve_via_adapter,
     "liability": _stub_workflow("liability"),
 }
 
