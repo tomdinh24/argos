@@ -39,9 +39,10 @@ DEFAULT_PROGRAM = ProgramConfig(
 
 
 # Default tolerance for the apportionment central value. The calculator
-# math is deterministic, so anything wider than this is a fixture-
-# expectation drift, not an LLM-accuracy issue.
-DEFAULT_FAULT_TOLERANCE_PP = Decimal("5")
+# math is fully deterministic (Python Decimal in `_shift_pie`), so any
+# nonzero default would be a silent regression hole. Widen per-case only
+# when a named stochastic source justifies it.
+DEFAULT_FAULT_TOLERANCE_PP = Decimal("0")
 
 
 @dataclass

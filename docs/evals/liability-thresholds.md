@@ -112,6 +112,25 @@ add a new case if the regression exposed an untested seam.
 - **LLM-extractor accuracy** — Layer 1 deferred until live API budget is set.
 - **Reserve calibration** — Reserve eval is a separate vertical slice; this doc is Liability-only.
 
+## Open gaps and revision path
+
+Five concerns surfaced during the first build of this slice. Each has a
+named trigger for revisiting it — so we don't either fix early (waste)
+or fix late (regression has already shipped).
+
+| # | Gap | Severity | Trigger to revise | Action when triggered |
+|---|---|---|---|---|
+| 1 | `vicarious_cap_value` semantics (per-person vs per-occurrence) ambiguous — calc emits per-occurrence `$300K`, schema field name implies per-person. | Medium | Reserve eval lands AND writes a payment-cap case. | Either surface both fields on `ExposureCeiling` (`vicarious_cap_per_person`, `vicarious_cap_per_occurrence`) OR document the per-occurrence semantics in the field docstring + add a Reserve case that asserts the consumer reads it correctly. |
+| 2 | Layer 1 (LLM extractor) is unevaled — a prompt change can silently break apportionment. | High | Live-API budget is set AND a ≥30-case labeled corpus exists. | Build the Layer-1 harness: enum exact-match ≥95%, statute-cite exact-match ≥99%, continuous-field ±5pp on ≥90%. Add a run-history row at the bottom of this doc. |
+| 3 | Apportionment central-value tolerance was ±5pp. | RESOLVED 2026-06-02 | — | Tightened to 0pp; suite still green. Code is fully deterministic; any future widening must name the stochastic source in a comment. |
+| 4 | No calibration grading (does the spec match closed-claim reality?). | Low until customer data | Argos has ≥10 closed claims with known outcomes from a real carrier. | Add a `tests/evals/liability/calibration/` slice that grades the spec against ground truth, not against itself. Until then, this doc is honest about the GIGO line. |
+| 5 | Subrogation rides `liability` posture (Document Reader eval is locked). | Low | Next intentional Document Reader eval refresh. | Extend `PostureChanged` literal with `subrogation`; add ≥3 anchor pairs to Document Reader covering consent-to-settle, AF eligibility, made-whole waiver; rewire dispatcher to route `subrogation → [recovery]`. |
+
+### Eval-design rules that came out of this slice
+
+- **Every Pydantic field a workflow emits must be either asserted by ≥1 case or listed under "Known asterisks" as deliberately not graded.** A rich-interface field with no test coverage is a silent liability surface — Gap #1 is exactly that pattern.
+- **Default deterministic tolerance to 0.** Widen only when you can name the noise source. Gap #3 was the cost of not doing this on first build.
+
 ## Run history
 
 Stamp each successful suite run here with date + git SHA. Update on
