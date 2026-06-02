@@ -157,13 +157,17 @@ class TestDispatcher:
         jobs = dispatch(_call(True, "reserve"), claim_id="C1")
         assert [j.workflow for j in jobs] == ["reserve"]
 
-    def test_liability_posture_enqueues_liability_only(self):
+    def test_liability_posture_enqueues_liability_and_recovery(self):
+        # Liability commit re-shapes recoverable basis + bar evaluation,
+        # so Recovery must be re-evaluated on every liability change.
         jobs = dispatch(_call(True, "liability"), claim_id="C1")
-        assert [j.workflow for j in jobs] == ["liability"]
+        assert [j.workflow for j in jobs] == ["liability", "recovery"]
 
-    def test_damages_posture_enqueues_reserve_and_liability(self):
+    def test_damages_posture_enqueues_reserve_liability_and_recovery(self):
+        # Damages flow into reserve adequacy, liability negotiation,
+        # AND the layered recoverable basis.
         jobs = dispatch(_call(True, "damages"), claim_id="C1")
-        assert {j.workflow for j in jobs} == {"reserve", "liability"}
+        assert {j.workflow for j in jobs} == {"reserve", "liability", "recovery"}
 
 
 # ---------------------------------------------------------------------------

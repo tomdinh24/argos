@@ -6,15 +6,29 @@ small and fixed for v1:
 
     posture_changed == "coverage"  → [Coverage]
     posture_changed == "reserve"   → [Reserve]
-    posture_changed == "liability" → [Liability]
-    posture_changed == "damages"   → [Reserve, Liability]
-                                     (damages affect both reserve
-                                     adequacy and liability negotiation)
+    posture_changed == "liability" → [Liability, Recovery]
+                                     (apportionment commit + Powell /
+                                     Berges signals re-shape recoverable
+                                     basis and bar evaluation)
+    posture_changed == "damages"   → [Reserve, Liability, Recovery]
+                                     (damages affect reserve adequacy,
+                                     liability negotiation, AND the
+                                     layered recoverable basis)
     relevant == False              → []
 
 Jobs returned here are NOT enqueued yet — the caller enqueues them
 through `JobQueue.enqueue()`, which enforces idempotency. Keeping the
 dispatcher pure makes it trivially testable.
+
+Closure is NOT dispatcher-routed: it's adjuster-triggered (review
+surface signals "ready_to_close"), so it lives outside the
+posture-changed taxonomy. Same pattern as Brief.
+
+The Document Reader's `PostureChanged` literal stays
+(`coverage` / `reserve` / `liability` / `damages`) — adding new postures
+(`subrogation`, `closure`) requires extending the LLM-facing schema +
+adding anchor-pair coverage to the locked eval, deferred until that
+investment is justified.
 """
 from __future__ import annotations
 
@@ -26,8 +40,8 @@ from argos.services.orchestrator.job import Job
 POSTURE_TO_WORKFLOWS: dict[str, list[str]] = {
     "coverage": ["coverage"],
     "reserve": ["reserve"],
-    "liability": ["liability"],
-    "damages": ["reserve", "liability"],
+    "liability": ["liability", "recovery"],
+    "damages": ["reserve", "liability", "recovery"],
 }
 
 

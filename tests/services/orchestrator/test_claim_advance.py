@@ -591,14 +591,15 @@ class TestAnalysisReTriggerOnDisclosures:
             reader_fn=reader,
         )
 
-        # Liability posture → one Liability Job per the dispatcher table.
-        assert len(report.analysis_jobs_enqueued) == 1
-        job = report.analysis_jobs_enqueued[0]
-        assert job.workflow == "liability"
-        assert job.claim_id == "CLM-007"
-        assert job.triggered_by_doc_id == "DOC-RT-2"
-        # Queue actually has the job.
-        assert any(j.job_id == job.job_id for j in queue.all_jobs())
+        # Liability posture → Liability + Recovery Jobs per the dispatcher
+        # table (liability commit re-shapes recoverable basis).
+        workflows = sorted(j.workflow for j in report.analysis_jobs_enqueued)
+        assert workflows == ["liability", "recovery"]
+        for job in report.analysis_jobs_enqueued:
+            assert job.claim_id == "CLM-007"
+            assert job.triggered_by_doc_id == "DOC-RT-2"
+            # Queue actually has the job.
+            assert any(j.job_id == job.job_id for j in queue.all_jobs())
 
     def test_disclosure_marked_not_relevant_enqueues_nothing(self):
         cs = _caseload()
@@ -620,9 +621,9 @@ class TestAnalysisReTriggerOnDisclosures:
         assert report.analysis_jobs_enqueued == []
         assert queue.all_jobs() == []
 
-    def test_damages_posture_enqueues_both_reserve_and_liability(self):
+    def test_damages_posture_enqueues_reserve_liability_and_recovery(self):
         """`damages` posture → POSTURE_TO_WORKFLOWS returns [reserve,
-        liability]; both Jobs land in the queue."""
+        liability, recovery]; all three Jobs land in the queue."""
         cs = _caseload()
         disclosure = _doc(
             "DOC-RT-4", document_type="medical_provider_summary",
@@ -651,7 +652,7 @@ class TestAnalysisReTriggerOnDisclosures:
         )
 
         workflows = sorted(j.workflow for j in report.analysis_jobs_enqueued)
-        assert workflows == ["liability", "reserve"]
+        assert workflows == ["liability", "recovery", "reserve"]
 
 
 class TestAnalysisReTriggerOnReplyBorneDocs:
@@ -706,10 +707,12 @@ class TestAnalysisReTriggerOnReplyBorneDocs:
         # Reply was matched (correspondence side).
         assert report.correspondence is not None
         assert report.correspondence.ingest_outcomes[0].outcome == "matched"
-        # Analysis re-trigger ALSO fired on the same doc.
-        assert len(report.analysis_jobs_enqueued) == 1
-        assert report.analysis_jobs_enqueued[0].workflow == "liability"
-        assert report.analysis_jobs_enqueued[0].triggered_by_doc_id == "DOC-RT-REPLY-1"
+        # Analysis re-trigger ALSO fired on the same doc — liability →
+        # [liability, recovery] per the dispatcher table.
+        workflows = sorted(j.workflow for j in report.analysis_jobs_enqueued)
+        assert workflows == ["liability", "recovery"]
+        for j in report.analysis_jobs_enqueued:
+            assert j.triggered_by_doc_id == "DOC-RT-REPLY-1"
 
 
 class TestAnalysisReTriggerIdempotence:
@@ -745,7 +748,8 @@ class TestAnalysisReTriggerIdempotence:
             job_queue=queue,
             reader_fn=reader,
         )
-        assert len(report1.analysis_jobs_enqueued) == 1
+        # liability → [liability, recovery] per dispatcher table
+        assert len(report1.analysis_jobs_enqueued) == 2
         initial_job_count = len(queue.all_jobs())
 
         # Second call with the same doc — already in caseload.documents,

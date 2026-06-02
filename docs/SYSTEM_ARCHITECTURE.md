@@ -43,7 +43,7 @@ aliases:
 | **Document Reader** | supporting | shipped | [`workflows/document_reader.py`](../src/argos/workflows/document_reader.py) |
 | **Intake Reader** | supporting | shipped | [`workflows/intake_reader.py`](../src/argos/workflows/intake_reader.py) |
 | **Triage policy engine** | supporting | shipped (deterministic gates; LLM hybrid v2 killed) | [`services/triage/policy_engine.py`](../src/argos/services/triage/policy_engine.py) |
-| **Dispatcher** | orchestration | shipped — but no `recovery` posture wired | [`services/orchestrator/dispatcher.py`](../src/argos/services/orchestrator/dispatcher.py); `POSTURE_TO_WORKFLOWS` maps coverage/reserve/liability/damages only |
+| **Dispatcher** | orchestration | shipped 2026-06-02 (Recovery routing wired: `liability → [liability, recovery]`, `damages → [reserve, liability, recovery]`) | [`services/orchestrator/dispatcher.py`](../src/argos/services/orchestrator/dispatcher.py) |
 | **Runner registry** | orchestration | shipped; includes coverage/reserve/liability/recovery/closure/brief | [`services/orchestrator/runner.py`](../src/argos/services/orchestrator/runner.py) |
 | **InfoGap (policy spine)** | orchestration | shipped | [`services/orchestrator/info_gap.py`](../src/argos/services/orchestrator/info_gap.py) |
 | **DraftOutreach action wire** | orchestration | shipped | [`services/orchestrator/draft_handler.py`](../src/argos/services/orchestrator/draft_handler.py) |
@@ -65,10 +65,10 @@ aliases:
 
 ### §0.2 — What ships next (ranked, per 2026-06-02 audit)
 
-1. **Dispatcher Recovery routing** — add `subrogation` posture to `POSTURE_TO_WORKFLOWS` and wire `liability → ["liability", "recovery"]` so Liability completion re-evaluates Recovery.
-2. **Reserve / Liability / Recovery writebacks** — symmetric to `apply_coverage_decision` and the now-shipped `apply_closure_decision`. Each appends `AgentAction` + flips a posture field on `claim`.
-3. **AgentAction audit log writes** — every workflow run appends a typed row. Cross-workflow lineage; system-level Boecher/Ruiz audit trail. Promotes Closure gate D1 from warning → blocker.
-4. **Eval suites for L/R/R/C** — anchor-pair thresholds + golden cases for Liability, Reserve, Recovery, Closure. Until built, the workflows ship "trust me" — not interview-defensible.
+1. **Reserve / Liability / Recovery writebacks** — symmetric to `apply_coverage_decision` and the shipped `apply_closure_decision`. Each appends `AgentAction` + flips a posture field on `claim`.
+2. **AgentAction audit log writes** — every workflow run appends a typed row. Cross-workflow lineage; system-level Boecher/Ruiz audit trail. Promotes Closure gate D1 from warning → blocker.
+3. **Eval suites for L/R/R/C** — anchor-pair thresholds + golden cases for Liability, Reserve, Recovery, Closure. Until built, the workflows ship "trust me" — not interview-defensible.
+4. **Document Reader `subrogation` posture** — extend the locked `PostureChanged` literal + add anchor-pair coverage so subro-signal docs (consent-to-settle, AF eligibility, made-whole waiver) can route directly to Recovery instead of riding the `liability` posture. Deferred behind an eval refresh.
 5. **AF signatory roster refresh path** — scrape AF's signatory list quarterly, version the roster.
 6. **Overdue OBR sweep** — `OutboundRequest.status → "overdue"` transition function.
 7. **Typed `pending_recommendations` collection** — promotes JSON-files-on-disk to first-class Caseload field. Load-bearing only when Foundry projection starts.

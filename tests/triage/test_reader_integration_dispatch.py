@@ -75,13 +75,15 @@ class TestDispatchScreeningResults:
         assert enqueued[0].claim_id == "C1"
         assert enqueued[0].triggered_by_doc_id == "D1"
 
-    def test_relevant_damages_enqueues_reserve_and_liability(self):
-        """damages posture fans out to two specialists per dispatcher rules."""
+    def test_relevant_damages_enqueues_reserve_liability_and_recovery(self):
+        """damages posture fans out to three specialists per dispatcher rules
+        (damages affect reserve adequacy, liability negotiation, AND the
+        layered recoverable basis)."""
         queue = JobQueue(persistence_path=None)
         records = [_record(True, "damages", claim_id="C2", doc_id="D9")]
         enqueued = dispatch_screening_results(_empty_screening(records), queue)
         specialists = sorted(j.workflow for j in enqueued)
-        assert specialists == ["liability", "reserve"]
+        assert specialists == ["liability", "recovery", "reserve"]
         assert all(j.claim_id == "C2" for j in enqueued)
         assert all(j.triggered_by_doc_id == "D9" for j in enqueued)
 
@@ -109,9 +111,15 @@ class TestDispatchScreeningResults:
             _record(False, None, claim_id="C3", doc_id="D3"),
         ]
         enqueued = dispatch_screening_results(_empty_screening(records), queue)
-        assert len(enqueued) == 2
+        # C1:coverage → 1 job; C2:liability → 2 jobs (liability + recovery);
+        # C3 not-relevant → 0.
+        assert len(enqueued) == 3
         by_claim = {(j.claim_id, j.workflow) for j in enqueued}
-        assert by_claim == {("C1", "coverage"), ("C2", "liability")}
+        assert by_claim == {
+            ("C1", "coverage"),
+            ("C2", "liability"),
+            ("C2", "recovery"),
+        }
 
     def test_mixed_relevant_and_non_relevant_only_enqueues_relevant(self):
         queue = JobQueue(persistence_path=None)
