@@ -94,7 +94,7 @@ Powell/Macola routing precedence.
 | `rationale_text` | NOT-GRADED-by-design | Templated; covered separately. |
 | `request_id`, `reviewed_as_of` | NOT-GRADED-by-design | Pass-throughs. |
 
-## Case coverage matrix (golden, n=15)
+## Case coverage matrix (golden, n=17)
 
 | ID | Scenario | What it grades |
 |---|---|---|
@@ -108,11 +108,13 @@ Powell/Macola routing precedence.
 | GC-08 | blocked_by_defects — multiple Tier A + Tier B fails | `recommendation=blocked_by_defects`, `ready_probability=0.05` (worst-tier wins) |
 | GC-09 | requires_legal_review — `macola_settlement_after_excess_trajectory` fails | Legal-review literal regardless of other state |
 | GC-10 | requires_senior_review — mandatory-escalation variance flag set | Senior review |
-| GC-11 | requires_senior_review — above-examiner authority, no defects | Senior review on dollar tier alone |
+| GC-11 | Above-examiner authority + escalation on file → requires_senior_review | D2 passes when SettlementAuthorizationRecord covers amount + tier |
 | GC-12 | A1 fail — coverage uncommitted | Tier A cap 0.05; defect with tier="A" |
 | GC-13 | A2 fail — liability not committed | Tier A cap; defect ranked first |
 | GC-14 | D1 fail — agent_action_ledger_incomplete | The gate promoted to blocker on 2026-06-02; tier D cap 0.70 |
 | GC-15 | Interpleader bifurcation — indemnity deposited + tort actions unresolved | `indemnity_status=closed`, `defense_status=open` |
+| GC-16 | Above-examiner authority + NO escalation → blocked_by_defects | D2 fails (Tier D cap 0.70) — complement to GC-11 |
+| GC-17 | Escalation amount < settlement → D2 still fails | Both amount AND tier must be satisfied |
 
 ## Adversarial / boundary probes (n=8)
 
@@ -152,7 +154,7 @@ golden cases pinned to the new registry.
 | 2 | `_route_authority` keys solely off `inputs.settlement.agreement_amount`; never reads upstream Reserve `total_paid`. | Medium | A high-paid claim with low/missing `agreement_amount` mis-routes to examiner. | Add a `max(agreement_amount, reserve.total_paid)` floor OR wire upstream Reserve through the routing call. |
 | 3 | `_build_preservation_plan` re-runs in the calculator even though `apply_fl_closure_gates` also computes `preservation_until_date`. Calculator overwrites unless doctrine resolution sets it. | Low | Plans drift between policy engine and calculator. | Pick one — recommend policy engine — and make the other read it. |
 | 4 | LLM extractor (Layer 1) unevaled. | High | Live API budget + corpus. | Build Layer-1 harness. |
-| 5 | `settlement_authority_exceeded` (D2) ALWAYS fires when `settlement > examiner_authority`. No `documented_escalation_evidence` input exists, so "above-examiner authority, properly escalated" is unrepresentable in v1. Effect: any settlement above $25K routes to `blocked_by_defects` with Tier D cap 0.70, NOT `requires_senior_review`. Confirmed by GC-11. | Medium | First real claim where senior examiner has authority and the file should close cleanly. | Add an `escalation_log` field to `ClosureInputs` (or a `documented_escalation` flag on `SettlementInfo`); gate passes if escalation evidence is on file for the relevant tier. |
+| 5 | `settlement_authority_exceeded` (D2) ALWAYS fires when `settlement > examiner_authority`. No `documented_escalation_evidence` input exists, so "above-examiner authority, properly escalated" is unrepresentable in v1. | RESOLVED 2026-06-02 | — | Added `SettlementAuthorizationRecord` schema + `authorizations: list[…]` on `SettlementInfo` + `AUTHORITY_TIER_RANK` in constants. D2 now passes when any record on file covers BOTH the settlement amount AND a tier at or above the routed required tier (lineage check via `AUTHORITY_TIER_RANK`); fails otherwise. GC-11 reframed to the escalated path (now `requires_senior_review`); GC-16 added for the unescalated path (still `blocked_by_defects` Tier D); GC-17 added for the amount-insufficient edge. |
 
 ### Eval-design rules inherited
 
@@ -164,3 +166,4 @@ golden cases pinned to the new registry.
 | Date | SHA | Golden | Adversarial | Notes |
 |---|---|---|---|---|
 | 2026-06-02 | 15a1b43 | 15/15 | 9/9 | Initial slice — green on second run. Two case-spec corrections: (1) GC-04 expectation widened from `{medicare_msp_unresolved}` to `{medicare_msp_unresolved, section_111_tpoc_unreported}` — both Tier B gates share the same trigger (beneficiary + settlement ≥ $750), so they always fire together; recommendation still routes correctly to `soft_close_pending_medicare_final_demand` because `medicare_only` is strict-subset of {medicare gates}. (2) GC-11 reframed from `requires_senior_review` (with `expected_defect_gate_ids=set()`) to `blocked_by_defects` (with `settlement_authority_exceeded` Tier D fail) — v1 policy engine has no `documented_escalation_evidence` input, so D2 always fires when settlement > examiner cap. Logged as new Gap #5; promoted to §0.2 item 2 of SYSTEM_ARCHITECTURE. 8 adversarial scenarios split into 9 sub-cases. ADV-08 reframed from "Medicare+§111 doesn't route to medicare-only" (false — both ARE in medicare_gates) to "Medicare + lien (mixed) → blocked_by_defects" (true boundary). |
+| 2026-06-02 | 60fd935 | 17/17 | 9/9 | Gap #5 resolved. Added `SettlementAuthorizationRecord` schema + `authorizations: list[…]` on `SettlementInfo` + `AUTHORITY_TIER_RANK` in constants. D2 now passes when an authorization record covers BOTH the settlement amount AND a tier ≥ routed required tier. GC-11 reframed back to the escalated-path requires_senior_review semantic (D2 pass). GC-16 added for the unescalated complement (D2 fail). GC-17 added for the amount-insufficient edge (D2 fail). Golden count: 15 → 17. |

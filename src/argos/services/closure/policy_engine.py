@@ -18,6 +18,7 @@ from argos.schemas.workflows.closure import (
     VarianceFlag,
 )
 from argos.services.closure.constants import (
+    AUTHORITY_TIER_RANK,
     CRN_CURE_WINDOW_DAYS,
     FL_ADMIN_CODE_RECORD_RETENTION_YEARS,
     FL_CLOSURE_GATE_REGISTRY_V1,
@@ -643,31 +644,62 @@ def apply_fl_closure_gates(
         gates.append(_gate("agent_action_ledger_incomplete", "pass"))
 
     # D2 — settlement_authority_exceeded
+    # Routing ladder (must match _route_authority in closure_calculator.py):
+    # examiner ≤ examiner_cap < senior_examiner ≤ senior_cap < supervisor
+    # ≤ supervisor_cap < manager ≤ manager_cap < roundtable
     settlement_amt3 = s.agreement_amount or Decimal("0")
-    if settlement_amt3 > program_config.closure_examiner_authority_dollars:
-        # Above examiner authority — needs escalation
-        # We don't have escalation evidence in inputs; default to fail if above examiner
-        if settlement_amt3 > program_config.closure_manager_authority_dollars:
-            gates.append(_gate(
-                "settlement_authority_exceeded",
-                "fail",
-                evidence_ref=f"settlement=${settlement_amt3} > manager ${program_config.closure_manager_authority_dollars}",
-                remediation="Roundtable approval required.",
-            ))
-        else:
-            # Examiner can't, but might be within higher-tier auth — surface as fail until evidence
-            gates.append(_gate(
-                "settlement_authority_exceeded",
-                "fail",
-                evidence_ref=f"settlement=${settlement_amt3} > examiner ${program_config.closure_examiner_authority_dollars}",
-                remediation="Escalate to next authority tier (senior_examiner / supervisor / manager).",
-            ))
-    else:
+    if settlement_amt3 <= program_config.closure_examiner_authority_dollars:
         gates.append(_gate(
             "settlement_authority_exceeded",
             "pass" if settlement_amt3 > 0 else "n_a",
             evidence_ref=f"settlement=${settlement_amt3} within examiner authority",
         ))
+    else:
+        # Above examiner — required tier = lowest tier whose cap ≥ settlement.
+        if settlement_amt3 <= program_config.closure_senior_examiner_authority_dollars:
+            required_tier = "senior_examiner"
+            cap_label = f"senior ${program_config.closure_senior_examiner_authority_dollars}"
+        elif settlement_amt3 <= program_config.closure_supervisor_authority_dollars:
+            required_tier = "supervisor"
+            cap_label = f"supervisor ${program_config.closure_supervisor_authority_dollars}"
+        elif settlement_amt3 <= program_config.closure_manager_authority_dollars:
+            required_tier = "manager"
+            cap_label = f"manager ${program_config.closure_manager_authority_dollars}"
+        else:
+            required_tier = "roundtable"
+            cap_label = f"> manager ${program_config.closure_manager_authority_dollars}"
+
+        required_rank = AUTHORITY_TIER_RANK[required_tier]
+        covering = [
+            auth for auth in s.authorizations
+            if auth.approved_amount >= settlement_amt3
+            and AUTHORITY_TIER_RANK.get(auth.approver_role, -1) >= required_rank
+        ]
+        if covering:
+            approvers = ", ".join(f"{a.approver_role}:{a.approver_id}" for a in covering)
+            gates.append(_gate(
+                "settlement_authority_exceeded",
+                "pass",
+                evidence_ref=(
+                    f"settlement=${settlement_amt3} routed to {required_tier} ({cap_label}); "
+                    f"escalation on file from {approvers}"
+                ),
+            ))
+        else:
+            gates.append(_gate(
+                "settlement_authority_exceeded",
+                "fail",
+                evidence_ref=(
+                    f"settlement=${settlement_amt3} > examiner "
+                    f"${program_config.closure_examiner_authority_dollars}; "
+                    f"required_tier={required_tier}; no SettlementAuthorizationRecord "
+                    f"on file covering both amount AND tier"
+                ),
+                remediation=(
+                    f"Obtain {required_tier}-tier authorization (or higher) for "
+                    f"${settlement_amt3}; record as SettlementAuthorizationRecord."
+                ),
+            ))
 
     # D3 — record_classification_missing — derived later by calculator; gate is here so
     # we can carry the OIR classification into the ledger.

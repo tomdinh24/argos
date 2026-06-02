@@ -5,6 +5,8 @@ from decimal import Decimal
 
 import pytest
 
+from datetime import date
+
 from argos.schemas.workflows.closure import (
     CrnRecord,
     DenialLetterAudit,
@@ -14,6 +16,7 @@ from argos.schemas.workflows.closure import (
     OutboundRequestRef,
     PowellAnalysis,
     Section111TpocLog,
+    SettlementAuthorizationRecord,
 )
 from tests.evals.closure._harness import (
     DEFAULT_LOSS,
@@ -248,30 +251,33 @@ GC_10 = ClosureEvalCase(
 
 
 # ---------------------------------------------------------------------------
-# GC-11 — Above-examiner authority — `settlement_authority_exceeded` Tier D
-# Settlement = $30K (> $25K examiner authority, ≤ $75K senior). v1 policy
-# engine has no "documented escalation evidence" input, so the D2 gate ALWAYS
-# fires when settlement > examiner. Recommendation routes to blocked_by_defects
-# under the current decision lattice (D2 fail + no soft-close path). Tier D
-# cap = 0.70. Authority tier still routes to senior_examiner.
-# Logged as Gap #5 in docs/evals/closure-thresholds.md.
+# GC-11 — Above-examiner authority, PROPERLY ESCALATED → requires_senior_review
+# Settlement = $30K (> $25K examiner, ≤ $75K senior). SettlementAuthorization
+# record on file from a senior_examiner covering the full amount. D2 passes;
+# decision lattice routes to requires_senior_review on dollar tier alone.
 # ---------------------------------------------------------------------------
 
 GC_11 = ClosureEvalCase(
     case_id="GC-11",
-    description=(
-        "Above-examiner authority — D2 settlement_authority_exceeded fires "
-        "(no escalation-evidence input in v1)"
+    description="Above-examiner authority, escalation on file → requires_senior_review",
+    inputs=make_inputs(
+        settlement_amount=Decimal("30000"),
+        settlement_authorizations=[
+            SettlementAuthorizationRecord(
+                approver_role="senior_examiner",
+                approver_id="senior-1",
+                approved_amount=Decimal("30000"),
+                approved_at=date(2026, 5, 19),
+            ),
+        ],
     ),
-    inputs=make_inputs(settlement_amount=Decimal("30000")),
     upstream=make_upstream(),
-    expected_recommendation="blocked_by_defects",
-    expected_ready_probability=0.70,
+    expected_recommendation="requires_senior_review",
     expected_authority_tier="senior_examiner",
     expected_committable_at_examiner=False,
     expected_settlement_amount=Decimal("30000"),
-    expected_defect_gate_ids={"settlement_authority_exceeded"},
-    expected_defect_tiers_include={"D"},
+    expected_defect_gate_ids=set(),
+    expected_gate_results={"settlement_authority_exceeded": "pass"},
 )
 
 
@@ -344,9 +350,57 @@ GC_15 = ClosureEvalCase(
 )
 
 
+# ---------------------------------------------------------------------------
+# GC-16 — Above-examiner authority WITHOUT escalation → D2 fail → blocked
+# Same $30K settlement as GC-11 but no authorization on file. D2 fails,
+# Tier D cap = 0.70, recommendation → blocked_by_defects. Complement to GC-11.
+# ---------------------------------------------------------------------------
+
+GC_16 = ClosureEvalCase(
+    case_id="GC-16",
+    description="Above-examiner authority, NO escalation on file → blocked Tier D",
+    inputs=make_inputs(settlement_amount=Decimal("30000")),
+    upstream=make_upstream(),
+    expected_recommendation="blocked_by_defects",
+    expected_ready_probability=0.70,
+    expected_authority_tier="senior_examiner",
+    expected_committable_at_examiner=False,
+    expected_settlement_amount=Decimal("30000"),
+    expected_defect_gate_ids={"settlement_authority_exceeded"},
+    expected_defect_tiers_include={"D"},
+    expected_gate_results={"settlement_authority_exceeded": "fail"},
+)
+
+
+# ---------------------------------------------------------------------------
+# GC-17 — Escalation amount insufficient → D2 still fails
+# Senior signed $20K but settlement is $30K → no covering record → blocked.
+# ---------------------------------------------------------------------------
+
+GC_17 = ClosureEvalCase(
+    case_id="GC-17",
+    description="Escalation amount < settlement → D2 still fails (amount + tier both required)",
+    inputs=make_inputs(
+        settlement_amount=Decimal("30000"),
+        settlement_authorizations=[
+            SettlementAuthorizationRecord(
+                approver_role="senior_examiner",
+                approver_id="senior-1",
+                approved_amount=Decimal("20000"),  # insufficient
+                approved_at=date(2026, 5, 19),
+            ),
+        ],
+    ),
+    upstream=make_upstream(),
+    expected_recommendation="blocked_by_defects",
+    expected_defect_gate_ids={"settlement_authority_exceeded"},
+    expected_gate_results={"settlement_authority_exceeded": "fail"},
+)
+
+
 GOLDEN_CASES = [
     GC_01, GC_02, GC_03, GC_04, GC_05, GC_06, GC_07, GC_08,
-    GC_09, GC_10, GC_11, GC_12, GC_13, GC_14, GC_15,
+    GC_09, GC_10, GC_11, GC_12, GC_13, GC_14, GC_15, GC_16, GC_17,
 ]
 
 

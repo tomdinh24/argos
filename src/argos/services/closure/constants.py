@@ -307,6 +307,18 @@ TIER_FAILURE_PROBABILITY_CAP: dict[str, float] = {
 }
 
 
+# Authority tier ladder (lower rank = lower authority). Used by D2 to verify
+# that a SettlementAuthorizationRecord was signed by an approver at or above
+# the routed required tier.
+AUTHORITY_TIER_RANK: dict[str, int] = {
+    "examiner": 0,
+    "senior_examiner": 1,
+    "supervisor": 2,
+    "manager": 3,
+    "roundtable": 4,
+}
+
+
 # =============================================================================
 # Default program config
 # =============================================================================

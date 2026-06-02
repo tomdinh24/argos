@@ -195,6 +195,21 @@ class OutboundRequestRef(BaseModel):
     days_open: int = 0
 
 
+class SettlementAuthorizationRecord(BaseModel):
+    """One documented escalation approval for a settlement above examiner authority.
+
+    Drives the D2 `settlement_authority_exceeded` gate. The gate passes when at
+    least one record on file covers the settlement amount AND was signed by an
+    approver at or above the routed authority tier (per AUTHORITY_TIER_RANK).
+    """
+
+    approver_role: AuthorityTier
+    approver_id: str
+    approved_amount: Decimal
+    approved_at: date
+    memo_doc_id: str | None = None
+
+
 class SettlementInfo(BaseModel):
     """Settlement state for §627.4265 + release-on-file checks."""
 
@@ -207,6 +222,7 @@ class SettlementInfo(BaseModel):
     check_amount: Decimal | None = None
     days_since_agreement: int | None = None
     days_since_release: int | None = None
+    authorizations: list[SettlementAuthorizationRecord] = Field(default_factory=list)
 
 
 class MultiClaimantState(BaseModel):

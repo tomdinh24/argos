@@ -15,6 +15,7 @@ from argos.schemas.workflows.closure import (
     MultiClaimantState,
     PowellAnalysis,
     Section_627_4137_AffidavitState,
+    SettlementAuthorizationRecord,
     SettlementInfo,
     UpstreamCoverageSnapshotForClosure,
     UpstreamLiabilitySnapshotForClosure,
@@ -38,6 +39,7 @@ def make_inputs(
     settlement_agreement_date: date | None = date(2026, 5, 20),
     release_executed_date: date | None = date(2026, 5, 22),
     check_tendered_date: date | None = date(2026, 5, 30),
+    settlement_authorizations: list[SettlementAuthorizationRecord] | None = None,
     all_exposures_closed: bool = True,
     boston_old_colony_all_yes: bool = True,
     open_crns: list | None = None,
@@ -78,6 +80,7 @@ def make_inputs(
         release_executed_date=release_executed_date,
         release_includes_hold_harmless_for_liens=True,
         check_tendered_date=check_tendered_date,
+        authorizations=settlement_authorizations or [],
     )
     return ClosureInputs(
         loss_date=loss_date,

@@ -68,12 +68,11 @@ aliases:
 ### §0.2 — What ships next (ranked, per 2026-06-02 audit)
 
 1. **Document Reader `subrogation` posture** — extend the locked `PostureChanged` literal + add anchor-pair coverage so subro-signal docs (consent-to-settle, AF eligibility, made-whole waiver) can route directly to Recovery instead of riding the `liability` posture. Deferred behind an eval refresh.
-2. **Closure escalation-evidence input (eval Gap #5)** — add `documented_escalation_log` to `ClosureInputs` (or a flag on `SettlementInfo`); `settlement_authority_exceeded` (D2) passes when evidence on file for the routed authority tier. Currently every settlement above examiner cap routes to `blocked_by_defects` even when escalation would be valid. Surfaced by Closure GC-11.
-3. **AF signatory roster refresh path** — scrape AF's signatory list quarterly, version the roster.
-4. **Overdue OBR sweep** — `OutboundRequest.status → "overdue"` transition function.
-5. **Typed `pending_recommendations` collection** — promotes JSON-files-on-disk to first-class Caseload field. Load-bearing only when Foundry projection starts.
-6. **Foundry projection** — promote 10 missing object types (LossOccurrence, Party, CoverageDecision, ReserveTransaction, RecoveryTarget, ClosureDefect, AuthorityRequest, BadFaithSignal, ExposureLayerSnapshot, FinancialSnapshot) from nested fields → first-class ontology objects. Build Action Types, OSDK shims, AIP Evals. Multi-week — only after items 1–4 are done.
-7. **Vercel cockpit (Next.js)** — the interview surface. Build after Foundry projection so it has typed objects to render.
+2. **AF signatory roster refresh path** — scrape AF's signatory list quarterly, version the roster.
+3. **Overdue OBR sweep** — `OutboundRequest.status → "overdue"` transition function.
+4. **Typed `pending_recommendations` collection** — promotes JSON-files-on-disk to first-class Caseload field. Load-bearing only when Foundry projection starts.
+5. **Foundry projection** — promote 10 missing object types (LossOccurrence, Party, CoverageDecision, ReserveTransaction, RecoveryTarget, ClosureDefect, AuthorityRequest, BadFaithSignal, ExposureLayerSnapshot, FinancialSnapshot) from nested fields → first-class ontology objects. Build Action Types, OSDK shims, AIP Evals. Multi-week — only after items 1–3 are done.
+6. **Vercel cockpit (Next.js)** — the interview surface. Build after Foundry projection so it has typed objects to render.
 
 ### §0.3 — Maintenance protocol
 
