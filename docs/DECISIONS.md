@@ -44,6 +44,119 @@ and surface the conflict.
 
 ---
 
+## 2026-06-01 — Liability workflow architecture: extractor + policy engine + apportionment calculator + diligence ledger
+
+**Decision:** Liability follows the Reserve precedent (LLM extractor + Python
+calculator + templated rationale, byte-reproducible) but the calculator
+decomposes into two stages AND there is a third co-equal artifact:
+
+1. **Stage A — LLM extractor (Software 3.0):** reads documents + claim
+   state, emits structured `LiabilityInputs` — fact pattern, parties +
+   roles, evidence items with quoted spans, owner relationship,
+   intoxication evidence, rear-end rebuttal evidence, demand state,
+   ROR/CRN state.
+2. **Stage B1 — Python policy engine (Software 1.0):** FL doctrine gates.
+   Step-function logic. Determines applicable regime (pre/post HB-837),
+   vicarious cap ceiling, Graves preemption, negligent entrustment
+   branch, §768.36 intoxication bar applicability. 15 named doctrines
+   versioned in `FL_DOCTRINE_REGISTRY_V1`.
+3. **Stage B2 — Python apportionment calculator (Software 1.0):** anchor
+   + adjustment table. Per-pattern anchor (rear_end ≈ 95% rear per
+   *Birge/Pierce/Eppler*; left_turn ≈ 90% turner per FL Std. Jury Instr.
+   401). Five-tier evidence weight class (hard_data ±20-25, independent
+   ±10-15, party_admission ±15, rebuttable_signal ±5-10, credibility_only
+   ±0-5). Per-party-pair scalar with confidence band from evidence
+   completeness + inter-evidence agreement.
+4. **Stage C — Diligence ledger (templated, co-equal artifact):**
+   contemporaneous record of posture by party, basis evidence with
+   quoted spans, change conditions, next review, open requests with age,
+   evidence-not-obtained with reason, prior-posture delta, supervisor
+   disagreement record. NOT a side effect. This is the *Allstate v.
+   Ruiz* (901 So. 2d 802) discoverable artifact and the *Harvey v.
+   GEICO* procedural-diligence defense.
+
+**Output framing (per Tom's nudge 2026-06-01):** the primary deliverable
+is the **evidence-anchored structured insight** + diligence ledger. The
+apportionment percentage is what falls out of the structured record, not
+what gets generated first. Liability does not auto-commit to fault; it
+generates evidence aligned to FL doctrines, surfaces what the evidence
+supports and what it doesn't, and produces a recommended apportionment
+with confidence band + audit trail. The adjuster commits. Argos
+surfaces.
+
+**Why split into 4 stages (vs Reserve's 3):**
+
+- **FL doctrine gates are step-functions** (51% bar, Graves preemption,
+  §768.36 intoxication, Fabre pleading, dangerous-instrumentality cap)
+  with binary effects on recovery. Putting them in LLM judgment is the
+  hybrid-v2 trap (model infers its own policy). Per
+  [[policy-engine-first-then-llm-extraction]]: deterministic gates +
+  LLM for extraction only.
+- **The diligence ledger is the product moat.** Under *Allstate v.
+  Ruiz* the claim file diligence trail is discoverable in bad-faith
+  litigation. *Harvey* lost on procedural-diligence gaps, not on
+  substantive fault calls. If we ship a defensible percentage with no
+  trail, we have built the wrong product. The ledger IS the trial
+  exhibit plaintiff's counsel reads to the jury — designed accordingly.
+
+**Calibration:** v1 fact-pattern anchors, evidence weights, doctrine
+registry, and authority bands are practitioner-anchored seeds informed
+by the 2026-06-01 multi-dimensional research workflow (73 findings, 10
+verified, 62 partial, 1 uncertain, 0 refuted across apportionment
+methodology, FL doctrines, source-document mapping, adjuster mechanics,
+specialty-TPA practice, bad-faith diligence). Closest published anchor
+proxy is MA 211 CMR 74 (codified presumptive fault). FL does not codify
+equivalents — we're industry-aligning anchored to controlling cases.
+
+**Variance zones (10 named) route around the calculator:** the
+calculator does NOT silently commit through `near_51_pct_bar` (force
+roundtable regardless of dollars), `fabre_non_party_evidenced_but_unpled`
+(dual-scenario), `powell_clarity_ambiguity`, `sufficient_evidence_borderline`
+(do not auto-start §624.155(4) 90-day clock), `siu_referral`, or any
+contradiction-pattern. Step-function risk dominates dollar risk.
+
+**Anti-patterns this rejects:**
+
+- LLM emits final fault % directly
+- Auto-start §624.155(4) safe-harbor clock on borderline sufficient-evidence
+- Silent omission of evidence we didn't collect (use `evidence_not_obtained` with reason)
+- Feed consistency-check contradictions silently into fault adjustment (widen band + SIU referral instead — opening-posture-as-real-call is bad-faith trap)
+- Commit through a variance flag
+- Output a "bad-faith exposure score" (faking that judgment invites the AI-excuse-generator-becomes-bad-faith-exhibit failure mode)
+- Score Fabre non-parties without pleading check (Rule 1.110(d))
+
+**Cost we are paying:** the rationale narrative is templated, not
+adjuster-voice. Same trade as Reserve. For legally-bearing outputs in
+FL bad-faith country, this is the right trade.
+
+**Out of scope (v1, explicit):** chain-reaction crashes with single
+claimant + divisible injuries across damage categories; non-FL
+jurisdictions (15 doctrine gates would each need a state-specific port);
+first-party UM/UIM claims; coverage-questions liability interactions
+(late notice + non-cooperation + Fabre stacking); supervisor-vs-examiner
+disagreement dynamics beyond metadata; bad-faith risk scoring; subro
+mechanics beyond handoff flag.
+
+**Code touched (when shipped):**
+`docs/specs/liability-workflow.md` (this entry's basis),
+`src/argos/schemas/workflows/liability.py` (refactor to
+LiabilityInputs + LiabilityAssessment split),
+`src/argos/services/liability/policy_engine.py`,
+`src/argos/services/liability/apportionment_calculator.py`,
+`src/argos/services/liability/constants.py`
+(FACT_PATTERN_ANCHORS_V1, EVIDENCE_WEIGHTS_V1, FL_DOCTRINE_REGISTRY_V1),
+`src/argos/services/liability/rationale.py`,
+`src/argos/services/liability/diligence_ledger.py`,
+`src/argos/workflows/liability.py` (extractor + orchestration),
+`src/argos/services/orchestrator/runner.py` (replace
+`_stub_workflow("liability")` with real workflow).
+
+**Research workflow run:** wy3ekvjbs (2026-06-01). Full proposal in
+session transcript; verified findings drive the doctrine registry +
+anchor table + variance zones.
+
+---
+
 ## 2026-06-01 — Reserve workflow architecture: LLM extractor + Python calculator split
 
 **Decision:** Reserve workflow is split into two stages, not bundled
