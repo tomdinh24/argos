@@ -58,7 +58,7 @@ aliases:
 | **AgentAction audit log writes** | action | shipped 2026-06-02 — runner appends `analysis_emitted`/`validator_fail` per run; writebacks append `validator_pass` on commit; Closure D1 gate promoted from warning → blocker | [`services/orchestrator/audit_log.py`](../src/argos/services/orchestrator/audit_log.py) |
 | **Overdue OBR sweep** | action | NOT built | — |
 | **Typed `pending_recommendations` on Caseload** | data | NOT built (JSON files on disk today) | `data/workflow-results/{claim_id}/{workflow}.json` |
-| **Eval suite (anchor-pair thresholds)** | eval | partial — Coverage, Document Reader, Triage, Brief have thresholds. NOT built for Liability, Reserve, Recovery, Closure | [`docs/evals/`](./evals/) |
+| **Eval suite (anchor-pair thresholds)** | eval | partial — Coverage, Document Reader, Triage, Brief, **Liability** (15 golden + 8 adversarial, deterministic-core layer, green 2026-06-02) have thresholds. NOT built for Reserve, Recovery, Closure | [`docs/evals/`](./evals/), [`tests/evals/liability/`](../tests/evals/liability/) |
 | **AF signatory roster** | data | seed-only (9 NAICs) — no refresh path | [`services/recovery/constants.py`](../src/argos/services/recovery/constants.py) |
 | **FastAPI service** (`/workflow/{name}/run`) | infra | NOT built — runner is in-process only | — |
 | **Foundry tenant** (Ontology, Action Types, Code Repos, AIP Evals) | infra | NOT built — Pydantic-only today | — |
@@ -67,7 +67,7 @@ aliases:
 
 ### §0.2 — What ships next (ranked, per 2026-06-02 audit)
 
-1. **Eval suites for L/R/R/C** — anchor-pair thresholds + golden cases for Liability, Reserve, Recovery, Closure. Until built, the workflows ship "trust me" — not interview-defensible.
+1. **Eval suites for R/R/C** — anchor-pair thresholds + golden cases for Reserve, Recovery, Closure. Liability slice shipped 2026-06-02 (`tests/evals/liability/`, contract: `docs/evals/liability-thresholds.md`). Reserve next because the dollar number is the load-bearing output of the whole system.
 2. **Document Reader `subrogation` posture** — extend the locked `PostureChanged` literal + add anchor-pair coverage so subro-signal docs (consent-to-settle, AF eligibility, made-whole waiver) can route directly to Recovery instead of riding the `liability` posture. Deferred behind an eval refresh.
 3. **AF signatory roster refresh path** — scrape AF's signatory list quarterly, version the roster.
 4. **Overdue OBR sweep** — `OutboundRequest.status → "overdue"` transition function.

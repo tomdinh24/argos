@@ -40,3 +40,7 @@ select = ["E", "F", "I", "B", "UP", "RUF"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+markers = [
+    "eval: workflow eval cases (golden + adversarial). Run with `-m eval` to include; excluded from the default test run because they are designed for on-demand quality regression detection, not per-commit gating.",
+]
+addopts = "-m 'not eval'"
