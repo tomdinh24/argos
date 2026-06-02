@@ -29,7 +29,14 @@ from argos.services.orchestrator.job import Job
 from argos.services.orchestrator.queue import JobQueue
 from argos.workflows.brief.brief import run_brief
 from argos.workflows.coverage import run_coverage
+from argos.schemas.workflows.recovery import (
+    RecoveryUpstreamContext,
+    UpstreamCoverageSnapshot,
+    UpstreamLiabilitySnapshot,
+    UpstreamReserveSnapshot,
+)
 from argos.workflows.liability import run_liability
+from argos.workflows.recovery import run_recovery
 from argos.workflows.reserve import run_reserve
 
 
@@ -110,6 +117,98 @@ def _run_liability_via_adapter(caseload: Caseload, claim_id: str) -> WorkflowRes
     return summary, result.assessment.model_dump(mode="json")
 
 
+def _load_recovery_upstream(
+    results_root: Path, claim_id: str,
+) -> RecoveryUpstreamContext:
+    """Load Liability/Reserve/Coverage results from prior runs into the
+    small typed snapshots Recovery consumes. Each snapshot is optional —
+    missing prior runs degrade gracefully (the policy engine and
+    calculator treat None as "no upstream signal")."""
+    liability_snap: UpstreamLiabilitySnapshot | None = None
+    reserve_snap: UpstreamReserveSnapshot | None = None
+    coverage_snap: UpstreamCoverageSnapshot | None = None
+
+    claim_dir = results_root / claim_id
+
+    lia_path = claim_dir / "liability.json"
+    if lia_path.exists():
+        try:
+            data = json.loads(lia_path.read_text())
+            apport = data.get("apportionment", {}) or {}
+            apport_pct = {
+                pid: a.get("fault_pct", 0) for pid, a in apport.items()
+            }
+            regime = data.get("applicable_regime", {}) or {}
+            liability_snap = UpstreamLiabilitySnapshot(
+                apportionment_by_party_id=apport_pct,
+                regime_statute=regime.get("statute", "unknown"),
+                recovery_bar_triggered=bool(regime.get("bar_basis")),
+                bar_basis=regime.get("bar_basis", "none"),
+            )
+        except (json.JSONDecodeError, KeyError, TypeError):
+            pass
+
+    res_path = claim_dir / "reserve.json"
+    if res_path.exists():
+        try:
+            data = json.loads(res_path.read_text())
+            paid = {}
+            outstanding = {}
+            for c in data.get("per_component", []) or []:
+                paid[c["component"]] = c.get("paid_to_date", 0)
+                outstanding[c["component"]] = (
+                    c.get("recommended_outstanding_band", {}).get("p50", 0)
+                )
+            reserve_snap = UpstreamReserveSnapshot(
+                paid_indemnity_by_component=paid,
+                outstanding_indemnity_by_component=outstanding,
+            )
+        except (json.JSONDecodeError, KeyError, TypeError):
+            pass
+
+    cov_path = claim_dir / "coverage.json"
+    if cov_path.exists():
+        try:
+            data = json.loads(cov_path.read_text())
+            outcomes = data.get("synthesis", {}).get("outcomes", []) or []
+            clean_prob = outcomes[0].get("probability", 1.0) if outcomes else 1.0
+            status = "granted" if clean_prob >= 0.5 else "under_investigation"
+            coverage_snap = UpstreamCoverageSnapshot(status=status)
+        except (json.JSONDecodeError, KeyError, TypeError, IndexError):
+            pass
+
+    return RecoveryUpstreamContext(
+        liability=liability_snap,
+        reserve=reserve_snap,
+        coverage=coverage_snap,
+    )
+
+
+def _make_recovery_runner(results_root: Path) -> WorkflowFn:
+    """Build a Recovery workflow closure that knows where to read upstream
+    Liability/Reserve/Coverage results from. Recovery depends on the
+    upstream snapshots for layered targets and bar evaluation; missing
+    snapshots degrade to a conservative recommendation."""
+    def run(caseload: Caseload, claim_id: str) -> WorkflowResult:
+        synth = caseload_to_synthetic_claim(caseload, claim_id)
+        claim_meta = next(
+            (c for c in caseload.claims if c.claim_id == claim_id), None,
+        )
+        upstream = _load_recovery_upstream(results_root, claim_id)
+        result = run_recovery(synth, upstream=upstream, claim_meta=claim_meta)
+        summary = (
+            f"Recovery for {claim_id}: recommendation={result.assessment.recommendation}, "
+            f"lane={result.assessment.subrogation_lane.lane_id}, "
+            f"forum={result.assessment.forum_routing.recommendation}, "
+            f"net=${result.assessment.net_economics.net_total:,.0f}, "
+            f"variance_flags={len(result.assessment.variance_flags)}, "
+            f"authority={result.assessment.authority_tier_required.required_tier}, "
+            f"extractor_attempts={result.extractor_attempts}"
+        )
+        return summary, result.assessment.model_dump(mode="json")
+    return run
+
+
 def _make_brief_runner(results_root: Path) -> WorkflowFn:
     """Build a Brief workflow closure that knows where to read other
     workflows' results from. Brief is a read-only assembler, so it
@@ -177,6 +276,7 @@ class WorkflowRunner:
             # registry on top of the static default.
             registry = {
                 **WORKFLOW_REGISTRY,
+                "recovery": _make_recovery_runner(results_root),
                 "brief": _make_brief_runner(results_root),
             }
         self.registry = registry
