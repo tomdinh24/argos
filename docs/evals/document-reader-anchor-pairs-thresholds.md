@@ -104,7 +104,7 @@ in Variant B's body.
 
 For each of the 8 variant runs (4 pairs × 2 variants):
 
-1. Output validates against `MaterialityCall` schema (Pydantic).
+1. Output validates against `RelevanceCall` schema (Pydantic).
 2. `text_excerpt` non-empty iff `material == True`.
 3. `posture_changed != None` iff `material == True`.
 4. When `material == True`, `text_excerpt` is a substring (or
@@ -117,10 +117,10 @@ For each of the 8 variant runs (4 pairs × 2 variants):
 ## Paired delta criteria — must hold for each pair
 
 The paired structure is the actual bias test (otherwise the model could
-always-pass by returning `material=True`):
+always-pass by returning `relevant=True`):
 
-7. **Materiality flip.** `call(B).material == True` AND
-   `call(A).material == False`. Both must hold for the pair to pass.
+7. **Relevance flip.** `call(B).relevant == True` AND
+   `call(A).relevant == False`. Both must hold for the pair to pass.
 8. **Excerpt directionality.** On Variant B, `text_excerpt` quotes (or
    ≥80%-overlaps) the *added* sentence from the B body — not a
    sentence that was already in the A body. On Variant A, `text_excerpt`

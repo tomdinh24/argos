@@ -1,6 +1,6 @@
-"""Posture → specialist routing.
+"""Posture → workflow routing.
 
-Pure function over `MaterialityCall`: given one Reader output, returns
+Pure function over `RelevanceCall`: given one Reader output, returns
 the list of `Job` objects that should be enqueued. The mapping is
 small and fixed for v1:
 
@@ -10,7 +10,7 @@ small and fixed for v1:
     posture_changed == "damages"   → [Reserve, Liability]
                                      (damages affect both reserve
                                      adequacy and liability negotiation)
-    material == False              → []
+    relevant == False              → []
 
 Jobs returned here are NOT enqueued yet — the caller enqueues them
 through `JobQueue.enqueue()`, which enforces idempotency. Keeping the
@@ -18,12 +18,12 @@ dispatcher pure makes it trivially testable.
 """
 from __future__ import annotations
 
-from argos.schemas.specialists.document_reader import MaterialityCall
+from argos.schemas.workflows.document_reader import RelevanceCall
 from argos.services.orchestrator.job import Job
 
 
-# Posture → list of specialist names. Tweakable in one place.
-POSTURE_TO_SPECIALISTS: dict[str, list[str]] = {
+# Posture → list of workflow names. Tweakable in one place.
+POSTURE_TO_WORKFLOWS: dict[str, list[str]] = {
     "coverage": ["coverage"],
     "reserve": ["reserve"],
     "liability": ["liability"],
@@ -31,23 +31,23 @@ POSTURE_TO_SPECIALISTS: dict[str, list[str]] = {
 }
 
 
-def dispatch(call: MaterialityCall, claim_id: str) -> list[Job]:
+def dispatch(call: RelevanceCall, claim_id: str) -> list[Job]:
     """Translate one Reader call into the jobs it implies.
 
-    Returns an empty list when `call.material == False`. Otherwise
-    returns one Job per specialist named in `POSTURE_TO_SPECIALISTS`
+    Returns an empty list when `call.relevant == False`. Otherwise
+    returns one Job per workflow named in `POSTURE_TO_WORKFLOWS`
     for the posture the Reader flagged.
     """
-    if not call.material or call.posture_changed is None:
+    if not call.relevant or call.posture_changed is None:
         return []
 
-    specialists = POSTURE_TO_SPECIALISTS.get(call.posture_changed, [])
+    workflows = POSTURE_TO_WORKFLOWS.get(call.posture_changed, [])
     return [
         Job(
-            specialist=spec,
+            workflow=name,
             claim_id=claim_id,
             triggered_by_doc_id=call.document_id,
             posture_changed=call.posture_changed,
         )
-        for spec in specialists
+        for name in workflows
     ]

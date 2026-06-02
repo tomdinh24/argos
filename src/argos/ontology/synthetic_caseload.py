@@ -256,7 +256,7 @@ def _build_one(spec: _ExposureSpec, idx: int, as_of: datetime) -> _ExposureBundl
         action_id=f"AA-{n}-001",
         claim_id=claim_id,
         timestamp=last_action_ts,
-        specialist="coverage",
+        workflow="coverage",
         action_type="analysis_emitted",
         summary="initial coverage analysis",
         success=True,

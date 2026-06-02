@@ -1,0 +1,79 @@
+{
+  "ts": "2026-06-01T02:23:29.294137+00:00",
+  "judge_run": true,
+  "verdict": "PASS",
+  "results": [
+    {
+      "criterion": "narrative_factual_accuracy",
+      "claim_id": "CLM-007",
+      "passed": true,
+      "detail": "median=0 (N=3, counts=[0, 0, 0])"
+    },
+    {
+      "criterion": "narrative_factual_accuracy",
+      "claim_id": "CLM-013",
+      "passed": true,
+      "detail": "median=0 (N=3, counts=[0, 0, 0])"
+    },
+    {
+      "criterion": "narrative_factual_accuracy",
+      "claim_id": "CLM-015",
+      "passed": true,
+      "detail": "median=0 (N=3, counts=[0, 0, 1])"
+    },
+    {
+      "criterion": "coverage_status",
+      "claim_id": "CLM-007",
+      "passed": true,
+      "detail": "got='pending' want='pending'"
+    },
+    {
+      "criterion": "coverage_status",
+      "claim_id": "CLM-013",
+      "passed": true,
+      "detail": "got='pending' want='pending'"
+    },
+    {
+      "criterion": "coverage_status",
+      "claim_id": "CLM-015",
+      "passed": true,
+      "detail": "got='pending' want='pending'"
+    },
+    {
+      "criterion": "specialist_recommendations",
+      "claim_id": "CLM-007",
+      "passed": true,
+      "detail": "got=['reserve'] want=['reserve']"
+    },
+    {
+      "criterion": "specialist_recommendations",
+      "claim_id": "CLM-013",
+      "passed": true,
+      "detail": "got=[] want=[]"
+    },
+    {
+      "criterion": "specialist_recommendations",
+      "claim_id": "CLM-015",
+      "passed": true,
+      "detail": "got=['coverage'] want=['coverage']"
+    },
+    {
+      "criterion": "gap_recall",
+      "claim_id": "CLM-007",
+      "passed": true,
+      "detail": "variables=['coverage_analysis', 'iso_claim_search', 'medical_records', 'policy_declarations'] items=['Complete medical records (including full MRI report and thoracic evaluation)', 'Coverage analysis memorandum', 'ISO claim search result', 'Policy declarations page'] uncovered=[]"
+    },
+    {
+      "criterion": "gap_recall",
+      "claim_id": "CLM-013",
+      "passed": true,
+      "detail": "variables=['coverage_analysis', 'iso_claim_search', 'policy_declarations'] items=['Coverage analysis', 'ISO claim search result', 'Policy declarations page'] uncovered=[]"
+    },
+    {
+      "criterion": "gap_recall",
+      "claim_id": "CLM-015",
+      "passed": true,
+      "detail": "variables=['iso_claim_search', 'medical_records', 'policy_declarations'] items=['Claimant medical records', 'ISO claim search result', 'Policy declarations page'] uncovered=[]"
+    }
+  ]
+}

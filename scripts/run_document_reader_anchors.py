@@ -27,11 +27,11 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(REPO_ROOT / ".env")
 
 from argos.ontology.document_reader_anchors import AnchorPair, all_pairs  # noqa: E402
-from argos.specialists.document_reader import (  # noqa: E402
+from argos.workflows.document_reader import (  # noqa: E402
     DEFAULT_MODEL,
     ClaimContext,
     DocumentInput,
-    MaterialityCallResult,
+    RelevanceCallResult,
     run_document_reader,
 )
 
@@ -82,7 +82,7 @@ def evaluate_variant(
     pair: AnchorPair,
     variant_label: str,
     doc: DocumentInput,
-    expected_material: bool,
+    expected_relevant: bool,
     expected_posture: str | None,
     ctx: ClaimContext,
     added_sentence: str,
@@ -92,12 +92,12 @@ def evaluate_variant(
 
     print(f"  → {pair.pair_id} variant {variant_label}: calling Reader...")
     try:
-        result: MaterialityCallResult = run_document_reader(doc, ctx)
+        result: RelevanceCallResult = run_document_reader(doc, ctx)
     except Exception as e:
         return {
             "pair_id": pair.pair_id,
             "variant": variant_label,
-            "expected_material": expected_material,
+            "expected_relevant": expected_relevant,
             "expected_posture": expected_posture,
             "schema_valid": False,
             "runtime_error": str(e),
@@ -110,47 +110,47 @@ def evaluate_variant(
     # 1. Schema validation already passed (Pydantic in run_document_reader)
     checks["schema_valid"] = {"passed": True, "detail": "Pydantic validation passed"}
 
-    # 2. Excerpt iff material (Pydantic enforces, double-check at logic level)
-    excerpt_iff_material = (call.material and bool(call.text_excerpt.strip())) or (
-        not call.material and not call.text_excerpt.strip()
+    # 2. Excerpt iff relevant (Pydantic enforces, double-check at logic level)
+    excerpt_iff_relevant = (call.relevant and bool(call.text_excerpt.strip())) or (
+        not call.relevant and not call.text_excerpt.strip()
     )
-    checks["excerpt_iff_material"] = {"passed": excerpt_iff_material}
+    checks["excerpt_iff_relevant"] = {"passed": excerpt_iff_relevant}
 
-    # 3. Posture iff material (also Pydantic, double-check)
-    posture_iff_material = (call.material and call.posture_changed is not None) or (
-        not call.material and call.posture_changed is None
+    # 3. Posture iff relevant (also Pydantic, double-check)
+    posture_iff_relevant = (call.relevant and call.posture_changed is not None) or (
+        not call.relevant and call.posture_changed is None
     )
-    checks["posture_iff_material"] = {"passed": posture_iff_material}
+    checks["posture_iff_relevant"] = {"passed": posture_iff_relevant}
 
-    # 4. Excerpt verbatim in document body (when material)
-    if call.material:
+    # 4. Excerpt verbatim in document body (when relevant)
+    if call.relevant:
         in_body, body_ratio = excerpt_overlaps(call.text_excerpt, doc.body_text)
         checks["excerpt_in_body"] = {
             "passed": in_body,
             "overlap_ratio": round(body_ratio, 3),
         }
     else:
-        checks["excerpt_in_body"] = {"passed": True, "detail": "n/a (material=False)"}
+        checks["excerpt_in_body"] = {"passed": True, "detail": "n/a (relevant=False)"}
 
-    # 5. material matches expected
-    checks["material_matches"] = {
-        "passed": call.material == expected_material,
-        "expected": expected_material,
-        "actual": call.material,
+    # 5. relevance matches expected
+    checks["relevant_matches"] = {
+        "passed": call.relevant == expected_relevant,
+        "expected": expected_relevant,
+        "actual": call.relevant,
     }
 
-    # 6. posture matches expected (when material)
-    if expected_material:
+    # 6. posture matches expected (when relevant)
+    if expected_relevant:
         checks["posture_matches"] = {
             "passed": call.posture_changed == expected_posture,
             "expected": expected_posture,
             "actual": call.posture_changed,
         }
     else:
-        checks["posture_matches"] = {"passed": True, "detail": "n/a (material=False)"}
+        checks["posture_matches"] = {"passed": True, "detail": "n/a (relevant=False)"}
 
     # 8 (paired-delta excerpt directionality, applies only on variant B)
-    if variant_label == "B" and call.material:
+    if variant_label == "B" and call.relevant:
         quotes_added, added_ratio = excerpt_overlaps_with(call.text_excerpt, added_sentence)
         checks["excerpt_directionality"] = {
             "passed": quotes_added,
@@ -162,10 +162,10 @@ def evaluate_variant(
             "detail": "Variant A excerpt must be empty",
         }
     else:
-        # Variant B but material=False — already failed at material_matches.
+        # Variant B but relevant=False — already failed at relevant_matches.
         checks["excerpt_directionality"] = {
             "passed": False,
-            "detail": "Variant B material=False, cannot check directionality",
+            "detail": "Variant B relevant=False, cannot check directionality",
         }
 
     all_passed = all(c["passed"] for c in checks.values())
@@ -174,9 +174,9 @@ def evaluate_variant(
         "pair_id": pair.pair_id,
         "posture": pair.posture,
         "variant": variant_label,
-        "expected_material": expected_material,
+        "expected_relevant": expected_relevant,
         "expected_posture": expected_posture,
-        "actual_material": call.material,
+        "actual_relevant": call.relevant,
         "actual_posture": call.posture_changed,
         "actual_reason": call.reason,
         "actual_text_excerpt": call.text_excerpt,
@@ -196,7 +196,7 @@ def evaluate_pair(pair: AnchorPair) -> dict:
         pair,
         "A",
         pair.variant_a,
-        expected_material=False,
+        expected_relevant=False,
         expected_posture=None,
         ctx=pair.context,
         added_sentence=pair.added_sentence,
@@ -205,21 +205,21 @@ def evaluate_pair(pair: AnchorPair) -> dict:
         pair,
         "B",
         pair.variant_b,
-        expected_material=True,
+        expected_relevant=True,
         expected_posture=pair.posture,
         ctx=pair.context,
         added_sentence=pair.added_sentence,
     )
 
-    # 7. Paired-delta: materiality flip
-    materiality_flip = (
-        a.get("actual_material") is False and b.get("actual_material") is True
+    # 7. Paired-delta: relevance flip
+    relevance_flip = (
+        a.get("actual_relevant") is False and b.get("actual_relevant") is True
     )
 
     pair_passed = (
         a.get("all_per_variant_checks_passed", False)
         and b.get("all_per_variant_checks_passed", False)
-        and materiality_flip
+        and relevance_flip
     )
 
     return {
@@ -227,7 +227,7 @@ def evaluate_pair(pair: AnchorPair) -> dict:
         "posture": pair.posture,
         "variant_a_result": a,
         "variant_b_result": b,
-        "paired_delta_materiality_flip": materiality_flip,
+        "paired_delta_relevance_flip": relevance_flip,
         "pair_passed": pair_passed,
     }
 
@@ -267,11 +267,11 @@ def main() -> int:
             v = pr[variant_key]
             print(f"  Variant {v['variant']}:")
             print(
-                f"    expected: material={v['expected_material']}, "
+                f"    expected: relevant={v['expected_relevant']}, "
                 f"posture={v['expected_posture']}"
             )
             print(
-                f"    actual:   material={v.get('actual_material')}, "
+                f"    actual:   relevant={v.get('actual_relevant')}, "
                 f"posture={v.get('actual_posture')}"
             )
             print(f"    reason: {v.get('actual_reason', '(error)')}")
@@ -287,7 +287,7 @@ def main() -> int:
                         continue
                     extra += f" {k}={val}"
                 print(f"      {mark} {ck_name}{extra}")
-        print(f"  paired-delta materiality_flip: {pr['paired_delta_materiality_flip']}")
+        print(f"  paired-delta relevance_flip: {pr['paired_delta_relevance_flip']}")
 
     # ============================================================
     # Composite verdict (only meaningful when running the full 4)
@@ -305,7 +305,7 @@ def main() -> int:
         )
     elif all_passed:
         composite = (
-            "SHIP — Reader classifies materiality from evidence on all 4 "
+            "SHIP — Reader classifies relevance from evidence on all 4 "
             "postures (liability, coverage, damages, reserve). Schema "
             "valid, excerpts verbatim, paired-delta directionality holds. "
             "Wire into policy engine B6/B7 as the next step."

@@ -1,0 +1,153 @@
+{
+  "brief": {
+    "request_id": "REQ-007",
+    "claim_id": "CLM-007",
+    "generated_at": "2026-06-01T02:21:37.310902Z",
+    "story_paragraph": "This is a commercial auto BI claim (CP-AUTO-BI-STANDARD) arising from a motor vehicle accident, currently rated catastrophic severity with coverage determination pending. The claimant sustained cervical and thoracic injuries; an MRI confirmed a C5-C6 disc herniation with nerve root impingement, neurosurgical consultation has been ordered, and a cervical discectomy and fusion is under consideration at an estimated cost of $85,000\u2013$120,000. The matter is unrepresented and not in litigation, though adjuster notes reflect a voicemail received from claimant counsel's office requesting a status update, with a return call placed the same day.",
+    "story_citations": [
+      {
+        "document_id": "DOC-007-02",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "body",
+        "text_excerpt": "MRI dated 2026-05-15 reveals C5-C6 disc herniation with nerve root impingement. Patient has been referred to neurosurgical consultation. Surgical intervention may be indicated if conservative treatment fails over the next 60 days. Estimated cost of cervical discectomy and fusion: $85,000\u2013$120,000.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-007-01",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "body",
+        "text_excerpt": "Received voicemail from claimant counsel's office requesting a status update on the matter. Returned the call within the hour; left a return voicemail with my direct line and email.",
+        "relation": "supports"
+      }
+    ],
+    "since_last_touch": {
+      "last_touch_at": null,
+      "diff_items": []
+    },
+    "current_status_snapshot": {
+      "coverage_status": "pending",
+      "handling_status": "open_investigation",
+      "settlement_status": "not_applicable",
+      "representation_status": "unrepresented",
+      "litigation_status": "none",
+      "recovery_status": "not_screened",
+      "financial_status": "partially_paid"
+    },
+    "financial_snapshot": {
+      "as_of_effective": "2026-06-01T02:21:37.309970Z",
+      "as_of_recorded": "2026-06-01T02:21:37.309970Z",
+      "outstanding_indemnity": 1250000.0,
+      "paid_indemnity": 250000.0,
+      "outstanding_alae": 0.0,
+      "paid_alae": 0.0,
+      "recovered": 0.0
+    },
+    "specialist_recommendations_summary": [
+      {
+        "specialist": "reserve",
+        "agent_action_id": "AA-reserve-CLM-007",
+        "headline": "not_implemented",
+        "awaiting_approval": false
+      }
+    ],
+    "missing_info": [
+      {
+        "item": "Policy declarations page",
+        "requested_from": "named_insured_or_broker",
+        "requested_at": null,
+        "response_due": null,
+        "correspondence_status": "not_yet_drafted",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-007-01",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "body",
+            "text_excerpt": "",
+            "relation": "contextual"
+          },
+          {
+            "document_id": "DOC-007-02",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "body",
+            "text_excerpt": "",
+            "relation": "contextual"
+          }
+        ]
+      },
+      {
+        "item": "ISO claim search result",
+        "requested_from": "iso_claim_search_service",
+        "requested_at": null,
+        "response_due": null,
+        "correspondence_status": "not_yet_drafted",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-007-01",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "body",
+            "text_excerpt": "",
+            "relation": "contextual"
+          },
+          {
+            "document_id": "DOC-007-02",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "body",
+            "text_excerpt": "",
+            "relation": "contextual"
+          }
+        ]
+      },
+      {
+        "item": "Complete medical records (including full MRI report and thoracic evaluation)",
+        "requested_from": "claimant_or_claimant_counsel",
+        "requested_at": null,
+        "response_due": null,
+        "correspondence_status": "not_yet_drafted",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-007-02",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "body",
+            "text_excerpt": "Patient is also being evaluated for possible thoracic inv\n... [truncated]",
+            "relation": "supports"
+          }
+        ]
+      },
+      {
+        "item": "Coverage analysis memorandum",
+        "requested_from": "coverage_specialist",
+        "requested_at": null,
+        "response_due": null,
+        "correspondence_status": "not_yet_drafted",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-007-02",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "body",
+            "text_excerpt": "Estimated cost of cervical discectomy and fusion: $85,000\u2013$120,000. Patient has been referred to neurosurgical consultation.",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-007-01",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "body",
+            "text_excerpt": "",
+            "relation": "contextual"
+          }
+        ]
+      }
+    ],
+    "pending_communications": []
+  },
+  "narrative_attempts": 1,
+  "gaps_attempts": 1
+}

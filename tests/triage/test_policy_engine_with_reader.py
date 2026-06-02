@@ -2,12 +2,12 @@
 
 No live API calls — these tests cover:
 
-- `material_counts=None` reproduces v3 behavior exactly (backward compat).
-- `material_counts={}` makes B6 fire only on overdue diary, not on
+- `relevant_doc_counts=None` reproduces v3 behavior exactly (backward compat).
+- `relevant_doc_counts={}` makes B6 fire only on overdue diary, not on
   raw unread doc count.
-- `material_counts={CLM-X: 1}` correctly promotes a high-exposure
+- `relevant_doc_counts={CLM-X: 1}` correctly promotes a high-exposure
   claim into B6.
-- `material_counts={CLM-Y: 0}` correctly demotes a high-exposure
+- `relevant_doc_counts={CLM-Y: 0}` correctly demotes a high-exposure
   claim with unread docs into B7.
 - Extended fixture has the right doc inventory (9 pinned docs on
   the right 5 claims, no placeholder bodies remaining on those
@@ -40,14 +40,14 @@ def _bucket_of(rid: str, ranked) -> int:
 
 
 class TestBackwardCompat:
-    def test_v3_caseload_unchanged_with_none_material_counts(self):
-        """v3 fixture + material_counts=None → identical to v3 output."""
+    def test_v3_caseload_unchanged_with_none_relevant_doc_counts(self):
+        """v3 fixture + relevant_doc_counts=None → identical to v3 output."""
         baseline = rank_policy(build_caseload())
-        with_none = rank_policy(build_caseload(), material_counts=None)
+        with_none = rank_policy(build_caseload(), relevant_doc_counts=None)
         assert baseline == with_none
 
     def test_v3_caseload_buckets_stable_with_none(self):
-        ranked = rank_policy(build_caseload(), material_counts=None)
+        ranked = rank_policy(build_caseload(), relevant_doc_counts=None)
         # spot-check: known v3 bucket gold for a few corner cases
         assert _bucket_of(_rid_for("sla-1h"), ranked) == 1
         assert _bucket_of(_rid_for("stat-3d"), ranked) == 2
@@ -100,63 +100,63 @@ class TestExtendedFixture:
 
 
 class TestMaterialCountsOverride:
-    def test_empty_material_counts_demotes_req_008_to_b7(self):
-        """Extended fixture + empty material_counts: B6 should NOT fire
+    def test_empty_relevant_doc_counts_demotes_req_008_to_b7(self):
+        """Extended fixture + empty relevant_doc_counts: B6 should NOT fire
         on REQ-008 (which has 1 raw unread doc but 0 material). Without
         the override, raw count would trigger B6."""
         cs = build_caseload_with_realistic_docs()
-        ranked = rank_policy(cs, material_counts={})
+        ranked = rank_policy(cs, relevant_doc_counts={})
         # REQ-008 has 0 material, $585K incurred → B7
         assert _bucket_of("REQ-008", ranked) == 7
         # REQ-007 has 0 material (because we passed empty), $1.75M → B7
         assert _bucket_of("REQ-007", ranked) == 7
 
-    def test_material_counts_promotes_req_007_to_b6(self):
+    def test_relevant_doc_counts_promotes_req_007_to_b6(self):
         """Reader-style override saying REQ-007 has 1 material doc:
         $1.75M incurred + 1 material → B6 fires."""
         cs = build_caseload_with_realistic_docs()
-        ranked = rank_policy(cs, material_counts={"CLM-007": 1})
+        ranked = rank_policy(cs, relevant_doc_counts={"CLM-007": 1})
         assert _bucket_of("REQ-007", ranked) == 6
         # REQ-008 still has 0 material → still B7
         assert _bucket_of("REQ-008", ranked) == 7
 
     def test_baseline_no_override_fires_b6_on_raw_unread_counts(self):
-        """Extended fixture + material_counts=None: B6 fires on REQ-007
+        """Extended fixture + relevant_doc_counts=None: B6 fires on REQ-007
         AND REQ-008 because both have raw unread docs ≥ 1 and
         incurred ≥ $250K. This is the 'before integration' baseline
         that the Reader should fix."""
         cs = build_caseload_with_realistic_docs()
-        ranked = rank_policy(cs, material_counts=None)
+        ranked = rank_policy(cs, relevant_doc_counts=None)
         assert _bucket_of("REQ-007", ranked) == 6  # 2 unread, $1.75M
         assert _bucket_of("REQ-008", ranked) == 6  # 1 unread, $585K
 
     def test_full_pre_registered_override_matches_integration_gold(self):
-        """The full pre-registered material_counts from the integration
+        """The full pre-registered relevant_doc_counts from the integration
         thresholds doc: REQ-007=1, REQ-008=0, REQ-013=0, REQ-014=1,
         REQ-015=1. Expected post-integration buckets: REQ-007 in B6,
         REQ-008 in B7, REQ-013/014/015 in B7."""
         cs = build_caseload_with_realistic_docs()
-        material_counts = {
+        relevant_doc_counts = {
             "CLM-007": 1,
             "CLM-008": 0,
             "CLM-013": 0,
             "CLM-014": 1,
             "CLM-015": 1,
         }
-        ranked = rank_policy(cs, material_counts=material_counts)
+        ranked = rank_policy(cs, relevant_doc_counts=relevant_doc_counts)
         assert _bucket_of("REQ-007", ranked) == 6
         assert _bucket_of("REQ-008", ranked) == 7
         assert _bucket_of("REQ-013", ranked) == 7
         assert _bucket_of("REQ-014", ranked) == 7  # below $250K threshold
         assert _bucket_of("REQ-015", ranked) == 7  # below $250K threshold
 
-    def test_missing_claim_id_in_material_counts_treated_as_zero(self):
-        """If a claim isn't in material_counts, default to 0 — not
+    def test_missing_claim_id_in_relevant_doc_counts_treated_as_zero(self):
+        """If a claim isn't in relevant_doc_counts, default to 0 — not
         a fallback to raw unread count. Otherwise the Reader integration
         would silently mix raw and Reader-screened signals."""
         cs = build_caseload_with_realistic_docs()
         # Only specify REQ-007; REQ-008 not in dict
-        ranked = rank_policy(cs, material_counts={"CLM-007": 1})
+        ranked = rank_policy(cs, relevant_doc_counts={"CLM-007": 1})
         # REQ-007 promoted to B6
         assert _bucket_of("REQ-007", ranked) == 6
         # REQ-008 has 0 material (defaulted) despite 1 raw unread doc → B7

@@ -4,8 +4,8 @@ Walks the full pipeline on the extended N=20 fixture:
 
   1. Build extended caseload (with realistic doc bodies).
   2. Run the Document Reader on every unread doc (9 calls).
-  3. Dispatch jobs from each material Reader call.
-  4. Drain the queue with the SpecialistRunner.
+  3. Dispatch jobs from each relevant Reader call.
+  4. Drain the queue with the WorkflowRunner.
   5. Show end state: jobs (status, summary), result files persisted.
 
 For the only fully-built specialist (Coverage), this produces a real
@@ -36,13 +36,13 @@ from argos.ontology.caseload_with_realistic_docs import (  # noqa: E402
 from argos.services.orchestrator.dispatcher import dispatch  # noqa: E402
 from argos.services.orchestrator.job import JobStatus  # noqa: E402
 from argos.services.orchestrator.queue import JobQueue  # noqa: E402
-from argos.services.orchestrator.runner import SpecialistRunner  # noqa: E402
+from argos.services.orchestrator.runner import WorkflowRunner  # noqa: E402
 from argos.services.triage.reader_integration import screen_caseload  # noqa: E402
 
 
 DEMO_ROOT = REPO_ROOT / "data" / "orchestrator-demo"
 QUEUE_PATH = DEMO_ROOT / "queue.json"
-RESULTS_ROOT = DEMO_ROOT / "specialist-results"
+RESULTS_ROOT = DEMO_ROOT / "workflow-results"
 RUN_LOG_PATH = DEMO_ROOT / "demo_run.json"
 
 
@@ -68,11 +68,11 @@ def main() -> int:
     print("-" * 76)
     screening = screen_caseload(caseload)
     print(f"  docs screened: {screening.docs_screened}")
-    print(f"  material counts: {screening.material_counts}")
+    print(f"  relevant-doc counts: {screening.relevant_doc_counts}")
     print()
 
-    # --- Step 3: dispatch jobs from each material Reader call ---
-    print("Step 2: Dispatching jobs from each material Reader call...")
+    # --- Step 3: dispatch jobs from each relevant Reader call ---
+    print("Step 2: Dispatching jobs from each relevant Reader call...")
     print("-" * 76)
     queue = JobQueue(QUEUE_PATH)
     enqueued_audit = []
@@ -84,31 +84,31 @@ def main() -> int:
             enqueued_audit.append({
                 "from_doc": record.document_id,
                 "claim_id": record.claim_id,
-                "specialist": job.specialist,
+                "workflow": job.workflow,
                 "posture_changed": job.posture_changed,
                 "job_id": stored.job_id,
                 "newly_enqueued": is_new,
             })
             mark = "+" if is_new else "="
             print(
-                f"  {mark} {record.document_id} → enqueue {job.specialist:<10} "
+                f"  {mark} {record.document_id} → enqueue {job.workflow:<10} "
                 f"on {record.claim_id} (job_id={stored.job_id})"
             )
         if not jobs_for_call:
-            print(f"    {record.document_id} → no dispatch (material={record.call.material})")
+            print(f"    {record.document_id} → no dispatch (relevant={record.call.relevant})")
     print()
     print(f"  total jobs enqueued: {len(queue.pending())}")
     print()
 
     # --- Step 4: drain the queue ---
-    print("Step 3: Running queue with SpecialistRunner...")
+    print("Step 3: Running queue with WorkflowRunner...")
     print("-" * 76)
-    runner = SpecialistRunner(queue=queue, caseload=caseload, results_root=RESULTS_ROOT)
+    runner = WorkflowRunner(queue=queue, caseload=caseload, results_root=RESULTS_ROOT)
     processed = runner.process_all()
     for job in processed:
         mark = "✓" if job.status == JobStatus.DONE else "✗"
         print(
-            f"  {mark} {job.job_id} | {job.specialist:<10} on {job.claim_id}: "
+            f"  {mark} {job.job_id} | {job.workflow:<10} on {job.claim_id}: "
             f"{job.status.value} — {job.result_summary or job.error}"
         )
     print()
@@ -141,12 +141,12 @@ def main() -> int:
     RUN_LOG_PATH.write_text(json.dumps({
         "run_timestamp": datetime.now(timezone.utc).isoformat(),
         "docs_screened": screening.docs_screened,
-        "material_counts": screening.material_counts,
+        "relevant_doc_counts": screening.relevant_doc_counts,
         "enqueued": enqueued_audit,
         "processed": [
             {
                 "job_id": j.job_id,
-                "specialist": j.specialist,
+                "workflow": j.workflow,
                 "claim_id": j.claim_id,
                 "triggered_by_doc_id": j.triggered_by_doc_id,
                 "posture_changed": j.posture_changed,

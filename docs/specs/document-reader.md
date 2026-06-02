@@ -23,7 +23,7 @@ missing extraction layer.
 (severity, current reserves, open coverage status, litigation/rep
 flags).
 
-**Output:** a `MaterialityCall`:
+**Output:** a `RelevanceCall`:
 
 - `material: bool` — does this document change adjuster posture?
 - `posture_changed: Literal["reserve", "liability", "coverage", "damages", None]` —
@@ -132,7 +132,7 @@ pipeline.
 
 ### Output via Anthropic tool_use
 
-Same pattern as Coverage. `MaterialityCall.model_json_schema()` is
+Same pattern as Coverage. `RelevanceCall.model_json_schema()` is
 the tool input schema; Pydantic validates the model's output; retry
 once on validation failure with the error fed back.
 
@@ -182,8 +182,8 @@ FAIL, regardless of how plausible the other 3 look.
 |---|---|
 | `docs/specs/document-reader.md` | this spec |
 | `docs/evals/document-reader-anchor-pairs-thresholds.md` | locked thresholds + per-variant targets |
-| `src/argos/schemas/specialists/document_reader.py` | `MaterialityCall` Pydantic model |
-| `src/argos/specialists/document_reader.py` | runtime: `run_document_reader(doc, ctx) → MaterialityCallResult` |
+| `src/argos/schemas/specialists/document_reader.py` | `RelevanceCall` Pydantic model |
+| `src/argos/specialists/document_reader.py` | runtime: `run_document_reader(doc, ctx) → RelevanceCallResult` |
 | `src/argos/ontology/document_reader_anchors.py` | the 4 anchor pairs (claim context + paired document bodies) |
 | `scripts/run_document_reader_anchors.py` | runs all 4 pairs once, applies locked thresholds, prints verdict |
 | `tests/specialists/test_document_reader.py` | schema tests + retry logic tests; no live API calls in pytest |

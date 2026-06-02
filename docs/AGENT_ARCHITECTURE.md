@@ -33,7 +33,77 @@ This document answers, for the agent layer:
 
 ## §2 — Specialist topology
 
-Six specialists and two supporting services.
+### §2.0 Current state inventory (what's actually shipped)
+
+> Single source of truth for "is X built." Updated every time a
+> DECISIONS entry ships or rejects something. Read this first
+> before proposing new work — recent-session context is biased
+> by what we just touched.
+
+**Analytical specialists (shipped, eval-grounded):**
+- Brief — `src/argos/workflows/brief.py`
+- Coverage — `src/argos/workflows/coverage.py`
+- Liability — `src/argos/workflows/liability.py`
+- Reserve — `src/argos/workflows/reserve.py`
+- Recovery / Closure — designed, not yet built
+
+**Correspondence specialists (shipped):**
+- Outreach Drafter — `src/argos/workflows/outreach_drafter.py`
+- Reply Parser — `src/argos/workflows/reply_parser.py`
+
+**Orchestration wires (shipped):**
+- InfoGap — `src/argos/services/orchestrator/info_gap.py`
+- DraftOutreach — `src/argos/services/orchestrator/draft_handler.py`
+- IngestReply — `src/argos/services/orchestrator/reply_handler.py`
+- Correspondence advance — `src/argos/services/orchestrator/correspondence_loop.py` (`advance_correspondence`)
+- Claim advance (cross-stream) — `src/argos/services/orchestrator/claim_advance.py` (`advance_claim`); re-triggers analysis pipeline on every newly-arrived doc via the helper below
+- Analysis re-trigger helper — `src/argos/services/triage/reader_integration.py` (`retrigger_analysis_for_docs`)
+- Coverage writeback — `src/argos/services/orchestrator/coverage_actions.py` (`apply_coverage_decision`)
+
+**Supporting services (shipped):**
+- Document Reader — `src/argos/workflows/document_reader.py`
+- Analysis pipeline — `src/argos/services/orchestrator/{dispatcher,runner,job,queue,adapter}.py`
+- Triage ranker, deterministic S1 — `src/argos/services/triage/{features,ranker}.py`
+- Triage policy engine — `src/argos/services/triage/policy_engine.py` (deterministic gates, replacement direction for the killed hybrid v2)
+- Reader-integrated policy engine — `src/argos/services/triage/reader_integration.py`
+
+**Killed approaches (preserved as cautionary tales, not live):**
+- Hybrid v2 — LLM materiality re-rank on top-N slice. Killed
+  2026-05-30 after regressing against one gold and holding flat
+  against the other. Code at `src/argos/services/triage/hybrid.py`
+  is preserved with `status: KILLED` in its spec. Lesson:
+  free-form LLM ranking is an oracle problem, not an evaluation
+  problem. Replacement direction is the policy-engine approach.
+  See `docs/specs/triage-ranker-hybrid-v2.md`.
+
+**Not yet built (functional layer gaps):**
+- Reserve workflow — schema exists (`ReserveAnalysis`); runner has
+  a `_stub_workflow("reserve")` placeholder returning
+  `{"status": "not_implemented"}`. Re-trigger correctly enqueues
+  Reserve Jobs for it; the stub marks them done with no analysis.
+- Liability workflow — same shape; schema exists, runner stub
+  returns not_implemented
+- Reserve writeback — symmetric to `apply_coverage_decision`;
+  meaningful only once the Reserve workflow ships
+- Liability writeback — symmetric; meaningful only once the
+  Liability workflow ships
+- Typed recommendation collection on `Caseload` — today Coverage
+  results land as JSON files at `data/workflow-results/{claim_id}/`.
+  Brief reads them from disk. A typed `pending_recommendations`
+  collection on the caseload becomes necessary when going to
+  Foundry (which wants ontology objects, not files), but works
+  as files at the functional layer.
+- `AgentAction` audit log writes — schema exists, nothing appends
+- Overdue sweep — `OutboundRequest.status = "overdue"` transition
+  function does not exist
+
+**Topology summary:**
+Two specialist families — **six analytical specialists** that emit
+`LegallyBearingClaim` outputs (§3), and **two correspondence
+specialists** that produce prose work product. Plus a deterministic
+policy spine (InfoGap), three orchestration wires that compose into
+one round of correspondence forward progress, and a cross-stream
+scheduler (`advance_claim`) that fires both streams per claim.
 
 ```
                   ┌───────────────────────────────────────────┐
@@ -42,6 +112,7 @@ Six specialists and two supporting services.
                   │  ─ LiabilityAssessment chain              │
                   │  ─ FinancialTransaction + FinancialPosting│
                   │  ─ Document + DocumentExtraction          │
+                  │  ─ OutboundRequest (5-state lifecycle)    │
                   │  ─ EvidenceCitation                       │
                   │  ─ SpecialistConfig                       │
                   │  ─ AgentAction (audit + citations link)   │
@@ -50,7 +121,7 @@ Six specialists and two supporting services.
                        reads / writes via Action Types
                                     │
    ┌────────────────────────────────┴────────────────────────────────┐
-   │  SPECIALISTS — each emits LegallyBearingClaim outputs (§3)      │
+   │  ANALYTICAL SPECIALISTS — emit LegallyBearingClaim (§3)         │
    │                                                                  │
    │   ┌────────┐   ┌──────────┐   ┌──────────┐                      │
    │   │ BRIEF  │   │ COVERAGE │   │ LIABILITY│                      │
@@ -59,10 +130,24 @@ Six specialists and two supporting services.
    │   │RESERVE │   │ RECOVERY │   │ CLOSURE  │                      │
    │   └────────┘   └──────────┘   └──────────┘                      │
    ├──────────────────────────────────────────────────────────────────┤
-   │  SERVICES — infrastructure used by specialists + cockpit        │
+   │  CORRESPONDENCE SPECIALISTS — emit prose work product (§2.1.2)   │
+   │                                                                  │
+   │   ┌─────────────────┐      ┌─────────────────┐                  │
+   │   │ OUTREACH DRAFTER│      │ REPLY PARSER    │                  │
+   │   │ (GPT-5.5, low)  │      │ (Claude Sonnet) │                  │
+   │   └─────────────────┘      └─────────────────┘                  │
+   ├──────────────────────────────────────────────────────────────────┤
+   │  ORCHESTRATION WIRES — deterministic spine + tick composer       │
+   │                                                                  │
+   │   ┌─────────┐  ┌──────────────┐  ┌────────────┐  ┌────────────┐ │
+   │   │ INFOGAP │  │ DRAFTOUTREACH│  │INGESTREPLY │  │CORRESPONDC │ │
+   │   │ (policy)│  │ (action wire)│  │(action wire│  │ ADVANCE    │ │
+   │   └─────────┘  └──────────────┘  └────────────┘  └────────────┘ │
+   ├──────────────────────────────────────────────────────────────────┤
+   │  SERVICES — infrastructure used by specialists + cockpit         │
    │                                                                  │
    │   ┌──────────────────┐      ┌──────────────────────┐            │
-   │   │ Priority Scorer  │      │ Correspondence svc   │            │
+   │   │ Priority Scorer  │      │ Document Reader       │            │
    │   └──────────────────┘      └──────────────────────┘            │
    └──────────────────────────────────────────────────────────────────┘
                                     ▲
@@ -75,27 +160,55 @@ Six specialists and two supporting services.
                     └─────────────────────────────┘
 ```
 
-### §2.1 The six specialists
+### §2.1 The six analytical specialists
 
 Every specialist output is shaped as a `LegallyBearingClaim` (§3): probability + reasoning + cited evidence. No bare recommendations. No assertion without a source.
 
 | Specialist | Trigger | Output | Auto-apply |
 |---|---|---|---|
-| **Brief** | Any state change on the claim (doc arrival, ledger change, status change, new AgentAction) | `ClaimBrief { story, since_last_touch_diff, missing_info, pending_communications, specialist_recommendations_summary, citations }` | Always refreshes (it's a view, not a mutation). Citations required for every diff item. |
+| **Brief** | Any state change on the claim (doc arrival, ledger change, status change, new AgentAction) | `ClaimBrief { story, since_last_touch_diff, missing_info, pending_communications, workflow_recommendations_summary, citations }` | Always refreshes (it's a view, not a mutation). Citations required for every diff item. |
 | **Coverage** | New claim with policy linkage; new endorsement; new evidence touching exclusions | `CoverageReport { evidence[], per_question_probabilities[], outcome_path_probabilities{clean, ROR, denial}, would_shift_distribution, draft_memo, draft_letters{ROR, denial}, citations[] }` | **Never.** Adjuster always clicks. AI surfaces evidence + probability; human owns the decision. |
 | **Liability** | Police report arrival; new statement; evidence touching fault analysis | `LiabilityAnalysis { evidence[], per_question_probabilities[], fault_allocation_distribution, would_shift_distribution, draft_assessment, citations[] }` | **Never.** Adjuster always clicks. AI surfaces evidence + distribution; human picks the point. |
 | **Reserve** | New evidence affecting reserve adequacy; daily review past `review_cadence_days` | `ReserveAnalysis { per_component[], notice_obligations_triggered, authority_required_level, citations[] }` | Below handler authority → auto-applied. Above → AuthorityRequest. |
 | **Recovery** | LossOccurrence created; doc arrival affecting recovery analysis | `RecoveryAnalysis { opportunity_probability, recovery_type, evidence[], sol_status, evidence_preservation_alerts, draft_demand, citations[] }` | Detection / surfacing → auto-applied. Pursuit / referral → always human (legal action). |
 | **Closure** | "Ready to close" signal; daily closable-exposure scan; defect-affecting evidence | `ClosureAnalysis { ready_probability, blocking_defects[], rationale, citations[] }` | Advisory + Action Type block → auto-applied. Closure execution itself → always human. |
 
+### §2.1.2 The two correspondence specialists
+
+Correspondence specialists produce prose work product, not
+`LegallyBearingClaim` outputs. They are LLM functions wrapped by
+action-type wires (§2.1.3). Both are stateless: structured input
+fully describes the situation, so retries and replays converge.
+
+| Specialist | Trigger | Output | Auto-apply |
+|---|---|---|---|
+| **Outreach Drafter** | `OutboundRequest` enters `pending_draft` state (created by InfoGap, by an adjuster's manual ask, or by a follow-up scheduler) | `OutreachDrafterResult { body_text, lint_metrics, lint_passes, drafted_at, input_tokens, output_tokens }` — letter body in plain text, no markdown, plus deterministic anti-slop lint metrics (paragraph word counts, banned-word hits, please-count, etc.). | **Never.** Adjuster always reviews before send. Lint is a SIGNAL surfaced in the cockpit, not a gate. GPT-5.5 with `reasoning_effort="low"`. |
+| **Reply Parser** | Inbound `Document` arrives and a routing classifier marks it a reply candidate | `ReplyParserResult { matched_outbound_id, answered_question_ids, unanswered_question_ids, partial, confidence, text_excerpt, reason }` — which OBR it matched, which Qs the reply addressed vs left open. | **Confidence-gated.** ≥0.5 → `IngestReply` action flips OBR `sent → replied` automatically. <0.5 → escalation; the doc still lands in the file, but the outbound stays `sent` for human review. Claude Sonnet 4.6 with tool use. |
+
+### §2.1.3 Orchestration wires — the deterministic spine
+
+Three Foundry-style Action Types wrap the correspondence
+specialists, plus one composer that runs them in order. All
+deterministic; no LLM calls in these layers (the LLMs are inside
+the specialists they wrap).
+
+| Wire | Action Type semantic | What it does |
+|---|---|---|
+| **InfoGap** (policy spine) | `ProposeOutreach` | Pure deterministic policy. Reads the claim's open-question set via `is_answered()`, filters by `depends_on`, picks the highest-fidelity deliverable source per question, looks up `recipient_name` in the directory, drops questions already in-flight on an existing OBR. Bundles surviving `(question, source)` pairs by `(party, recipient_name)` → one `pending_draft` `OutboundRequest` per group. Emits an `InfoGapOutcome` carrying both `proposals` and `skipped` (typed audit trail). |
+| **DraftOutreach** (action wire) | `DraftOutreach` | Wraps the Outreach Drafter. Validates outbound is `pending_draft`, hydrates drafter input from claim + outbound + thread history (last 5 turns verbatim + older summary), invokes the specialist, flips `pending_draft → drafted` with body and `drafted_at`. Soft escalations: claim unhydrated (no claimant/insured names), no open questions, drafter empty body. |
+| **IngestReply** (action wire) | `IngestReply` | Wraps the Reply Parser. Validates open outbounds exist, invokes the specialist over inbound doc + candidates, ingests the doc into `caseload.documents` (closes the question-state loop via `is_answered()`), and on confident match flips the matched OBR `sent → replied`. Doc ingestion fires for every outcome — including escalations — because the record arrived; only the outbound state transition is gated by confidence. |
+| **Correspondence Advance** (composer) | `CorrespondenceAdvanced` | `advance_correspondence` composes the three wires per claim in fixed order: ingest pending replies → propose new outbounds → draft every `pending_draft`. Order matters: ingest-first means the post-ingest claim state is what InfoGap evaluates, so just-arrived answers don't get re-asked. Idempotent: a clean advance on a fully-handled claim is a near no-op. |
+| **Claim Advance** (cross-stream scheduler) | `ClaimAdvanced` | `advance_claim` is the single entry point a cron, event handler, or "Refresh" button calls. Classifies each new inbound doc (reply candidate vs. disclosure), routes disclosures into `caseload.documents` directly and reply candidates into `advance_correspondence` as `inbound_replies`. Does NOT run analysis LLM calls inline — those drain on the runner's cadence. |
+| **Coverage Writeback** (action) | `ApplyCoverageDecision` | `apply_coverage_decision` is the cockpit-triggered writeback the adjuster invokes when committing a coverage decision (issue ROR, accept, deny). Flips `claim.coverage_posture`. Producer side of the ROR loop; the consumer side (Drafter reading the posture) ships in the Outreach Drafter system prompt. |
+
 ### §2.2 Supporting services
 
-Not specialists — they don't emit `LegallyBearingClaim` outputs. They power the cockpit and feed specialists.
+Not specialists — they don't emit `LegallyBearingClaim` outputs and don't carry the correspondence specialists' prose contract. They power the cockpit and feed specialists.
 
 | Service | Job | Where it runs |
 |---|---|---|
-| **Priority Scorer** | Rank the queue of open claims by what the adjuster should work next. Candidate features: statutory clocks, diary deadlines, reserve adequacy drift, financial exposure, AgentAction backlog, inactivity risk, negotiation cadence. Output: ordered CoverageRequest IDs with **reason chips** derived from per-claim feature attribution. | Ranking is a learned problem from day one. We hold opinions about which features matter (priors / weight biases) but the actual weights come out of training against eval signal — does the predicted rank correlate with the order adjusters work in, with hindsight of which work order produced the best outcomes? Both the feature set and what counts as "good outcome" are revisable as we learn what adjusters actually optimize for. |
-| **Correspondence service** | Route outbound communications by legal weight. Routine recipients (body shop, medical provider, insured, tow, police records) → auto-send. Adversarial recipients (claimant's counsel, opposing counsel, court) → auto-draft, queue for human approval. Track receipt against `DiaryTask` deadlines; auto-fire follow-ups. | Railway FastAPI service. Templated routine messages; LLM-drafted adversarial ones (which themselves go through the `LegallyBearingClaim` contract). |
+| **Priority Scorer / Triage** | Rank open claims by what the adjuster should work next. Shipped today: deterministic S1 (linear weighted sum on 12 normalized features in `features.py` + `ranker.py`), reaches k=6 top-7 overlap against independent GPT-5 / GPT-5.5-pro golds. The killed hybrid v2 (LLM materiality re-rank) attempted to close the contested 7th slot but regressed against one gold and held flat against the other — see `docs/specs/triage-ranker-hybrid-v2.md` (status: KILLED). Replacement direction is the policy-engine approach (`policy_engine.py` + `reader_integration.py`): deterministic gates for "must touch today" tier, then deterministic scoring within band. | Per [[policy-engine-first-then-llm-extraction]] — free-form LLM ranking is an oracle problem, not an evaluation problem. Future iteration adds LLM only at the bounded "why this one" surface, not at the ranking decision itself. |
+| **Document Reader** | Classify every inbound `Document` on arrival: relevance, posture change (coverage / liability / damages / reserve), and reply-candidate flag. Output: `RelevanceCall` consumed by the analysis dispatcher (`POSTURE_TO_WORKFLOWS`) AND by the correspondence loop's reply-routing classifier (currently caller-supplied; this is the upstream piece that will replace human triage). | LLM call wrapped by `dispatcher.py`. Two consumers downstream — the analysis JobQueue and the correspondence loop — read different fields off the same call. |
 
 ### §2.3 Why six specialists, not three
 
@@ -623,7 +736,7 @@ ClaimBrief = {
 
   financial_snapshot: ExposureFinancialSnapshot,  // from get_financials_as_of
 
-  specialist_recommendations_summary: Array<{
+  workflow_recommendations_summary: Array<{
     specialist: 'coverage' | 'liability' | 'reserve' | 'recovery' | 'closure',
     agent_action_id: string,
     headline: string,                       // "Reserve specialist proposes BI +$18,500 → $46,500"

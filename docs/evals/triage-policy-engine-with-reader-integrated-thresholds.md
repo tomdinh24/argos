@@ -42,7 +42,7 @@ incurred ≥ $250K  AND  material_unread_document_count ≥ 1
 how many did the Reader classify as `material=True`.
 
 The policy engine stays pure (no LLM calls inside `rank_policy()`).
-The Reader runs separately, produces a `material_counts: dict[claim_id, int]`,
+The Reader runs separately, produces a `relevant_doc_counts: dict[claim_id, int]`,
 and `rank_policy()` accepts it as an optional parameter. When `None`,
 behavior is identical to v3 (uses raw `unread_document_count`).
 
@@ -67,7 +67,7 @@ reproducible.
   $85,000–$120,000"). Pre-registered Reader output: `material=True`,
   `posture_changed="reserve"`, excerpt overlaps the MRI/cost sentence.
 
-**Reader integration impact on REQ-007:** `material_unread_count = 1`,
+**Reader integration impact on REQ-007:** `relevant_unread_count = 1`,
 which combined with `incurred ≥ $250K` → bucket 6 fires.
 Pre-integration: B7. Post-integration: **B6** (Reader promotes).
 
@@ -81,7 +81,7 @@ Pre-integration: B7. Post-integration: **B6** (Reader promotes).
   expect a response within 30 days"). Pre-registered Reader output:
   `material=False`, `posture_changed=None`.
 
-**Reader integration impact on REQ-008:** `material_unread_count = 0`.
+**Reader integration impact on REQ-008:** `relevant_unread_count = 0`.
 Pre-integration: **B6** would fire on raw `unread_document_count=1`.
 Post-integration: B7 (Reader demotes — routine doc shouldn't trigger
 B6 escalation).
@@ -164,7 +164,7 @@ Correcting the table — both REQ-007 and REQ-008 fire B6 in baseline:
 
 All other claims keep their v3 buckets.
 
-### Integrated (with Reader-supplied material_counts)
+### Integrated (with Reader-supplied relevant_doc_counts)
 
 | claim | label | integrated bucket | why |
 |---|---|---|---|
@@ -206,7 +206,7 @@ under realistic claim context.)
 
 ### Q2 — Baseline bucket assignment matches pre-registered baseline gold
 
-Running `rank_policy(caseload, weights)` with `material_counts=None`
+Running `rank_policy(caseload, weights)` with `relevant_doc_counts=None`
 on the extended fixture must produce:
 - REQ-007 in B6
 - REQ-008 in B6
@@ -218,7 +218,7 @@ unintended side effect.
 
 ### Q3 — Integrated bucket assignment matches pre-registered integrated gold
 
-Running `rank_policy(caseload, weights, material_counts=reader_output)`
+Running `rank_policy(caseload, weights, relevant_doc_counts=reader_output)`
 must produce:
 - REQ-007 in **B6** (promoted by Reader catching the MRI)
 - REQ-008 in **B7** (demoted by Reader catching the routine ack)
@@ -248,7 +248,7 @@ caseload, end-to-end. Specifically:
   realistic (not anchor-pair-paired) document bodies, in realistic
   claim context.
 - The policy engine's B6 trigger swaps cleanly from raw unread count
-  to material unread count via the `material_counts` parameter — no
+  to material unread count via the `relevant_doc_counts` parameter — no
   refactor needed.
 - The integration correctly **promotes** a claim that was hiding
   (REQ-007) and **demotes** a claim that was falsely escalating

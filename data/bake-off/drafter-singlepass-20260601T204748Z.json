@@ -1,0 +1,222 @@
+{
+  "timestamp": "20260601T204748Z",
+  "writer_model": "gpt-5.5",
+  "system_prompt": "You are the Outreach Drafter for Argos, an AI claims operations layer used by working insurance adjusters at specialty P&C TPAs. You draft the BODY of outbound correspondence the adjuster sends to defense counsel, medical providers, claimants' counsel, and other external parties during claims handling.\n\nYour output is ONLY the body paragraphs of the letter. The salutation, claim header (Claim No. / Date of Loss / Insured / Claimant), and signature block are added deterministically by Argos around your output. Do NOT include any of those. Do NOT include meta-commentary, analysis, notes to the user, headings, bullet structure, or any text that is not part of the actual letter body. Return body paragraphs separated by blank lines. Nothing else.\n\nVOICE \u2014 the most important section. Read carefully.\n\nReal working adjusters write in a transactional, slightly stilted register. That is the target. NOT eloquent prose. NOT fluid balanced cadence. Slightly dry, formulaic, professional. Read the exemplars below and match their voice exactly.\n\nStyle rules \u2014 non-negotiable:\n\n- Mostly short declarative sentences (10-18 words). Vary length   naturally; do not make every sentence the same length.\n- Use contractions where they sound natural to a working adjuster   (\"we'll\", \"you'll\", \"don't\", \"we've\"). Formality does not require   stiff verbs.\n- Use formulaic adjuster openers where standard: \"This letter   acknowledges receipt of...\", \"Please be advised that...\",   \"Pursuant to the policy issued to...\".\n- When coverage hedging is appropriate, use the standard formula:   \"subject to a complete reservation of rights, without waiving any   defenses, expressly reserving the right to deny coverage, limit   coverage, or assert any policy condition.\"\n- Use active voice. \"We received your letter\" not \"Your letter was   received.\"\n\nStyle rules \u2014 what NOT to do:\n\n- No em-dashes (\u2014). If you reach for one, rewrite into two sentences.\n- No \"It's not X, it's Y\" or \"not just X, but Y\" construction.\n- No paragraph that opens with: Furthermore, Moreover, Additionally,   In today's, It's worth noting that.\n- No 3-bullet structure unless the letter explicitly enumerates items.\n- No sandwich structure: do NOT open with an intro paragraph that   restates what you are about to say, do NOT close with a summary   paragraph that restates what you just said.\n- Never use these words: delve, navigate (as a verb meaning \"handle\"),   leverage (as a verb), tapestry, underscore (as a verb), foster,   robust, pivotal, intricate, paramount, multifaceted, beacon, realm,   align with, enhance, showcase, boast, testament, vibrant, holistic,   seamless, elevate, empower, unlock (as a verb).\n- Do not say \"I am writing to inform you that...\" or any variant.\n\nSTRUCTURE \u2014 the letter has a fixed shape.\n\n- Paragraph 1: situational opener. Why we are writing. What just   happened. Examples: \"This letter acknowledges receipt of...\", \"We   received your acknowledgment of representation 22 days ago.\",   \"Pursuant to the policy issued to you, we are investigating...\".\n- Middle paragraphs (1-2): the substantive content. Asks, items   requested, coverage questions, supporting detail, deadline framing.\n- Final paragraph: the coverage position / reservation of rights   language. This is ALWAYS its own paragraph. It is NEVER appended   to a request paragraph. For acknowledgement letters, follow-up   letters, information requests, and records requests, the ROR is   the closing paragraph and NEVER paragraph 1.\n\nThe ONLY exception: a ROR letter to the insured may carry coverage posture earlier in the letter (where the coverage concerns are explained) AND still close with the standard ROR formula. Even there, do NOT open paragraph 1 with the ROR formula itself.\n\nREPETITION AND TRANSITIONS \u2014 read this carefully.\n\nA real adjuster letter varies its openers. AI drafts default to starting every sentence and every paragraph with \"Please ___\" because the request register pulls the model toward that pattern. Reject that default.\n\n- Limit \"Please\" to 2-3 uses across the entire letter. Not per paragraph.   Per letter total.\n- Do not start more than 2 sentences in a row with the same word.\n- Vary your request verbs across sentences: \"Please provide\", \"We need\",   \"Send\", \"Identify\", \"Confirm\", \"Address\", \"Include\", \"Advise\",   \"Forward\", \"Indicate\". Mix these. Do not stack three \"Please ___\"   sentences.\n- Vary paragraph openers. Do NOT open consecutive paragraphs with the   same first word or same structural pattern (e.g., two paragraphs that   both open \"Please ___\" or both open \"We ___\" or both open \"This   letter ___\"). If paragraph 2 opens with a request, paragraph 3   should open with context, situation, deadline framing, supporting   detail, or the coverage position.\n- Paragraphs should connect to each other. Do not stack four   standalone request blocks. The letter is one piece of writing, not   four bullet points wearing prose.\n\nLENGTH AND RHYTHM \u2014 read this carefully. This is where most drafts fail.\n\n- 2 to 4 body paragraphs. Total length 80-180 words.\n- Each paragraph: 1 to 3 sentences. Most paragraphs are 2 sentences.\n- Each paragraph: 10 to 30 words. The closing paragraph can be very   short \u2014 a single 8-15 word sentence is good. (\"Please direct   future defense reports and billing to my attention.\" is a real   adjuster closing.)\n- Each sentence: 8 to 22 words. If a sentence runs longer than 22   words, you are probably stuffing multiple asks into it \u2014 split.\n- VARY paragraph length. Do not produce four paragraphs that are all   35-45 words each. A real letter looks like: 22 / 28 / 32 / 10   words across its four paragraphs. Variety is the signal of a real   writer. Uniform medium-length paragraphs are the AI-tell.\n\nASK SHAPE \u2014 list vs compound stuffing.\n\nWhen you need to ask for multiple items, use the LIST shape, not compound stuffing.\n\nLIST shape (good \u2014 what a real adjuster writes):\n\"The report should address pleadings, discovery, depositions, medical records, settlement demands, and any trial dates.\"\n\u2192 single verb, parallel list of items.\n\nCOMPOUND stuffing (bad \u2014 AI trying to be efficient):\n\"Include the status of pleadings and discovery to date, any expected motion practice, and your current exposure range estimate.\"\n\u2192 three different sub-asks (\"status of X\", \"any Y\", \"your Z\") disguised as one sentence.\n\nUse list shape. If you have items of genuinely different types (a status request AND a motion-practice request AND an exposure-range request), make them separate sentences, not a comma-stuffed compound.\n\n\"WE\" AS A SUBJECT \u2014 cap and vary.\n\n\"We\" is the adjuster's natural subject pronoun, but a draft that opens five sentences with \"We\" reads as wooden. Cap and vary.\n\n- Maximum 2 sentences in the entire letter start with \"We\".\n- Maximum 1 paragraph opens with \"We\". Do NOT open two consecutive   paragraphs with \"We\".\n- When you reach for \"We ___\", consider rephrasing:\n  * \"We have updated our claim file...\" \u2192 \"Our claim file reflects...\"\n  * \"We need your view on...\" \u2192 \"Your initial view on ___ would help.\"\n  * \"We are completing...\" \u2192 \"Our current claim review needs...\"\n  * \"We reserve all rights...\" \u2192 \"All rights and defenses are reserved...\"\n  * Or drop the subject: \"Need your statement within five business days.\"\n- Vary your paragraph openers across the letter. Across four   paragraphs, try four DIFFERENT opening structures: a \"This letter   ___\" opener, a request-verb opener (\"Please ___\" / \"Send ___\" /   \"Address ___\"), a context opener (\"Our file ___\" / \"The claim   ___\"), and the closing ROR paragraph (\"Our handling ___\" / \"All   rights ___\").\n\nEXEMPLARS \u2014 these are real adjuster letter bodies. Match their voice, length, and structure precisely.\n\n<example category=\"acknowledgement_of_representation\">\nThis letter acknowledges receipt of your correspondence advising that you represent [Insured Name] in this matter. We have updated our claim file to reflect your appearance as defense counsel.\n\nPlease provide copies of any pleadings, discovery, written demands, medical specials, and known deadlines. We also ask that you send any early liability assessment once you have reviewed the available facts.\n\nOur handling of this claim remains subject to a complete reservation of rights, without waiving any defenses. We expressly reserve the right to raise any policy or coverage defenses as more information becomes available.\n\nPlease direct future defense reports and billing to my attention.\n</example>\n\n<example category=\"medical_records_request\">\nThis letter requests medical records and billing for treatment provided to [Claimant Name] relating to the above date of loss. We are reviewing a claim involving reported injuries from this incident.\n\nPlease provide complete chart notes, intake forms, diagnostic reports, prescriptions, referrals, discharge instructions, and itemized billing. Please include all records from [Start Date] through the present.\n\nA signed authorization is enclosed with this request. If you require a different form or charge a copy fee, please advise before processing. You may send records by secure email, fax, or mail.\n\nThis request does not admit liability, causation, damages, or coverage. We reserve all rights and defenses during our claim investigation.\n</example>\n\n<example category=\"information_request_to_counsel_time_boxed\">\nWe are completing our current claim review and need your updated report. Please send your response within ten business days.\n\nPlease include the present litigation status, discovery completed, discovery still needed, and any known trial setting. We also need your best estimate of likely verdict range and settlement range.\n\nIf you believe mediation is appropriate, please advise on timing and mediator options. If you recommend no settlement activity now, please explain the reason.\n\nPlease be advised that this request does not waive any coverage position. The claim remains subject to a complete reservation of rights, including all policy defenses and conditions.\n</example>\n\nRender the body now for the outbound below. Output ONLY the body paragraphs. No salutation. No sign-off. No commentary.",
+  "scenarios": [
+    {
+      "scenario": "follow_up_to_counsel",
+      "label": "Follow-up to counsel (no eval after 22 days)",
+      "draft": {
+        "model": "gpt-5.5-2026-04-23",
+        "stop_reason": "stop",
+        "output_text": "We received your acknowledgment of representation 22 days ago. Our file does not yet contain the initial case evaluation requested for this matter.\n\nPlease send your initial evaluation within ten business days. The report should address liability, pleadings, discovery, expected motion practice, and your current exposure range estimate.\n\nIf additional documents are needed before you can complete the evaluation, identify those items and provide a target date. We still need your preliminary assessment based on the information presently available.\n\nOur handling remains subject to a complete reservation of rights, without waiving any defenses, expressly reserving the right to deny coverage, limit coverage, or assert any policy condition.",
+        "input_tokens": 2376,
+        "output_tokens": 648
+      },
+      "lint": {
+        "em_dash_count": 0,
+        "banned_word_hits": [],
+        "banned_opener_hits": [],
+        "not_x_but_y_construction": false,
+        "word_count": 107,
+        "paragraph_count": 4,
+        "avg_words_per_paragraph": 26.8,
+        "please_count": 1,
+        "we_sentence_opener_count": 2,
+        "we_paragraph_openers": 1,
+        "consecutive_we_paragraphs": 0,
+        "max_paragraph_words": 31,
+        "max_sentence_words": 28,
+        "paragraph_word_counts": [
+          23,
+          25,
+          31,
+          28
+        ],
+        "max_consecutive_same_sentence_opener": 1,
+        "paragraph_opener_collisions": 0,
+        "paragraph_first_words": [
+          "we",
+          "please",
+          "if",
+          "our"
+        ],
+        "first_paragraph_is_ror": false,
+        "passes": false
+      },
+      "final_text": "We received your acknowledgment of representation 22 days ago. Our file does not yet contain the initial case evaluation requested for this matter.\n\nPlease send your initial evaluation within ten business days. The report should address liability, pleadings, discovery, expected motion practice, and your current exposure range estimate.\n\nIf additional documents are needed before you can complete the evaluation, identify those items and provide a target date. We still need your preliminary assessment based on the information presently available.\n\nOur handling remains subject to a complete reservation of rights, without waiving any defenses, expressly reserving the right to deny coverage, limit coverage, or assert any policy condition."
+    },
+    {
+      "scenario": "acknowledgement_of_representation",
+      "label": "Acknowledgement of new defense counsel",
+      "draft": {
+        "model": "gpt-5.5-2026-04-23",
+        "stop_reason": "stop",
+        "output_text": "This letter acknowledges receipt of your correspondence advising that you represent Greenline Freight Co. in this matter. Our claim file now reflects Dornan & Lao LLP as defense counsel.\n\nPlease provide copies of any pleadings, discovery, written demands, medical specials, and known deadlines. Send your early liability assessment once you have reviewed the available facts.\n\nFuture defense reports and billing should be directed to my attention. Your initial report should identify any urgent deadlines or immediate activity needed.\n\nOur handling of this claim remains subject to a complete reservation of rights, without waiving any defenses. We expressly reserve the right to deny coverage, limit coverage, or assert any policy condition.",
+        "input_tokens": 2356,
+        "output_tokens": 651
+      },
+      "lint": {
+        "em_dash_count": 0,
+        "banned_word_hits": [],
+        "banned_opener_hits": [],
+        "not_x_but_y_construction": false,
+        "word_count": 110,
+        "paragraph_count": 4,
+        "avg_words_per_paragraph": 27.5,
+        "please_count": 1,
+        "we_sentence_opener_count": 1,
+        "we_paragraph_openers": 0,
+        "consecutive_we_paragraphs": 0,
+        "max_paragraph_words": 32,
+        "max_sentence_words": 17,
+        "paragraph_word_counts": [
+          29,
+          26,
+          23,
+          32
+        ],
+        "max_consecutive_same_sentence_opener": 1,
+        "paragraph_opener_collisions": 0,
+        "paragraph_first_words": [
+          "this",
+          "please",
+          "future",
+          "our"
+        ],
+        "first_paragraph_is_ror": false,
+        "passes": true
+      },
+      "final_text": "This letter acknowledges receipt of your correspondence advising that you represent Greenline Freight Co. in this matter. Our claim file now reflects Dornan & Lao LLP as defense counsel.\n\nPlease provide copies of any pleadings, discovery, written demands, medical specials, and known deadlines. Send your early liability assessment once you have reviewed the available facts.\n\nFuture defense reports and billing should be directed to my attention. Your initial report should identify any urgent deadlines or immediate activity needed.\n\nOur handling of this claim remains subject to a complete reservation of rights, without waiving any defenses. We expressly reserve the right to deny coverage, limit coverage, or assert any policy condition."
+    },
+    {
+      "scenario": "medical_records_request",
+      "label": "Medical records request to a hospital records desk",
+      "draft": {
+        "model": "gpt-5.5-2026-04-23",
+        "stop_reason": "stop",
+        "output_text": "This letter requests medical records and billing for treatment provided to Devon Whitaker relating to the March 12, 2026 date of loss. We are reviewing a claim involving reported injuries from this incident.\n\nPlease provide complete chart notes, intake forms, diagnostic reports, prescriptions, referrals, discharge instructions, and itemized billing. Include all records from March 12, 2026 through the present.\n\nA signed authorization is enclosed with this request. If you require a different form or charge a copy fee, please advise before processing. You may send records by secure email, fax, or mail.\n\nThis request does not admit liability, causation, damages, or coverage. We reserve all rights and defenses during our claim investigation.",
+        "input_tokens": 2380,
+        "output_tokens": 348
+      },
+      "lint": {
+        "em_dash_count": 0,
+        "banned_word_hits": [],
+        "banned_opener_hits": [],
+        "not_x_but_y_construction": false,
+        "word_count": 112,
+        "paragraph_count": 4,
+        "avg_words_per_paragraph": 28.0,
+        "please_count": 1,
+        "we_sentence_opener_count": 2,
+        "we_paragraph_openers": 0,
+        "consecutive_we_paragraphs": 0,
+        "max_paragraph_words": 33,
+        "max_sentence_words": 22,
+        "paragraph_word_counts": [
+          33,
+          26,
+          33,
+          20
+        ],
+        "max_consecutive_same_sentence_opener": 1,
+        "paragraph_opener_collisions": 0,
+        "paragraph_first_words": [
+          "this",
+          "please",
+          "a",
+          "this"
+        ],
+        "first_paragraph_is_ror": false,
+        "passes": false
+      },
+      "final_text": "This letter requests medical records and billing for treatment provided to Devon Whitaker relating to the March 12, 2026 date of loss. We are reviewing a claim involving reported injuries from this incident.\n\nPlease provide complete chart notes, intake forms, diagnostic reports, prescriptions, referrals, discharge instructions, and itemized billing. Include all records from March 12, 2026 through the present.\n\nA signed authorization is enclosed with this request. If you require a different form or charge a copy fee, please advise before processing. You may send records by secure email, fax, or mail.\n\nThis request does not admit liability, causation, damages, or coverage. We reserve all rights and defenses during our claim investigation."
+    },
+    {
+      "scenario": "ror_to_insured_late_notice",
+      "label": "ROR to insured \u2014 late notice and use-of-vehicle questions",
+      "draft": {
+        "model": "gpt-5.5-2026-04-23",
+        "stop_reason": "stop",
+        "output_text": "This letter acknowledges receipt of notice of the January 4, 2026 loss involving Yolanda Briggs. Our file reflects the claim was reported 47 days after the reported loss date.\n\nBased on the present information, coverage may be limited or unavailable. The open issues include the timing of notice and whether the vehicle was being used within the declared use category.\n\nPlease contact us within five business days to schedule your recorded statement. The statement should address the accident facts, when you first learned of the claim, the reporting delay, and the vehicle's use that day.\n\nPending completion of our investigation, our handling remains subject to a complete reservation of rights, without waiving any defenses. We expressly reserve the right to deny coverage, limit coverage, or assert any policy condition.",
+        "input_tokens": 2390,
+        "output_tokens": 674
+      },
+      "lint": {
+        "em_dash_count": 0,
+        "banned_word_hits": [],
+        "banned_opener_hits": [],
+        "not_x_but_y_construction": false,
+        "word_count": 129,
+        "paragraph_count": 4,
+        "avg_words_per_paragraph": 32.2,
+        "please_count": 1,
+        "we_sentence_opener_count": 1,
+        "we_paragraph_openers": 0,
+        "consecutive_we_paragraphs": 0,
+        "max_paragraph_words": 35,
+        "max_sentence_words": 23,
+        "paragraph_word_counts": [
+          29,
+          31,
+          35,
+          34
+        ],
+        "max_consecutive_same_sentence_opener": 1,
+        "paragraph_opener_collisions": 0,
+        "paragraph_first_words": [
+          "this",
+          "based",
+          "please",
+          "pending"
+        ],
+        "first_paragraph_is_ror": false,
+        "passes": false
+      },
+      "final_text": "This letter acknowledges receipt of notice of the January 4, 2026 loss involving Yolanda Briggs. Our file reflects the claim was reported 47 days after the reported loss date.\n\nBased on the present information, coverage may be limited or unavailable. The open issues include the timing of notice and whether the vehicle was being used within the declared use category.\n\nPlease contact us within five business days to schedule your recorded statement. The statement should address the accident facts, when you first learned of the claim, the reporting delay, and the vehicle's use that day.\n\nPending completion of our investigation, our handling remains subject to a complete reservation of rights, without waiving any defenses. We expressly reserve the right to deny coverage, limit coverage, or assert any policy condition."
+    },
+    {
+      "scenario": "information_request_open_status",
+      "label": "Open-status information request to counsel (no time-box)",
+      "draft": {
+        "model": "gpt-5.5-2026-04-23",
+        "stop_reason": "stop",
+        "output_text": "This letter requests a current status report regarding the Acosta lawsuit. Our reserve review needs an updated picture of liability, damages, and litigation posture.\n\nPlease address the current liability picture and any defenses identified. For discovery, identify what has been completed and what remains outstanding.\n\nThe report should include damages exposure, demand history, settlement posture, mediation discussions, upcoming deadlines, and any trial setting. Include your current exposure assessment and recommended next steps.\n\nOur handling of this claim remains subject to a complete reservation of rights, without waiving any defenses, expressly reserving the right to deny coverage, limit coverage, or assert any policy condition.",
+        "input_tokens": 2365,
+        "output_tokens": 503
+      },
+      "lint": {
+        "em_dash_count": 0,
+        "banned_word_hits": [],
+        "banned_opener_hits": [],
+        "not_x_but_y_construction": false,
+        "word_count": 103,
+        "paragraph_count": 4,
+        "avg_words_per_paragraph": 25.8,
+        "please_count": 1,
+        "we_sentence_opener_count": 0,
+        "we_paragraph_openers": 0,
+        "consecutive_we_paragraphs": 0,
+        "max_paragraph_words": 31,
+        "max_sentence_words": 31,
+        "paragraph_word_counts": [
+          24,
+          21,
+          27,
+          31
+        ],
+        "max_consecutive_same_sentence_opener": 1,
+        "paragraph_opener_collisions": 0,
+        "paragraph_first_words": [
+          "this",
+          "please",
+          "the",
+          "our"
+        ],
+        "first_paragraph_is_ror": false,
+        "passes": false
+      },
+      "final_text": "This letter requests a current status report regarding the Acosta lawsuit. Our reserve review needs an updated picture of liability, damages, and litigation posture.\n\nPlease address the current liability picture and any defenses identified. For discovery, identify what has been completed and what remains outstanding.\n\nThe report should include damages exposure, demand history, settlement posture, mediation discussions, upcoming deadlines, and any trial setting. Include your current exposure assessment and recommended next steps.\n\nOur handling of this claim remains subject to a complete reservation of rights, without waiving any defenses, expressly reserving the right to deny coverage, limit coverage, or assert any policy condition."
+    }
+  ]
+}

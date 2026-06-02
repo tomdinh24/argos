@@ -30,8 +30,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(PROJECT_ROOT / ".env")
 
 from argos.ontology.synthetic import build_anchor_variant  # noqa: E402
-from argos.schemas.specialists.coverage import CoverageReport  # noqa: E402
-from argos.specialists.coverage import run_coverage  # noqa: E402
+from argos.schemas.workflows.coverage import CoverageReport  # noqa: E402
+from argos.workflows.coverage import run_coverage  # noqa: E402
 
 
 _OUTCOME_LABEL_SPLIT = re.compile(r"[—:\-(]")

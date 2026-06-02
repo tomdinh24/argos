@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from argos.specialists.document_reader import ClaimContext, DocumentInput
+from argos.workflows.document_reader import ClaimContext, DocumentInput
 
 
 @dataclass(frozen=True)

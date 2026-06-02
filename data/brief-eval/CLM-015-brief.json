@@ -1,0 +1,136 @@
+{
+  "brief": {
+    "request_id": "REQ-015",
+    "claim_id": "CLM-015",
+    "generated_at": "2026-06-01T02:22:03.858578Z",
+    "story_paragraph": "This is a commercial auto bodily injury (BI) claim (CP-AUTO-BI-STANDARD) opened on 2026-04-14 at a serious severity tier. The claimant's counsel, T. Olsen, Esq., has been in contact regarding scheduling an IME, and co-defendant carrier Northstar Casualty has declined tender of defense and indemnity, asserting that cooperative-defense obligations do not extend to claims arising from the named insured's independent acts. Coverage determination is currently pending on REQ-015, and the matter is neither in litigation nor is the claimant formally represented per file posture.",
+    "story_citations": [
+      {
+        "document_id": "DOC-015-01",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "body",
+        "text_excerpt": "Please advise on scheduling for the IME we discussed. Our office can accommodate most weekday windows in the next two weeks.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-015-03",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "body",
+        "text_excerpt": "Northstar Casualty declines your tender of defense and indemnity. Our position is that the cooperative-defense obligations in the underlying agreement do not extend to claims arising from your insured's independent acts.",
+        "relation": "supports"
+      }
+    ],
+    "since_last_touch": {
+      "last_touch_at": null,
+      "diff_items": []
+    },
+    "current_status_snapshot": {
+      "coverage_status": "pending",
+      "handling_status": "open_investigation",
+      "settlement_status": "not_applicable",
+      "representation_status": "unrepresented",
+      "litigation_status": "none",
+      "recovery_status": "not_screened",
+      "financial_status": "reserves_outstanding"
+    },
+    "financial_snapshot": {
+      "as_of_effective": "2026-06-01T02:22:03.858461Z",
+      "as_of_recorded": "2026-06-01T02:22:03.858461Z",
+      "outstanding_indemnity": 90000.0,
+      "paid_indemnity": 0.0,
+      "outstanding_alae": 0.0,
+      "paid_alae": 0.0,
+      "recovered": 0.0
+    },
+    "specialist_recommendations_summary": [
+      {
+        "specialist": "coverage",
+        "agent_action_id": "AA-coverage-unknown",
+        "headline": "Coverage clean probability 25% \u2014 see report",
+        "awaiting_approval": false
+      }
+    ],
+    "missing_info": [
+      {
+        "item": "Policy declarations page",
+        "requested_from": "named_insured_or_broker",
+        "requested_at": null,
+        "response_due": null,
+        "correspondence_status": "not_yet_drafted",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-015-01",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "body",
+            "text_excerpt": "",
+            "relation": "contextual"
+          },
+          {
+            "document_id": "DOC-015-03",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "body",
+            "text_excerpt": "",
+            "relation": "contextual"
+          }
+        ]
+      },
+      {
+        "item": "ISO claim search result",
+        "requested_from": "iso_claim_search_service",
+        "requested_at": null,
+        "response_due": null,
+        "correspondence_status": "not_yet_drafted",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-015-01",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "body",
+            "text_excerpt": "",
+            "relation": "contextual"
+          },
+          {
+            "document_id": "DOC-015-02",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "body",
+            "text_excerpt": "",
+            "relation": "contextual"
+          }
+        ]
+      },
+      {
+        "item": "Claimant medical records",
+        "requested_from": "claimant_or_claimant_counsel",
+        "requested_at": null,
+        "response_due": null,
+        "correspondence_status": "not_yet_drafted",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-015-01",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "body",
+            "text_excerpt": "Please advise on scheduling for the IME we discussed. Our office can accommodate most weekday windows in the next two weeks.",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-015-02",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "body",
+            "text_excerpt": "",
+            "relation": "contextual"
+          }
+        ]
+      }
+    ],
+    "pending_communications": []
+  },
+  "narrative_attempts": 1,
+  "gaps_attempts": 1
+}

@@ -43,7 +43,7 @@ class JobQueue:
         return [j for j in self._jobs if j.status == status]
 
     def find_active(
-        self, specialist: str, claim_id: str, triggered_by_doc_id: str
+        self, workflow: str, claim_id: str, triggered_by_doc_id: str
     ) -> Job | None:
         """Return an existing PENDING or RUNNING job with this triple,
         if one exists. Used by the dispatcher to enforce idempotency."""
@@ -51,7 +51,7 @@ class JobQueue:
             if j.status not in (JobStatus.PENDING, JobStatus.RUNNING):
                 continue
             if (
-                j.specialist == specialist
+                j.workflow == workflow
                 and j.claim_id == claim_id
                 and j.triggered_by_doc_id == triggered_by_doc_id
             ):
@@ -65,7 +65,7 @@ class JobQueue:
         idempotency key. Returns the existing job if a duplicate is found,
         otherwise the newly-enqueued job."""
         existing = self.find_active(
-            job.specialist, job.claim_id, job.triggered_by_doc_id
+            job.workflow, job.claim_id, job.triggered_by_doc_id
         )
         if existing is not None:
             return existing

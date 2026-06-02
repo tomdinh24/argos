@@ -3,7 +3,7 @@
 Runs the policy engine twice on the extended N=20 fixture:
 
   Baseline:    rank_policy(caseload)                       # raw unread counts
-  Integrated:  rank_policy(caseload, material_counts=...)  # Reader-screened counts
+  Integrated:  rank_policy(caseload, relevant_doc_counts=...)  # Reader-screened counts
 
 Reports both rankings side-by-side and applies the locked thresholds in
 `docs/evals/triage-policy-engine-with-reader-integrated-thresholds.md`:
@@ -55,8 +55,8 @@ BASELINE_BUCKET_GOLD: dict[str, int] = {
     "REQ-015": 7,
 }
 INTEGRATED_BUCKET_GOLD: dict[str, int] = {
-    "REQ-007": 6,  # $1.75M + 1 material unread → B6 (Reader keeps it)
-    "REQ-008": 7,  # $585K + 0 material unread → B7 (Reader demotes)
+    "REQ-007": 6,  # $1.75M + 1 relevant unread → B6 (Reader keeps it)
+    "REQ-008": 7,  # $585K + 0 relevant unread → B7 (Reader demotes)
     "REQ-013": 7,
     "REQ-014": 7,
     "REQ-015": 7,
@@ -80,7 +80,7 @@ def main() -> int:
     # ===================================================================
     print("Step 1: BASELINE — policy engine on extended fixture, raw unread counts")
     print("-" * 76)
-    baseline_ranked = rank_policy(caseload, weights, material_counts=None)
+    baseline_ranked = rank_policy(caseload, weights, relevant_doc_counts=None)
     baseline_bucket_by_rid = {r.request_id: r.bucket for r in baseline_ranked}
     for rid, expected in BASELINE_BUCKET_GOLD.items():
         actual = baseline_bucket_by_rid[rid]
@@ -94,13 +94,13 @@ def main() -> int:
     print()
 
     # ===================================================================
-    # Step 2 — Reader pass: classify every unread doc, build material map
+    # Step 2 — Reader pass: classify every unread doc, build relevance map
     # ===================================================================
     print("Step 2: READER PASS — classifying every unread doc")
     print("-" * 76)
     screening = screen_caseload(caseload)
     print(f"  docs screened: {screening.docs_screened}")
-    print(f"  material counts by claim: {screening.material_counts}")
+    print(f"  relevant-doc counts by claim: {screening.relevant_doc_counts}")
     print()
 
     print("  Per-doc Reader output vs pre-registered prediction:")
@@ -112,13 +112,13 @@ def main() -> int:
             print(f"  ?  {record.document_id} — UNKNOWN DOC (not pinned)")
             q1_mismatches.append(record.document_id)
             continue
-        material_match = record.call.material == pinned.expected_material
+        relevant_match = record.call.relevant == pinned.expected_relevant
         posture_match = record.call.posture_changed == pinned.expected_posture
-        passed = material_match and posture_match
+        passed = relevant_match and posture_match
         mark = "✓" if passed else "✗"
         print(
             f"  {mark} {record.document_id}: "
-            f"material={record.call.material} (expected {pinned.expected_material}), "
+            f"relevant={record.call.relevant} (expected {pinned.expected_relevant}), "
             f"posture={record.call.posture_changed} (expected {pinned.expected_posture})"
         )
         if not passed:
@@ -126,13 +126,13 @@ def main() -> int:
         reader_audit.append({
             "document_id": record.document_id,
             "claim_id": record.claim_id,
-            "expected_material": pinned.expected_material,
-            "actual_material": record.call.material,
+            "expected_relevant": pinned.expected_relevant,
+            "actual_relevant": record.call.relevant,
             "expected_posture": pinned.expected_posture,
             "actual_posture": record.call.posture_changed,
             "reason": record.call.reason,
             "text_excerpt": record.call.text_excerpt,
-            "material_match": material_match,
+            "relevant_match": relevant_match,
             "posture_match": posture_match,
             "all_passed": passed,
         })
@@ -145,10 +145,10 @@ def main() -> int:
     # ===================================================================
     # Step 3 — integrated: policy engine with Reader-supplied counts
     # ===================================================================
-    print("Step 3: INTEGRATED — policy engine with Reader-screened material counts")
+    print("Step 3: INTEGRATED — policy engine with Reader-screened relevant-doc counts")
     print("-" * 76)
     integrated_ranked = rank_policy(
-        caseload, weights, material_counts=screening.material_counts
+        caseload, weights, relevant_doc_counts=screening.relevant_doc_counts
     )
     integrated_bucket_by_rid = {r.request_id: r.bucket for r in integrated_ranked}
     for rid, expected in INTEGRATED_BUCKET_GOLD.items():
@@ -228,7 +228,7 @@ def main() -> int:
             "verdict": "PASS" if q1_pass else "FAIL",
             "docs_screened": screening.docs_screened,
             "audit": reader_audit,
-            "material_counts": screening.material_counts,
+            "relevant_doc_counts": screening.relevant_doc_counts,
         },
         "q2_baseline_buckets": {
             "verdict": "PASS" if q2_pass else "FAIL",

@@ -1,8 +1,8 @@
 """Glue between the Document Reader and the triage policy engine.
 
 Given a `Caseload`, runs the Reader on every unread document and
-returns a `{claim_id: material_unread_count}` map ready to pass into
-`rank_policy(..., material_counts=...)`.
+returns a `{claim_id: relevant_unread_count}` map ready to pass into
+`rank_policy(..., relevant_doc_counts=...)`.
 
 "Unread" matches the same definition the triage features use: a
 document whose `received_date` is strictly after the most recent
@@ -20,15 +20,24 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
+from typing import Callable
 
 from argos.ontology.types import Caseload, Document
-from argos.specialists.document_reader import (
+from argos.services.orchestrator.dispatcher import dispatch
+from argos.services.orchestrator.job import Job
+from argos.services.orchestrator.queue import JobQueue
+from argos.workflows.document_reader import (
     ClaimContext,
     DocumentInput,
-    MaterialityCall,
-    MaterialityCallResult,
+    RelevanceCall,
+    RelevanceCallResult,
     run_document_reader,
 )
+
+
+ReaderFn = Callable[[DocumentInput, ClaimContext], RelevanceCallResult]
+"""Signature of `run_document_reader`. Tests can pass a stub; production
+callers leave it None and the real Reader is used."""
 
 
 @dataclass(frozen=True)
@@ -37,7 +46,7 @@ class ReaderCallRecord:
 
     document_id: str
     claim_id: str
-    call: MaterialityCall
+    call: RelevanceCall
     model: str
     attempts: int
 
@@ -98,10 +107,10 @@ def _build_claim_context(caseload: Caseload, claim_id: str) -> ClaimContext:
 
 @dataclass
 class ReaderScreeningResult:
-    """Output of `screen_caseload`: per-claim material counts + audit
-    trail of every Reader call made."""
+    """Output of `screen_caseload`: per-claim relevant-doc counts +
+    audit trail of every Reader call made."""
 
-    material_counts: dict[str, int]
+    relevant_doc_counts: dict[str, int]
     call_records: list[ReaderCallRecord]
     docs_screened: int
 
@@ -110,12 +119,12 @@ def screen_caseload(caseload: Caseload) -> ReaderScreeningResult:
     """Run the Document Reader on every unread doc in the caseload.
 
     Returns `{claim_id: material_count}` ready to pass into
-    `rank_policy(..., material_counts=...)`, plus an audit list of
+    `rank_policy(..., relevant_doc_counts=...)`, plus an audit list of
     every Reader call (for benchmark verification against pre-registered
     Reader output predictions).
     """
     unread = _unread_docs_by_claim(caseload)
-    material_counts: dict[str, int] = defaultdict(int)
+    relevant_doc_counts: dict[str, int] = defaultdict(int)
     call_records: list[ReaderCallRecord] = []
     docs_screened = 0
 
@@ -130,7 +139,7 @@ def screen_caseload(caseload: Caseload) -> ReaderScreeningResult:
                 received_date=doc.received_date.isoformat(),
                 body_text=doc.body_text,
             )
-            result: MaterialityCallResult = run_document_reader(doc_input, ctx)
+            result: RelevanceCallResult = run_document_reader(doc_input, ctx)
             call_records.append(
                 ReaderCallRecord(
                     document_id=doc.document_id,
@@ -140,12 +149,99 @@ def screen_caseload(caseload: Caseload) -> ReaderScreeningResult:
                     attempts=result.attempts,
                 )
             )
-            if result.call.material:
-                material_counts[claim_id] += 1
+            if result.call.relevant:
+                relevant_doc_counts[claim_id] += 1
 
     # Convert to plain dict (defaultdict shouldn't leak into callers).
     return ReaderScreeningResult(
-        material_counts=dict(material_counts),
+        relevant_doc_counts=dict(relevant_doc_counts),
         call_records=call_records,
         docs_screened=docs_screened,
     )
+
+
+def dispatch_screening_results(
+    screening: ReaderScreeningResult,
+    queue: JobQueue,
+) -> list[Job]:
+    """Auto-dispatch specialist jobs from a screening pass.
+
+    For every Reader call where `relevant == True`, runs the pure
+    `orchestrator.dispatcher.dispatch()` function to map the posture
+    to one or more specialist jobs, then enqueues each via
+    `JobQueue.enqueue()` (which is idempotent on
+    `(specialist, claim_id, triggered_by_doc_id)`).
+
+    Returns the list of Job objects that were actually enqueued
+    (after idempotency filtering by the queue). Empty when no call
+    was relevant or when every implied job was already pending /
+    running.
+
+    This is the wire that turns "Reader said this doc matters" into
+    "Coverage / Reserve / Liability runs in the background" without
+    a caller manually walking the screening output. See decision
+    `docs/DECISIONS.md` — "Auto-dispatch from Reader → Orchestrator".
+    """
+    enqueued: list[Job] = []
+    for record in screening.call_records:
+        for job in dispatch(record.call, record.claim_id):
+            persisted = queue.enqueue(job)
+            # JobQueue.enqueue returns the existing job on idempotency
+            # collision and the new job on a fresh enqueue. Only
+            # count fresh enqueues here so callers can see what
+            # actually changed.
+            if persisted is job:
+                enqueued.append(job)
+    return enqueued
+
+
+def retrigger_analysis_for_docs(
+    docs: list[Document],
+    claim_id: str,
+    *,
+    caseload: Caseload,
+    queue: JobQueue,
+    reader_fn: ReaderFn | None = None,
+) -> list[Job]:
+    """Run Reader on each doc, dispatch the resulting calls, enqueue.
+
+    The cross-stream entry point (`advance_claim`) calls this after
+    new disclosures land in `caseload.documents`, so the analysis
+    pipeline (Coverage / Reserve / Liability) re-fires on fresh
+    evidence. Without this, disclosures would sit in the file
+    unread until the next manual screening pass.
+
+    Reader runs inline here (one LLM call per doc) — that's cheap,
+    and the routing decision needs to happen before any analysis
+    Job can be enqueued. The heavy analytical workflows still drain
+    on the runner's cadence, NOT inline. Same separation of "fast
+    routing decisions" vs. "expensive specialist runs" the rest of
+    the orchestrator uses.
+
+    Returns the list of Jobs that were newly enqueued (idempotency
+    filter applied — if a Coverage job for (claim, doc) already
+    exists in the queue, this call returns it but doesn't duplicate).
+
+    `reader_fn` is a callable injection point for tests. Production
+    callers leave it None and the real `run_document_reader` is
+    invoked.
+    """
+    if not docs:
+        return []
+    ctx = _build_claim_context(caseload, claim_id)
+    fn = reader_fn or run_document_reader
+    enqueued: list[Job] = []
+    for doc in docs:
+        doc_input = DocumentInput(
+            document_id=doc.document_id,
+            document_type=doc.document_type,
+            source=doc.source,
+            received_date=doc.received_date.isoformat(),
+            body_text=doc.body_text,
+        )
+        result = fn(doc_input, ctx)
+        for job in dispatch(result.call, claim_id):
+            persisted = queue.enqueue(job)
+            if persisted is job:
+                enqueued.append(job)
+    return enqueued

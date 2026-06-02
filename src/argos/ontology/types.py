@@ -12,7 +12,7 @@ from __future__ import annotations
 from datetime import date, datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 CoverageType = Literal[
@@ -124,6 +124,38 @@ class Claim(BaseModel):
     litigation_flag: bool = False
     rep_flag: bool = False
     complaint_flag: bool = False
+    claimant_name: str | None = Field(
+        default=None,
+        description=(
+            "Display name of the claimant party. Optional because the "
+            "name may be unknown at FNOL — intake_reader fills it in "
+            "when extracted from documents. Workflows that need to "
+            "render a letter (Outreach Drafter) require this; they "
+            "raise if it's null."
+        ),
+    )
+    insured_name: str | None = Field(
+        default=None,
+        description=(
+            "Display name of the insured. Same null-at-FNOL semantics "
+            "as claimant_name."
+        ),
+    )
+    coverage_posture: Literal[
+        "under_investigation", "ROR_issued", "denied", "accepted"
+    ] = Field(
+        default="under_investigation",
+        description=(
+            "The carrier's current coverage stance. Drives correspondence "
+            "framing — once ROR_issued, every outbound to the "
+            "claimant/insured/counsel must carry the reservation-of-rights "
+            "caveat so subsequent communication doesn't waive the position. "
+            "Defaults to under_investigation (no special framing). Today "
+            "this field is hand-flipped (or set by the demo); future work "
+            "wires the Coverage specialist's recommendation back onto the "
+            "claim so the posture transition is automatic."
+        ),
+    )
 
 
 class AgentAction(BaseModel):
@@ -132,7 +164,7 @@ class AgentAction(BaseModel):
     action_id: str
     claim_id: str
     timestamp: datetime
-    specialist: str  # e.g., "coverage", "liability", "reserve", "triage"
+    workflow: str  # e.g., "coverage", "liability", "reserve", "triage"
     action_type: Literal[
         "specialist_invoked",
         "analysis_emitted",
@@ -223,6 +255,136 @@ class LegalDeadline(BaseModel):
     expired: bool = False
 
 
+OutboundChannel = Literal[
+    "email", "phone", "portal", "fax", "mail", "in_person",
+    "subpoena", "court_record",
+]
+"""How an outbound request was (or will be) delivered. Mirrors the
+`Channel` literal in `services/info_map/types.py` minus the
+internal-only channels (`internal_lookup`, `api`) — those don't
+generate an `OutboundRequest`."""
+
+
+OutboundStatus = Literal[
+    "pending_draft",  # created, awaiting LLM drafter
+    "drafted",        # LLM produced body; adjuster hasn't sent
+    "sent",           # adjuster sent; awaiting reply
+    "replied",        # Reply Parser linked an inbound document
+    "overdue",        # follow_up_due_at passed without reply
+    "cancelled",      # adjuster cancelled before send
+]
+
+
+class OutboundRequest(BaseModel):
+    """One outbound information request the adjuster (with help from
+    the system) sends to an external party to close one or more open
+    questions.
+
+    Lifecycle: `pending_draft` → `drafted` → `sent` → `replied`. The
+    `overdue` and `cancelled` branches break from `sent` and any
+    pre-send state respectively.
+
+    Created by `RecordOutboundRequest` Action Type (Foundry mapping).
+    Mutated by `SendOutbound`, `MarkOverdue`, `MarkReplied` Action
+    Types. The LLM-produced body is filled in by the `DraftOutreach`
+    Action Type when the Outreach Drafter specialist ships (step 3b).
+    """
+
+    request_id: str = Field(
+        description="Stable identifier (e.g., 'OBR-001234')."
+    )
+    claim_id: str
+    recipient_party: str = Field(
+        description=(
+            "Free-form party identifier matching info-map source.party "
+            "values: 'claimant_counsel', 'body_shop', 'medical_provider', "
+            "'iso_claim_search', etc."
+        )
+    )
+    recipient_name: str = Field(
+        min_length=1,
+        description=(
+            "Display name of the specific recipient ('Marisol Trent, "
+            "Esq.', 'St. Anthony's Medical Records Desk'). Part of "
+            "the thread key with (claim_id, recipient_party) — "
+            "different recipients at the same party reset the thread."
+        ),
+    )
+    letter_purpose: str = Field(
+        min_length=1,
+        description=(
+            "Free-form one-line purpose the info-gap detector "
+            "captures at creation time ('Follow up with defense "
+            "counsel; initial case eval not received after 22 "
+            "days'). The drafter reads this to choose tone/framing "
+            "without re-deriving intent."
+        ),
+    )
+    question_ids_asked: list[str] = Field(
+        min_length=1,
+        description=(
+            "Info-map question IDs this outbound asks about. Used by "
+            "Reply Parser to scope the candidate set when matching a "
+            "reply to questions."
+        ),
+    )
+    status: OutboundStatus = "pending_draft"
+
+    # Draft phase (filled by Outreach Drafter — step 3b)
+    drafted_at: datetime | None = None
+    draft_body: str | None = Field(
+        default=None,
+        description=(
+            "LLM-produced outreach text. Null until the Outreach "
+            "Drafter ships."
+        ),
+    )
+
+    # Send phase (filled when adjuster acts on the draft)
+    sent_at: datetime | None = None
+    channel: OutboundChannel | None = None
+    follow_up_due_at: datetime | None = Field(
+        default=None,
+        description=(
+            "When a follow-up reminder fires if no reply has arrived. "
+            "Set at send time based on the question's expected "
+            "cycle_time."
+        ),
+    )
+
+    # Reply phase (filled by Reply Parser — step 4)
+    replied_at: datetime | None = None
+    reply_doc_id: str | None = Field(
+        default=None,
+        description=(
+            "Document ID of the inbound document Reply Parser matched "
+            "to this outbound."
+        ),
+    )
+
+    @model_validator(mode="after")
+    def status_field_consistency(self) -> OutboundRequest:
+        """Each status implies which fields must be populated; enforced
+        here so downstream code can rely on the invariant."""
+        if self.status in ("sent", "replied", "overdue") and self.sent_at is None:
+            raise ValueError(
+                f"OutboundRequest {self.request_id}: status={self.status!r} "
+                f"requires sent_at to be set."
+            )
+        if self.status == "replied":
+            if self.reply_doc_id is None:
+                raise ValueError(
+                    f"OutboundRequest {self.request_id}: status='replied' "
+                    f"requires reply_doc_id."
+                )
+            if self.replied_at is None:
+                raise ValueError(
+                    f"OutboundRequest {self.request_id}: status='replied' "
+                    f"requires replied_at."
+                )
+        return self
+
+
 class Caseload(BaseModel):
     """The complete cross-claim state for a triage run.
 
@@ -247,6 +409,7 @@ class Caseload(BaseModel):
     communications: list[Communication] = Field(default_factory=list)
     agent_actions: list[AgentAction] = Field(default_factory=list)
     work_items: list[WorkItem] = Field(default_factory=list)
+    outbound_requests: list[OutboundRequest] = Field(default_factory=list)
 
     # ----- derivation helpers (kept small; features.py builds on these) -----
 
@@ -258,6 +421,22 @@ class Caseload(BaseModel):
             f"CoverageRequest {request.request_id} references "
             f"claim_id={request.claim_id!r} which is not in the caseload"
         )
+
+    def outbounds_for_claim(self, claim_id: str) -> list[OutboundRequest]:
+        """All outbound requests bound to this claim, in insertion
+        order. Used by Brief to render outreach state in the
+        open-questions panel and by Reply Parser to scope the
+        candidate set when an inbound document arrives."""
+        return [o for o in self.outbound_requests if o.claim_id == claim_id]
+
+    def open_outbounds_for_claim(self, claim_id: str) -> list[OutboundRequest]:
+        """Outbounds that are still awaiting a reply (sent but not
+        replied/cancelled). Reply Parser scopes its candidate set to
+        these on inbound."""
+        return [
+            o for o in self.outbounds_for_claim(claim_id)
+            if o.status in ("sent", "overdue")
+        ]
 
     def paid_to_date(self, request_id: str) -> float:
         """Sum of all payment LedgerEntries on this coverage request."""

@@ -1,0 +1,97 @@
+{
+  "brief": {
+    "request_id": "REQ-013",
+    "claim_id": "CLM-013",
+    "generated_at": "2026-06-01T02:21:54.025965Z",
+    "story_paragraph": "This is a commercial auto bodily injury (BI) claim under policy CP-AUTO-BI-STANDARD, opened 2026-04-14 as CLM-013. The claimant is currently receiving ongoing medical treatment, and coverage determination is pending. The matter is standard severity, unrepresented, and not in litigation.",
+    "story_citations": [
+      {
+        "document_id": "DOC-013-01",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "body",
+        "text_excerpt": "Our client continues to receive treatment and we will update you as matters progress.",
+        "relation": "supports"
+      }
+    ],
+    "since_last_touch": {
+      "last_touch_at": null,
+      "diff_items": []
+    },
+    "current_status_snapshot": {
+      "coverage_status": "pending",
+      "handling_status": "open_investigation",
+      "settlement_status": "not_applicable",
+      "representation_status": "unrepresented",
+      "litigation_status": "none",
+      "recovery_status": "not_screened",
+      "financial_status": "reserves_outstanding"
+    },
+    "financial_snapshot": {
+      "as_of_effective": "2026-06-01T02:21:54.025925Z",
+      "as_of_recorded": "2026-06-01T02:21:54.025925Z",
+      "outstanding_indemnity": 18000.0,
+      "paid_indemnity": 0.0,
+      "outstanding_alae": 0.0,
+      "paid_alae": 0.0,
+      "recovered": 0.0
+    },
+    "specialist_recommendations_summary": [],
+    "missing_info": [
+      {
+        "item": "Policy declarations page",
+        "requested_from": "named_insured_or_broker",
+        "requested_at": null,
+        "response_due": null,
+        "correspondence_status": "not_yet_drafted",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-013-01",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "body",
+            "text_excerpt": "",
+            "relation": "contextual"
+          }
+        ]
+      },
+      {
+        "item": "ISO claim search result",
+        "requested_from": "iso_claim_search_service",
+        "requested_at": null,
+        "response_due": null,
+        "correspondence_status": "not_yet_drafted",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-013-01",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "body",
+            "text_excerpt": "",
+            "relation": "contextual"
+          }
+        ]
+      },
+      {
+        "item": "Coverage analysis",
+        "requested_from": "coverage_specialist",
+        "requested_at": null,
+        "response_due": null,
+        "correspondence_status": "not_yet_drafted",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-013-01",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "body",
+            "text_excerpt": "Our client continues to receive treatment and we will update you as matters progress.",
+            "relation": "supports"
+          }
+        ]
+      }
+    ],
+    "pending_communications": []
+  },
+  "narrative_attempts": 1,
+  "gaps_attempts": 1
+}

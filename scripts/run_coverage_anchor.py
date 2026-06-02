@@ -31,13 +31,13 @@ load_dotenv(PROJECT_ROOT / ".env")
 
 from argos.ontology.synthetic import build_anchor_variant  # noqa: E402
 from argos.ontology.types import SyntheticClaim  # noqa: E402
-from argos.schemas.specialists.coverage import CoverageReport  # noqa: E402
-from argos.specialists.checks import (  # noqa: E402
+from argos.schemas.workflows.coverage import CoverageReport  # noqa: E402
+from argos.workflows.checks import (  # noqa: E402
     check_premise_grounding,
     check_recommendation_prose,
     verify_citations,
 )
-from argos.specialists.coverage import DEFAULT_MODEL, run_coverage  # noqa: E402
+from argos.workflows.coverage import DEFAULT_MODEL, run_coverage  # noqa: E402
 
 
 VariantName = Literal["clean", "with_flag"]

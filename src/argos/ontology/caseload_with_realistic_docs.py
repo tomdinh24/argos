@@ -25,7 +25,7 @@ from argos.ontology.types import Caseload, Document
 class PinnedDoc:
     """One realistic doc inserted into the extended fixture.
 
-    `expected_material` and `expected_posture` are pinned in the
+    `expected_relevant` and `expected_posture` are pinned in the
     integration thresholds doc and used by the benchmark to verify
     Reader output against the locked predictions.
     """
@@ -35,7 +35,7 @@ class PinnedDoc:
     document_type: str
     source: str
     body_text: str
-    expected_material: bool
+    expected_relevant: bool
     expected_posture: str | None  # "reserve" | "liability" | "coverage" | "damages" | None
 
 
@@ -57,7 +57,7 @@ _DOC_007_01 = PinnedDoc(
         "Available for a call any time this week or next. No new "
         "documents or substantive content to log at this time."
     ),
-    expected_material=False,
+    expected_relevant=False,
     expected_posture=None,
 )
 
@@ -81,7 +81,7 @@ _DOC_007_02 = PinnedDoc(
         "$85,000–$120,000. Patient is also being evaluated for possible "
         "thoracic involvement; additional imaging pending."
     ),
-    expected_material=True,
+    expected_relevant=True,
     expected_posture="reserve",
 )
 
@@ -102,7 +102,7 @@ _DOC_008_01 = PinnedDoc(
         "our coverage position.\n\n"
         "Very truly yours,\n/s/ R. Patel\nCoverage Counsel"
     ),
-    expected_material=False,
+    expected_relevant=False,
     expected_posture=None,
 )
 
@@ -120,7 +120,7 @@ _DOC_013_01 = PinnedDoc(
         "further from our office at this time.\n\n"
         "Best regards,\n/s/ J. Nguyen, Esq."
     ),
-    expected_material=False,
+    expected_relevant=False,
     expected_posture=None,
 )
 
@@ -138,7 +138,7 @@ _DOC_014_01 = PinnedDoc(
         "provided last month so our records are aligned.\n\n"
         "Sincerely,\n/s/ M. Reyes, Esq."
     ),
-    expected_material=False,
+    expected_relevant=False,
     expected_posture=None,
 )
 
@@ -158,7 +158,7 @@ _DOC_014_02 = PinnedDoc(
         "formal litigation.\n\n"
         "Sincerely,\n/s/ M. Reyes, Esq."
     ),
-    expected_material=True,
+    expected_relevant=True,
     expected_posture="damages",
 )
 
@@ -175,7 +175,7 @@ _DOC_015_01 = PinnedDoc(
         "most weekday windows in the next two weeks. Best,\n"
         "/s/ T. Olsen, Esq."
     ),
-    expected_material=False,
+    expected_relevant=False,
     expected_posture=None,
 )
 
@@ -191,7 +191,7 @@ _DOC_015_02 = PinnedDoc(
         "we have additional information.\n\n"
         "Regards,\n/s/ T. Olsen, Esq."
     ),
-    expected_material=False,
+    expected_relevant=False,
     expected_posture=None,
 )
 
@@ -212,7 +212,7 @@ _DOC_015_03 = PinnedDoc(
         "not be participating in defense or indemnity.\n\n"
         "Very truly yours,\n/s/ S. Wright, Coverage Counsel"
     ),
-    expected_material=True,
+    expected_relevant=True,
     expected_posture="coverage",
 )
 
