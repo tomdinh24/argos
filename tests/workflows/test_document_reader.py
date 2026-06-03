@@ -18,6 +18,9 @@ from argos.ontology.document_reader_anchors import (
     PAIR2_COVERAGE,
     PAIR3_DAMAGES,
     PAIR4_RESERVE,
+    PAIR5_SUBROGATION,
+    PAIR6_SUBROGATION,
+    PAIR7_SUBROGATION,
     all_pairs,
 )
 from argos.schemas.workflows.document_reader import RelevanceCall
@@ -169,14 +172,25 @@ class TestRendering:
 
 
 class TestAnchorPairs:
-    def test_all_pairs_returns_four(self):
+    def test_all_pairs_returns_seven(self):
+        # v1/v2 baseline (Pairs 1-4) + v3 subrogation (Pairs 5-7).
         pairs = all_pairs()
-        assert len(pairs) == 4
+        assert len(pairs) == 7
 
-    def test_one_pair_per_posture(self):
+    def test_postures_covered(self):
+        # v3 added subrogation as a 5th posture and gave it 3 pairs (not
+        # 1) because the posture-vs-the-prior-4 boundary needed extra
+        # coverage. Cardinalities matter — bake into the assertion.
         pairs = all_pairs()
-        postures = sorted(p.posture for p in pairs)
-        assert postures == ["coverage", "damages", "liability", "reserve"]
+        from collections import Counter
+        posture_counts = Counter(p.posture for p in pairs)
+        assert posture_counts == {
+            "liability": 1,
+            "coverage": 1,
+            "damages": 1,
+            "reserve": 1,
+            "subrogation": 3,
+        }
 
     def test_variant_b_body_contains_added_sentence(self):
         for pair in all_pairs():
@@ -204,8 +218,11 @@ class TestAnchorPairs:
         assert len(pair_ids) == len(set(pair_ids))
 
     def test_individual_pairs_accessible_by_name(self):
-        # Smoke check the four pinned exports are individually importable
+        # Smoke check the seven pinned exports are individually importable
         assert PAIR1_LIABILITY.posture == "liability"
         assert PAIR2_COVERAGE.posture == "coverage"
         assert PAIR3_DAMAGES.posture == "damages"
         assert PAIR4_RESERVE.posture == "reserve"
+        assert PAIR5_SUBROGATION.posture == "subrogation"
+        assert PAIR6_SUBROGATION.posture == "subrogation"
+        assert PAIR7_SUBROGATION.posture == "subrogation"

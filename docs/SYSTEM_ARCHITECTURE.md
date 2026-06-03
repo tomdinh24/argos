@@ -50,7 +50,8 @@ aliases:
 | **IngestReply action wire** | orchestration | shipped | [`services/orchestrator/reply_handler.py`](../src/argos/services/orchestrator/reply_handler.py) |
 | **Correspondence Advance** | orchestration | shipped | [`services/orchestrator/correspondence_loop.py`](../src/argos/services/orchestrator/correspondence_loop.py) |
 | **Claim Advance (cross-stream)** | orchestration | shipped | [`services/orchestrator/claim_advance.py`](../src/argos/services/orchestrator/claim_advance.py) |
-| **Coverage writeback** | action | shipped | [`services/orchestrator/coverage_actions.py`](../src/argos/services/orchestrator/coverage_actions.py) |
+| **Coverage writeback** | action | shipped; Foundry bridge shipped 2026-06-02 | [`services/orchestrator/coverage_actions.py`](../src/argos/services/orchestrator/coverage_actions.py), [`services/foundry/coverage_bridge.py`](../src/argos/services/foundry/coverage_bridge.py) |
+| **Foundry bridge layer** | infra | shipped 2026-06-02 — Coverage bridge only; pattern documented for Reserve/Liability/Recovery/Closure | [`services/foundry/`](../src/argos/services/foundry/), [`docs/architecture/foundry-bridge-pattern.md`](./architecture/foundry-bridge-pattern.md) |
 | **Closure writeback** | action | shipped 2026-06-02 — `apply_closure_decision` + `apply_reopen_decision` | [`services/orchestrator/closure_actions.py`](../src/argos/services/orchestrator/closure_actions.py) |
 | **Reserve writeback** | action | shipped 2026-06-02 — `apply_reserve_decision` | [`services/orchestrator/reserve_actions.py`](../src/argos/services/orchestrator/reserve_actions.py) |
 | **Liability writeback** | action | shipped 2026-06-02 — `apply_liability_decision` | [`services/orchestrator/liability_actions.py`](../src/argos/services/orchestrator/liability_actions.py) |
@@ -71,7 +72,8 @@ aliases:
 2. **AF signatory roster refresh path** — scrape AF's signatory list quarterly, version the roster.
 3. **Overdue OBR sweep** — `OutboundRequest.status → "overdue"` transition function.
 4. **Typed `pending_recommendations` collection** — promotes JSON-files-on-disk to first-class Caseload field. Load-bearing only when Foundry projection starts.
-5. **Foundry projection scale-out** — vertical slice (1 Object Type + 1 Action Type + OSDK round-trip) proven 2026-06-02. Next: promote the remaining 15 existing Pydantic types + 10 missing types (LossOccurrence, Party, CoverageDecision, ReserveTransaction, RecoveryTarget, ClosureDefect, AuthorityRequest, BadFaithSignal, ExposureLayerSnapshot, FinancialSnapshot) → first-class Object Types; build their Action Types from `services/orchestrator/*_actions.py`; wire AIP Evals from the four locked threshold docs. Only after items 1–3 are done.
+5. **Reserve/Liability/Recovery/Closure Foundry bridges** — Coverage bridge shipped 2026-06-02 per [`docs/architecture/foundry-bridge-pattern.md`](./architecture/foundry-bridge-pattern.md). The other 4 writeback workflows follow the same ~30-line-per-bridge pattern. Each requires its corresponding Foundry Action Type to exist first (currently NOT built; blocked on UI clicks or Code Repo YAML — Tom's call).
+6. **Foundry Object Types scale-out** — promote the remaining 15 existing Pydantic types + 10 missing types (LossOccurrence, Party, CoverageDecision, ReserveTransaction, RecoveryTarget, ClosureDefect, AuthorityRequest, BadFaithSignal, ExposureLayerSnapshot, FinancialSnapshot) → first-class Foundry Object Types; build their Action Types from `services/orchestrator/*_actions.py`; wire AIP Evals from the four locked threshold docs. Blocked: Foundry Platform SDK is read-only for type definitions on Developer Tier; needs UI clicks or Code Repo YAML pipeline. Only after items 1–3 and Foundry-side type creation are done.
 6. **Vercel cockpit (Next.js)** — the interview surface. Build after Foundry projection so it has typed objects to render.
 
 ### §0.3 — Maintenance protocol

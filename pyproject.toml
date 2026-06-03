@@ -42,5 +42,6 @@ testpaths = ["tests"]
 pythonpath = ["src"]
 markers = [
     "eval: workflow eval cases (golden + adversarial). Run with `-m eval` to include; excluded from the default test run because they are designed for on-demand quality regression detection, not per-commit gating.",
+    "foundry_integration: live Foundry OSDK round-trip tests. Mutates the live tenant; requires FOUNDRY_TOKEN. Run with `-m foundry_integration` to include; excluded by default because tenant state is shared with smoke tests and demos.",
 ]
-addopts = "-m 'not eval'"
+addopts = "-m 'not eval and not foundry_integration'"

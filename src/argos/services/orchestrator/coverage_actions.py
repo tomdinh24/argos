@@ -23,17 +23,26 @@ Decision context: docs/DECISIONS.md →
   "Coverage->Claim writeback (apply_coverage_decision)"
   "ROR escalation: coverage_posture on Claim, drafter responds"
 
-Palantir mapping: this is the `ApplyCoverageDecision` Action Type
-fired from the cockpit's coverage-review surface. Mutates the
-`Claim` ontology object, emits a `CoveragePostureChanged` event,
-and (in production) appends an `AgentAction` row to the audit log
-with `source_recommendation_id` for provenance.
+Palantir mapping: Foundry's `apply-coverage-decision` Action Type
+(API name kebab-case) flips `ClaimsV1.coverage_posture` to mirror
+the Pydantic-side mutation. The propagation is performed by
+`services/foundry/coverage_bridge.propagate_coverage_decision_to_foundry`,
+feature-flagged via `ARGOS_FOUNDRY_BRIDGE_ENABLED` so tests stay
+hermetic by default. The bridge returns Foundry's `operation_id`
+which we log into the AgentAction audit row (per data-layer.md §6).
 """
 from __future__ import annotations
 
+import logging
 from typing import Literal
 
 from argos.ontology.types import Caseload, Claim
+from argos.services.foundry.coverage_bridge import (
+    CoverageBridgeError,
+    propagate_coverage_decision_to_foundry,
+)
+
+logger = logging.getLogger(__name__)
 
 
 CoveragePosture = Literal[
@@ -95,7 +104,47 @@ def apply_coverage_decision(
         new_claim if c.claim_id == claim_id else c
         for c in caseload.claims
     ]
-    return caseload.model_copy(update={"claims": new_claims})
+    new_caseload = caseload.model_copy(update={"claims": new_claims})
+
+    # Foundry-side propagation. Feature-flagged by the bridge itself
+    # via ARGOS_FOUNDRY_BRIDGE_ENABLED; returns None when flag is off
+    # (Pydantic-side commit stands alone). Errors are logged, not raised,
+    # because the Pydantic substrate is already updated and downstream
+    # Argos consumers (Drafter, etc.) read from it — Foundry divergence
+    # is recoverable via a retry sweep, an in-process raise would leave
+    # the caller with no way to know that Pydantic succeeded.
+    try:
+        operation_id = propagate_coverage_decision_to_foundry(
+            claim_id=claim_id,
+            new_posture=new_posture,
+        )
+        if operation_id is not None:
+            logger.info(
+                "coverage decision propagated to Foundry: claim_id=%s "
+                "new_posture=%s operation_id=%s "
+                "source_recommendation_id=%s",
+                claim_id,
+                new_posture,
+                operation_id,
+                source_recommendation_id,
+            )
+    except CoverageBridgeError as e:
+        logger.error(
+            "coverage decision Pydantic-side committed but Foundry "
+            "propagation failed: claim_id=%s new_posture=%s err=%s",
+            claim_id,
+            new_posture,
+            e,
+        )
+    except Exception as e:  # noqa: BLE001 — surface unexpected bridge failures via log, don't crash caller
+        logger.exception(
+            "coverage decision: unexpected error during Foundry "
+            "propagation for claim_id=%s: %s",
+            claim_id,
+            e,
+        )
+
+    return new_caseload
 
 
 _TERMINAL_POSTURES: frozenset[str] = frozenset({"accepted", "denied"})
