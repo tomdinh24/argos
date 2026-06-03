@@ -577,3 +577,108 @@ object_types:
       - { name: verification_status, type: string, required: true,
           enum: [unverified, verified, hallucinated_dropped],
           default: unverified }
+
+
+# ─────────────────────────────────────────────────────────
+# ACTION TYPES
+# Six orchestrator-level actions, mirroring the Python handlers in
+# src/argos/services/orchestrator/*_actions.py. Each modifies a Claim
+# instance with the decision captured in the parameters.
+# ─────────────────────────────────────────────────────────
+
+action_types:
+
+  - api_name: ApplyCoverageDecision
+    display_name: Apply Coverage Decision
+    description: >-
+      Commit a coverage posture transition to a Claim. Mirrors
+      apply_coverage_decision() in coverage_actions.py — validates the
+      transition is allowed and updates the Claim's coverage_posture field.
+    target_object_type: Claim
+    parameters:
+      - { name: claim_id, type: string, required: true,
+          description: Primary key of the Claim to update }
+      - { name: new_posture, type: string, required: true,
+          enum: [under_investigation, ROR_issued, denied, accepted],
+          description: Target coverage posture }
+      - { name: source_recommendation_id, type: string, required: false,
+          description: AgentAction RID that proposed this decision }
+
+  - api_name: ApplyReserveDecision
+    display_name: Apply Reserve Decision
+    description: >-
+      Commit a reserve decision (accept or reject the recommended reserve
+      band) to a Claim. Mirrors apply_reserve_decision() in
+      reserve_actions.py.
+    target_object_type: Claim
+    parameters:
+      - { name: claim_id, type: string, required: true,
+          description: Primary key of the Claim to update }
+      - { name: accept, type: boolean, required: true,
+          description: Whether to accept the specialist-recommended reserve }
+      - { name: source_assessment_id, type: string, required: false,
+          description: LiabilityAssessment / AgentAction RID that produced the recommendation }
+
+  - api_name: ApplyLiabilityDecision
+    display_name: Apply Liability Decision
+    description: >-
+      Commit a liability apportionment decision to a Claim. Mirrors
+      apply_liability_decision() in liability_actions.py.
+    target_object_type: Claim
+    parameters:
+      - { name: claim_id, type: string, required: true,
+          description: Primary key of the Claim to update }
+      - { name: accept, type: boolean, required: true,
+          description: Whether to accept the specialist-recommended apportionment }
+      - { name: source_assessment_id, type: string, required: false,
+          description: LiabilityAssessment / AgentAction RID that produced the recommendation }
+
+  - api_name: ApplyRecoveryDecision
+    display_name: Apply Recovery Decision
+    description: >-
+      Commit a recovery pursuit decision to a Claim. Mirrors
+      apply_recovery_decision() in recovery_actions.py. Decision is one of
+      the canonical recovery routes.
+    target_object_type: Claim
+    parameters:
+      - { name: claim_id, type: string, required: true,
+          description: Primary key of the Claim to update }
+      - { name: decision, type: string, required: true,
+          enum: [pursue, route_to_af, route_to_litigation,
+                 route_to_negotiated_demand, abstain, senior_review_required],
+          description: Recovery pursuit route }
+      - { name: source_assessment_id, type: string, required: false,
+          description: RecoveryOpportunity / AgentAction RID that produced the recommendation }
+
+  - api_name: ApplyClosureDecision
+    display_name: Apply Closure Decision
+    description: >-
+      Commit a closure recommendation to a Claim. Mirrors
+      apply_closure_decision() in closure_actions.py.
+    target_object_type: Claim
+    parameters:
+      - { name: claim_id, type: string, required: true,
+          description: Primary key of the Claim to update }
+      - { name: recommendation, type: string, required: true,
+          enum: [close_full, close_with_followups, hold_open],
+          description: The closure recommendation to commit }
+      - { name: source_assessment_id, type: string, required: false,
+          description: ClosureAnalysis / AgentAction RID that produced the recommendation }
+
+  - api_name: ApplyReopenDecision
+    display_name: Apply Reopen Decision
+    description: >-
+      Reopen a closed Claim with a documented reason. Mirrors
+      apply_reopen_decision() in closure_actions.py.
+    target_object_type: Claim
+    parameters:
+      - { name: claim_id, type: string, required: true,
+          description: Primary key of the Claim to reopen }
+      - { name: reopen_reason, type: string, required: true,
+          enum: [post_close_demand, post_close_lien_surfaced,
+                 post_close_cms_final_demand, post_close_litigation_filed,
+                 material_new_information],
+          description: Reason for reopening the claim }
+      - { name: source_assessment_id, type: string, required: false,
+          description: AgentAction RID that surfaced the reopen trigger }
+
