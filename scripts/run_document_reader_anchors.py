@@ -1,15 +1,20 @@
-"""Run the Document Reader against all 4 anchor pairs and apply locked thresholds.
+"""Run the Document Reader against the locked anchor pairs and apply thresholds.
 
 Spec: docs/specs/document-reader.md
-Thresholds: docs/evals/document-reader-anchor-pairs-thresholds.md
+Thresholds:
+  v1 (Pairs 1-4 baseline): docs/evals/document-reader-anchor-pairs-thresholds.md
+  v2 (Pairs 1-4 controls hardened): docs/evals/document-reader-anchor-pairs-v2-thresholds.md
+  v3 (Pairs 5-7 subrogation): docs/evals/document-reader-anchor-pairs-v3-subrogation-thresholds.md
 
-Calls Claude Sonnet 4.6 eight times (4 pairs × 2 variants) — costs
-real money. One shot per variant; do not loop. Per-variant + paired
-checks per the locked thresholds; PASS only if ALL 4 pairs pass.
+Calls Claude Sonnet 4.6 twice per pair (one shot per variant) — costs
+real money. Per-variant + paired-delta checks per the locked thresholds;
+PASS only if ALL pairs in the selected subset pass.
 
 Run:
-    .venv/bin/python scripts/run_document_reader_anchors.py
-    .venv/bin/python scripts/run_document_reader_anchors.py --pair 1
+    .venv/bin/python scripts/run_document_reader_anchors.py                    # all 7 pairs
+    .venv/bin/python scripts/run_document_reader_anchors.py --version v3       # subrogation only (5,6,7)
+    .venv/bin/python scripts/run_document_reader_anchors.py --version v2       # baseline 4 only (1,2,3,4)
+    .venv/bin/python scripts/run_document_reader_anchors.py --pair 1           # single pair by index
 """
 from __future__ import annotations
 
@@ -232,24 +237,49 @@ def evaluate_pair(pair: AnchorPair) -> dict:
     }
 
 
+VERSION_SUBSETS = {
+    "v2": [1, 2, 3, 4],  # liability, coverage, damages, reserve (baseline 4)
+    "v3": [5, 6, 7],     # subrogation (3 added 2026-06-02)
+    "all": [1, 2, 3, 4, 5, 6, 7],
+}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
         "--pair",
         type=int,
-        choices=[1, 2, 3, 4],
-        help="Run only one pair (1=liability, 2=coverage, 3=damages, 4=reserve)",
+        choices=[1, 2, 3, 4, 5, 6, 7],
+        help=(
+            "Run only one pair by 1-indexed slot "
+            "(1=liability, 2=coverage, 3=damages, 4=reserve, "
+            "5/6/7=subrogation)"
+        ),
+    )
+    group.add_argument(
+        "--version",
+        choices=["v2", "v3", "all"],
+        default="all",
+        help=(
+            "Run a version subset (default: all). "
+            "v2 = baseline 4 (Pairs 1-4); "
+            "v3 = subrogation 3 (Pairs 5-7)."
+        ),
     )
     args = parser.parse_args()
 
     print("=" * 72)
     print("DOCUMENT READER — ANCHOR-PAIR BENCHMARK")
     print(f"Model: {DEFAULT_MODEL}")
+    print(f"Subset: {'pair ' + str(args.pair) if args.pair else args.version}")
     print("=" * 72)
 
     pairs = all_pairs()
     if args.pair is not None:
         pairs = [pairs[args.pair - 1]]
+    else:
+        pairs = [pairs[i - 1] for i in VERSION_SUBSETS[args.version]]
 
     pair_results = [evaluate_pair(p) for p in pairs]
 
@@ -297,24 +327,29 @@ def main() -> int:
     print("COMPOSITE VERDICT")
     print("=" * 72)
     all_passed = all(pr["pair_passed"] for pr in pair_results)
+    n_total = len(pair_results)
+    n_pass = sum(1 for p in pair_results if p["pair_passed"])
+    postures = sorted({p["posture"] for p in pair_results})
+    subset_label = (
+        f"pair {args.pair}" if args.pair else args.version
+    )
     if args.pair is not None:
         composite = (
-            f"PARTIAL RUN ({len(pair_results)} pair) — "
+            f"PARTIAL RUN (1 pair) — "
             f"{'PASS' if all_passed else 'FAIL'} on the subset. "
-            "Composite ship/no-ship requires the full 4-pair run."
+            "Composite ship/no-ship requires the full version subset run."
         )
     elif all_passed:
         composite = (
-            "SHIP — Reader classifies relevance from evidence on all 4 "
-            "postures (liability, coverage, damages, reserve). Schema "
-            "valid, excerpts verbatim, paired-delta directionality holds. "
-            "Wire into policy engine B6/B7 as the next step."
+            f"SHIP ({subset_label}) — Reader classifies relevance from evidence "
+            f"on {n_total} pair(s) covering posture(s): {', '.join(postures)}. "
+            f"Schema valid, excerpts verbatim, paired-delta directionality holds."
         )
     else:
-        n_pass = sum(1 for p in pair_results if p["pair_passed"])
         composite = (
-            f"DO NOT SHIP — {n_pass}/4 pairs passed. Per locked thresholds, "
-            "Reader ships only when all 4 pairs pass. Failure detail above."
+            f"DO NOT SHIP ({subset_label}) — {n_pass}/{n_total} pairs passed. "
+            "Per locked thresholds, Reader ships only when all pairs in the "
+            "subset pass. Failure detail above."
         )
     print(composite)
 
@@ -324,7 +359,11 @@ def main() -> int:
     OUTPUT_PATH.write_text(json.dumps({
         "run_timestamp": datetime.now(timezone.utc).isoformat(),
         "spec": "docs/specs/document-reader.md",
-        "thresholds": "docs/evals/document-reader-anchor-pairs-thresholds.md",
+        "thresholds": {
+            "v2": "docs/evals/document-reader-anchor-pairs-v2-thresholds.md",
+            "v3": "docs/evals/document-reader-anchor-pairs-v3-subrogation-thresholds.md",
+        },
+        "subset": subset_label,
         "model": DEFAULT_MODEL,
         "pairs_run": [pr["pair_id"] for pr in pair_results],
         "pair_results": pair_results,

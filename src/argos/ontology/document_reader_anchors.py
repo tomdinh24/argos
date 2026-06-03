@@ -1,6 +1,10 @@
 """Anchor-pair fixtures for the Document Reader eval.
 
-Four pairs, one per posture (liability, coverage, damages, reserve).
+Seven pairs total:
+- Pairs 1-4 cover the original postures (liability, coverage, damages, reserve).
+- Pairs 5-7 (added 2026-06-02) cover the `subrogation` posture introduced
+  when the `PostureChanged` literal was extended from 4 -> 5 values.
+
 Each pair shares: same ClaimContext, same DocumentInput metadata, same
 opening body. Variant B adds exactly one material sentence to the body
 that Variant A does not have.
@@ -9,7 +13,10 @@ Bodies are designed so the **added sentence** is the one a passing
 Reader must quote in `text_excerpt` on Variant B. Variant A must
 return `material=False` with empty excerpt.
 
-Pinned by `docs/evals/document-reader-anchor-pairs-thresholds.md`.
+Pinned by:
+- v1 (Pairs 1-4 baseline): `docs/evals/document-reader-anchor-pairs-thresholds.md`
+- v2 (Pairs 1-4 controls hardened): `docs/evals/document-reader-anchor-pairs-v2-thresholds.md`
+- v3 (Pairs 5-7 subrogation): `docs/evals/document-reader-anchor-pairs-v3-subrogation-thresholds.md`
 """
 from __future__ import annotations
 
@@ -350,11 +357,238 @@ PAIR4_RESERVE = AnchorPair(
 
 
 # ---------------------------------------------------------------------------
+# Pair 5 — Subrogation posture (ERISA consent-to-settle)
+# ---------------------------------------------------------------------------
+
+_PAIR5_CTX = ClaimContext(
+    claim_id="CLM-ANCHOR-SUB-005",
+    severity_tier="serious",
+    current_reserve_amount=200_000.0,
+    paid_to_date=0.0,
+    litigation_flag=False,
+    rep_flag=True,
+    complaint_flag=False,
+    open_coverage_status="clean",
+    loss_facts=(
+        "Auto bodily injury arising from a 2026-02-18 collision in "
+        "which our insured was not at fault. Claimant is an active "
+        "participant in an ERISA-governed employer health plan that "
+        "has paid conditional medical benefits and asserted a "
+        "first-dollar reimbursement right against any third-party "
+        "recovery. Subrogation file is open with the plan trustees."
+    ),
+)
+
+_PAIR5_OPENING = (
+    "RE: Plan Participant — [Claimant Name]\n"
+    "Plan ID: TRUSTEE-2026-PP-0042\n"
+    "Your File: ARG-SUB-005-A\n\n"
+    "Dear Claims Representative,\n\n"
+    "This office acknowledges receipt of your correspondence dated "
+    "May 8, 2026 regarding the above-referenced plan participant. "
+    "Your inquiry has been logged and assigned to the appropriate "
+    "recovery analyst for review.\n\n"
+    "Please confirm that we have the most current contact information "
+    "on file for your claims department, and we will respond "
+    "substantively within our standard review window."
+)
+
+_PAIR5_ADDED = (
+    "Per the terms of the underlying ERISA-governed plan, the Trustees "
+    "consent to your insured's settlement with the third-party "
+    "tortfeasor in the amount of $150,000.00, subject to the plan's "
+    "first-dollar reimbursement right of $42,318.74 in conditional "
+    "payments under 29 U.S.C. §1132(a)(3) and US Airways v. McCutchen."
+)
+
+PAIR5_SUBROGATION = AnchorPair(
+    pair_id="pair-5-subrogation",
+    posture="subrogation",
+    context=_PAIR5_CTX,
+    variant_a=DocumentInput(
+        document_id="DOC-PAIR5-A",
+        document_type="correspondence",
+        source="erisa_plan_administrator",
+        received_date="2026-05-28",
+        body_text=(
+            _PAIR5_OPENING
+            + "\n\nSincerely,\n/s/ Trustee Services Group"
+        ),
+    ),
+    variant_b=DocumentInput(
+        document_id="DOC-PAIR5-B",
+        document_type="correspondence",
+        source="erisa_plan_administrator",
+        received_date="2026-05-28",
+        body_text=(
+            _PAIR5_OPENING
+            + "\n\n"
+            + _PAIR5_ADDED
+            + "\n\nSincerely,\n/s/ Trustee Services Group"
+        ),
+    ),
+    added_sentence=_PAIR5_ADDED,
+)
+
+
+# ---------------------------------------------------------------------------
+# Pair 6 — Subrogation posture (Arbitration Forums signatory notice)
+# ---------------------------------------------------------------------------
+
+_PAIR6_CTX = ClaimContext(
+    claim_id="CLM-ANCHOR-SUB-006",
+    severity_tier="standard",
+    current_reserve_amount=45_000.0,
+    paid_to_date=12_400.0,
+    litigation_flag=False,
+    rep_flag=False,
+    complaint_flag=False,
+    open_coverage_status="clean",
+    loss_facts=(
+        "Auto property-damage-plus-soft-tissue claim arising from a "
+        "2026-03-30 rear-end collision. Recovery target is the adverse "
+        "driver's auto carrier. Intercompany arbitration under the "
+        "Arbitration Forums (AF) Auto Subrogation Arbitration Agreement "
+        "is under consideration in lieu of litigation."
+    ),
+)
+
+_PAIR6_OPENING = (
+    "Arbitration Forums, Inc.\n"
+    "Member Services Notice\n"
+    "Account: ARG-MS-2026-1147\n\n"
+    "Dear Member,\n\n"
+    "This notice confirms your member account remains active and in "
+    "good standing. Recent administrative updates to our case "
+    "submission portal have been deployed; documentation is available "
+    "in the member portal under \"Resources → Portal Updates.\"\n\n"
+    "For any account-level questions, contact Member Services."
+)
+
+_PAIR6_ADDED = (
+    "Per our records, the adverse carrier identified in your inquiry "
+    "— Mercury Casualty Group, NAIC 27553 — is a current signatory "
+    "to the Auto Subrogation Arbitration Agreement and the dispute as "
+    "described falls within compulsory jurisdiction; you may proceed "
+    "with filing under Rule 2-1."
+)
+
+PAIR6_SUBROGATION = AnchorPair(
+    pair_id="pair-6-subrogation",
+    posture="subrogation",
+    context=_PAIR6_CTX,
+    variant_a=DocumentInput(
+        document_id="DOC-PAIR6-A",
+        document_type="correspondence",
+        source="arbitration_forums",
+        received_date="2026-05-29",
+        body_text=(
+            _PAIR6_OPENING
+            + "\n\nArbitration Forums, Inc. — Member Services"
+        ),
+    ),
+    variant_b=DocumentInput(
+        document_id="DOC-PAIR6-B",
+        document_type="correspondence",
+        source="arbitration_forums",
+        received_date="2026-05-29",
+        body_text=(
+            _PAIR6_OPENING
+            + "\n\n"
+            + _PAIR6_ADDED
+            + "\n\nArbitration Forums, Inc. — Member Services"
+        ),
+    ),
+    added_sentence=_PAIR6_ADDED,
+)
+
+
+# ---------------------------------------------------------------------------
+# Pair 7 — Subrogation posture (made-whole waiver)
+# ---------------------------------------------------------------------------
+
+_PAIR7_CTX = ClaimContext(
+    claim_id="CLM-ANCHOR-SUB-007",
+    severity_tier="serious",
+    current_reserve_amount=120_000.0,
+    paid_to_date=18_600.0,
+    litigation_flag=False,
+    rep_flag=True,
+    complaint_flag=False,
+    open_coverage_status="clean",
+    loss_facts=(
+        "Auto bodily injury arising from a 2026-01-24 collision. "
+        "Claimant is in active recovery negotiation with a health "
+        "insurer that has asserted a §768.76 lien notice for paid "
+        "medical benefits. Made-whole doctrine has been the live "
+        "question in correspondence between claimant counsel and the "
+        "health insurer."
+    ),
+)
+
+_PAIR7_OPENING = (
+    "RE: [Claimant Name] — Lien Coordination\n"
+    "Your File: CLM-SUB-007\n\n"
+    "Dear Claims Representative,\n\n"
+    "Enclosed please find a copy of the cover page for our client's "
+    "file as previously requested. This is provided for your records "
+    "only and is not intended to alter any prior positions taken in "
+    "this matter.\n\n"
+    "We will follow up separately on remaining outstanding items."
+)
+
+_PAIR7_ADDED = (
+    "Our client has executed the enclosed Made-Whole Waiver, expressly "
+    "waiving the protections of the made-whole doctrine under "
+    "§768.76(2)(b) and acknowledging the health insurer's first-dollar "
+    "reimbursement right against any third-party recovery; the executed "
+    "waiver is attached as Exhibit A."
+)
+
+PAIR7_SUBROGATION = AnchorPair(
+    pair_id="pair-7-subrogation",
+    posture="subrogation",
+    context=_PAIR7_CTX,
+    variant_a=DocumentInput(
+        document_id="DOC-PAIR7-A",
+        document_type="executed_agreement",
+        source="claimant_counsel",
+        received_date="2026-05-30",
+        body_text=(
+            _PAIR7_OPENING
+            + "\n\nSincerely,\n/s/ Reyes & Patel, P.A."
+        ),
+    ),
+    variant_b=DocumentInput(
+        document_id="DOC-PAIR7-B",
+        document_type="executed_agreement",
+        source="claimant_counsel",
+        received_date="2026-05-30",
+        body_text=(
+            _PAIR7_OPENING
+            + "\n\n"
+            + _PAIR7_ADDED
+            + "\n\nSincerely,\n/s/ Reyes & Patel, P.A."
+        ),
+    ),
+    added_sentence=_PAIR7_ADDED,
+)
+
+
+# ---------------------------------------------------------------------------
 # Public entry point
 # ---------------------------------------------------------------------------
 
 
 def all_pairs() -> list[AnchorPair]:
-    """Return all four anchor pairs, in the order pinned by the
-    thresholds doc."""
-    return [PAIR1_LIABILITY, PAIR2_COVERAGE, PAIR3_DAMAGES, PAIR4_RESERVE]
+    """Return all seven anchor pairs, in the order pinned by the
+    thresholds docs (v1/v2: 1-4; v3: 5-7)."""
+    return [
+        PAIR1_LIABILITY,
+        PAIR2_COVERAGE,
+        PAIR3_DAMAGES,
+        PAIR4_RESERVE,
+        PAIR5_SUBROGATION,
+        PAIR6_SUBROGATION,
+        PAIR7_SUBROGATION,
+    ]
