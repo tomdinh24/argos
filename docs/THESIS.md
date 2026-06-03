@@ -11,7 +11,7 @@ aliases:
 
 # THESIS — Claims Operations Intelligence Layer (Argos)
 
-> Written downstream of Phase 1 (adjuster workflow research), Phase 2 (real data exploration across FARS, CRSS, NFIP), and Phase 3 (buyer profile locked: specialty mid-tier auto + property TPA). Target audience: a Palantir Forward Deployed Engineer interviewer first, an AI PM interviewer second — the former-credible version is also the latter-credible version, not vice versa.
+> Written downstream of Phase 1 (adjuster workflow research), Phase 2 (real data exploration across FARS, CRSS, NFIP), and Phase 3 (buyer profile locked: specialty mid-tier auto + property TPA).
 
 ---
 
@@ -125,9 +125,9 @@ A horizontal AI vendor can ship the shared record and the workspace. They cannot
 
 The configuration corpus also compounds. Every new customer adds a new configuration; every new configuration is a new data point about how real specialty TPAs actually operate. That compound is the flywheel a horizontal AI vendor structurally cannot build.
 
-### Why this matters for Palantir-style interview signal
+### The architectural pattern
 
-This is the same architectural pattern Palantir built their entire enterprise business on: a shared ontology at the bottom, a library of composable functions that operate on it, applications on top where humans actually work. Saying *"we built a claims intelligence layer with a shared structured record, a library of specialist watchers on top, and a unified adjuster workspace"* is the language an FDE interviewer expects. Saying *"we built six AI agents"* is not.
+This is the same pattern enterprise data platforms are built on: a shared ontology at the bottom, a library of composable functions that operate on it, applications on top where humans actually work. The framing is *"a claims intelligence layer with a shared structured record, a library of specialist watchers on top, and a unified adjuster workspace"* — not "six AI agents." The former composes; the latter is just plumbing.
 
 ---
 
@@ -169,11 +169,11 @@ The wedge is **the minimum viable claims intelligence layer** — the substrate 
 
 **Which analyzers light up first is the load-bearing STRATEGY decision.** Three candidates each have a different strongest argument:
 
-- **Recovery analyzer** — strongest single-dollar-ROI pitch; closed-file audits routinely surface missed recovery; the demo moment of "the agent found money your adjuster missed" is interview-grade and customer-pitchable in one sentence
+- **Recovery analyzer** — strongest single-dollar-ROI pitch; closed-file audits routinely surface missed recovery; the demo moment of "the agent found money your adjuster missed" is customer-pitchable in one sentence
 - **Reserve analyzer** — strongest "stops the cardinal sin" pitch; reserve drift is the failure clients audit TPAs against most harshly, and a reserve recommendation engine that catches material events early is the single biggest financial-accuracy lever in the workflow
 - **Closure analyzer** — strongest client-trust pitch; every claim closes through it, loss-run accuracy is what clients evaluate the TPA on, and structurally enforcing closure readiness prevents the largest class of audit defects
 
-STRATEGY.md picks which subset lights up, with the reasoning grounded in demo credibility, customer-pitch coherence, and which analyzers most efficiently exercise the substrate-plus-cockpit architecture for portfolio purposes.
+STRATEGY.md picks which subset lights up, with the reasoning grounded in demo credibility, customer-pitch coherence, and which analyzers most efficiently exercise the substrate-plus-cockpit architecture for the current build.
 
 **The specific PMF metric is deferred to PRD.** Candidates depend on which analyzers ship first: recovery-dollars-detected, reserve-accuracy-improvement, closure-cycle-time-reduction, audit-defect-rate-reduction.
 

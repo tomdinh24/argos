@@ -11,7 +11,7 @@ aliases:
 
 # STRATEGY — Claims Operations Intelligence Layer (Argos)
 
-> Downstream of [THESIS.md](./THESIS.md). Defines the user, the product, the wedge, the metrics, the moat, and the competitive position. Target audience: an AI Product Manager interviewer first, an FDE interviewer second. Companion to [research/specialty-tpa-auto-property-workflow.md](./research/specialty-tpa-auto-property-workflow.md) (the workflow ground truth) and the [data-exploration notes](./data-exploration/) (the data foundation).
+> Downstream of [THESIS.md](./THESIS.md). Defines the user, the product, the wedge, the metrics, the moat, and the competitive position. Companion to [research/specialty-tpa-auto-property-workflow.md](./research/specialty-tpa-auto-property-workflow.md) (the workflow ground truth) and the [data-exploration notes](./data-exploration/) (the data foundation).
 
 ---
 
@@ -319,7 +319,7 @@ Five risks, each plausible, each with a falsifying signal we would watch for.
 
 **3. Incumbent response risk — CCC or Snapsheet ships specialist watchers.** If CCC (with $2.65B market cap) decides to build the same layer, they have the SOR relationships, the data, and the distribution. *Falsifying signal:* CCC or Guidewire announces a "claims intelligence layer" product. *Response:* depth-of-configuration is harder to copy than the architecture; we keep building configuration corpus.
 
-**4. Data risk — real customer data access becomes harder.** Without paid customer data, we cannot validate the specialists at production quality. The portfolio project survives on synthetic generation grounded in public data; the real product needs real data. *Falsifying signal:* first customer refuses access to their CMS for integration. *Response:* deploy in observe-only mode initially (analyzes without integrating), build trust, expand access over time.
+**4. Data risk — real customer data access becomes harder.** Without paid customer data, we cannot validate the specialists at production quality. The current build runs on synthetic generation grounded in public data; the production product needs real data. *Falsifying signal:* first customer refuses access to their CMS for integration. *Response:* deploy in observe-only mode initially (analyzes without integrating), build trust, expand access over time.
 
 **5. Liability risk — a specialist recommendation contributes to a bad-faith claim.** Even with human-in-the-loop, the system's recommendation can be discoverable in litigation. *Falsifying signal:* legal counsel at any first customer flags this in diligence. *Response:* aggressive logging, clear "drafts only" labeling, contractual indemnification carve-outs.
 

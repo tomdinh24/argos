@@ -832,7 +832,7 @@ For facts derived from *the client's configuration* — closure-blocking defects
 
 This is **rule-execution accuracy**, not deterministic ground truth. The specialist could be perfect at reading the config and the config could still be wrong (e.g., the client's authority threshold is misconfigured). C-policy measures the system's ability to operate as configured, which is a real product question — but the eval honestly cannot conclude "the specialist arrived at the right answer about the real world," only "the specialist correctly executed the encoded rule."
 
-Metrics reported under C-policy are labeled accordingly. An interviewer asking "where does Layer C ground truth come from?" gets a layered answer:
+Metrics reported under C-policy are labeled accordingly. Someone asking "where does Layer C ground truth come from?" gets a layered answer:
 - C-statutory: from sourced statutes with citations
 - C-policy: from the client config (which the generator wrote); measures execution fidelity, not real-world correctness
 
@@ -904,7 +904,7 @@ Both are actionable. Both surface as eval failures with directional signal for p
 
 ## §8 — Scale targets and statistical power
 
-### For the interview demo
+### Initial scale
 
 - ~300 synthetic auto claims (across Northwind, Sentinel, RoadMile portfolios; CRSS calibration; FARS fatality subset)
 - ~200 synthetic flood claims (Coastal WYO demo branch)

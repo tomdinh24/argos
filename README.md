@@ -16,12 +16,7 @@ aliases:
 
 ## What this is
 
-A portfolio project building Argos. Six specialists watch every claim — Brief, Coverage, Liability, Reserve, Recovery, Closure — and surface evidence + probability + drafted work product to the adjuster's workspace. The adjuster picks the path. The vault enforces every write.
-
-The architecture answers two interview loops:
-
-- **Palantir FDE** — ontology design over messy real data, SQL-on-messy-data, configuration-as-moat, system decomposition
-- **AI PM** — problem framing, multi-agent architecture, evals, calibration, the legally-bearing-claim contract
+Six specialists watch every claim — Brief, Coverage, Liability, Reserve, Recovery, Closure — and surface evidence + probability + drafted work product to the adjuster's workspace. The adjuster picks the path. The vault enforces every write.
 
 ## Design docs (read in this order)
 
@@ -77,4 +72,4 @@ Weekend 1 in progress. See [TECH_PLAN §8](docs/TECH_PLAN.md) for the four-weeke
 
 ## License
 
-No license attached yet. Portfolio project; reach out before copying.
+Proprietary. All rights reserved.

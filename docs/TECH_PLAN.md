@@ -24,7 +24,6 @@ This document defines:
 3. **The three-layer architecture** — Foundry / Railway Python / Vercel Next.js, with the contract between each layer.
 4. **The build sequence** — four weekends with acceptance gates.
 5. **The eval harness** — AIP Evals + our orchestration, wiring data-layer.md §7.
-6. **The interview narrative mapping** — which artifact wins which interview moment.
 
 What this doc is *not*:
 - It does **not** redefine the ontology (see [data-layer.md](./data-layer.md) §5).
@@ -41,14 +40,14 @@ The driving principle: **evaluate each Foundry/AIP component on its own merits, 
 
 | Component | What it gives us | Cost of using it | Decision | Why |
 |---|---|---|---|---|
-| **Foundry Ontology** | Typed semantic graph; ontology imports in Functions; the unique-to-Foundry primitive; FDE interview centerpiece | Data model locks to Foundry; ontology authoring goes through Ontology Manager UI | **USE** | This is the one capability nothing else gives us out of the box. The semantic graph + validation + audit + branching all attached to the *type* itself is the Palantir thesis. Replacing it with Postgres + Pydantic loses both the unique capability and the FDE interview signal. |
+| **Foundry Ontology** | Typed semantic graph; ontology imports in Functions; the unique-to-Foundry primitive | Data model locks to Foundry; ontology authoring goes through Ontology Manager UI | **USE** | This is the one capability nothing else gives us out of the box. The semantic graph + validation + audit + branching all attached to the *type* itself is the Palantir thesis. Replacing it with Postgres + Pydantic loses the unique capability. |
 | **Foundry Action Types** | The only mutation surface; TypeScript validation logic; built-in audit + permissions | All mutations go through Action Types — can't bypass | **USE** | The illegal-combination matrix from data-layer.md §5 and the financial-posting rules become Action Type validators. Invariants live at the data layer, not scattered across Python. The audit trail is automatic. |
 | **Foundry Datasets** | Raw storage under the ontology | None at our scale | **USE** | Comes free with Ontology. |
 | **Code Repositories (Functions)** | Git-backed Python/TS serverless runtime; ontology imports with autocomplete; built-in deployment | Foundry-hosted git is less flexible than GitHub + local IDE; iteration is slower | **USE SPARINGLY** | Only for Functions that need direct ontology access — primarily `get_financials_as_of` and a few read helpers. Bulk Python (specialists, synthesis, eval orchestration) lives in our own GitHub repo on Railway. Faster iteration, full toolchain control. |
 | **AIP Logic** | Visual LLM workflow builder; built-in monitoring; callable from elsewhere in Foundry | UI-bound prompt authoring; constrained orchestration shape; less control than raw Python | **SKIP** | Our specialists are complex multi-step orchestration with precise prompt requirements. AIP Logic is great for simple "extract these fields from this text" tasks; ours are not those. We get monitoring via our own logging + AIP Evals integration. |
 | **AIP Chatbot Studio** | Multi-turn conversational agent builder | Adds chat surface we don't need | **SKIP** | The workspace is a structured UI, not a chat interface. |
-| **AIP Evals** | Eval framework with custom golden sets, rubrics, evaluators; built-in dashboards | Eval-specific, low lock-in cost | **USE** | Real win for the four-layer truth model. Custom Functions as evaluators map directly to Layer C-statutory / C-policy / D. The dashboard becomes an interview surface. |
-| **Workshop** | No-code dashboard builder over the Ontology | UI-bound; not externally shareable without Foundry auth | **SKIP** | Demo must be recruiter-shareable via a public URL. Workshop can't do that. Building Next.js. |
+| **AIP Evals** | Eval framework with custom golden sets, rubrics, evaluators; built-in dashboards | Eval-specific, low lock-in cost | **USE** | Real win for the four-layer truth model. Custom Functions as evaluators map directly to Layer C-statutory / C-policy / D. The dashboard becomes a primary review surface. |
+| **Workshop** | No-code dashboard builder over the Ontology | UI-bound; not externally shareable without Foundry auth | **SKIP** | Demo must be shareable via a public URL. Workshop can't do that. Building Next.js. |
 | **OSDK (Ontology SDK)** | Generated typed SDK for external Python or TypeScript | None — required for any external integration | **USE** | The bridge that makes Foundry-backend + external-Python + external-Next.js work. |
 
 ### §2.2 Why the external Python backend (Railway) instead of Code Repositories
@@ -65,9 +64,9 @@ For the specialists, synthesis pipeline, and eval orchestration: we ship to Rail
 
 ### §2.3 Why Next.js on Vercel instead of Workshop
 
-**The demo-shareability argument.** A Workshop module is gated behind Foundry auth — recruiters can't click a link. A Vercel-deployed Next.js URL is public, single-click, works on a phone, screenshots cleanly.
+**The demo-shareability argument.** A Workshop module is gated behind Foundry auth — external viewers can't click a link. A Vercel-deployed Next.js URL is public, single-click, works on a phone, screenshots cleanly.
 
-**The control argument.** Custom UI requirements (the audit drawer with full citation chains, the matched-pair config sensitivity view, the eval truth-layer attribution table) are easier in custom React than Workshop's drag-and-drop. Workshop is great for internal operational dashboards; ours is a portfolio demo with specific narrative beats.
+**The control argument.** Custom UI requirements (the audit drawer with full citation chains, the matched-pair config sensitivity view, the eval truth-layer attribution table) are easier in custom React than Workshop's drag-and-drop. Workshop is great for internal operational dashboards; ours is a custom workspace with specific narrative beats.
 
 **The cost.** We give up Workshop's automatic ontology-data binding — the Next.js app calls OSDK explicitly. We give up Workshop's permission model — we add our own (NextAuth or pass-through Foundry token for the demo).
 
@@ -91,7 +90,7 @@ Honest accounting of Foundry lock-in:
 | Re-implement AIP Evals dashboard | ~2-3 days (existing OSS eval frameworks: Promptfoo, Inspect, Weights & Biases) |
 | Migrate ontology data | Standard Parquet/CSV export → Postgres COPY |
 
-Total migration cost: ~2 weeks. Manageable. We're not betting the company on Foundry; we're picking the best tool for the portfolio demo.
+Total migration cost: ~2 weeks. Manageable. We're not betting the company on Foundry; we're picking the best tool for the build.
 
 ---
 
@@ -99,7 +98,7 @@ Total migration cost: ~2 weeks. Manageable. We're not betting the company on Fou
 
 | Layer | Choice | Rationale |
 |---|---|---|
-| **Data + semantic layer** | Foundry Ontology + Action Types | Unique typed-semantic-graph capability. FDE interview centerpiece. Built-in audit/permissions/branching. |
+| **Data + semantic layer** | Foundry Ontology + Action Types | Unique typed-semantic-graph capability. Built-in audit/permissions/branching. |
 | **Ontology-touching compute** | Foundry Code Repositories (Python) | Functions that need direct ontology access. Limited to ~3-5 functions. |
 | **Eval framework** | Foundry AIP Evals | Custom golden sets + custom evaluator Functions + rubric + dashboard. Maps to four-layer truth model. |
 | **Specialist orchestration** | Python on Railway (FastAPI) | Full prompt control, fast iteration loop, local dev experience, portable. Calls Foundry via OSDK. |
@@ -114,7 +113,7 @@ Total migration cost: ~2 weeks. Manageable. We're not betting the company on Fou
 | **Testing (Python)** | pytest + hypothesis | Standard test runner; property-based tests for synthesis pipeline invariants |
 | **Auth (demo)** | Foundry personal access token in env var for OSDK; NextAuth for the Next.js public-demo surface | Production would use Foundry's hosted auth flow |
 
-**Considered and rejected:** DuckDB as substrate (Foundry Ontology gives us typed semantic graph + audit + branching that Postgres + Pydantic can't match cleanly); hand-rolled state machine library (Action Type validators put invariants at the data layer where they belong); Streamlit (not recruiter-shareable); hand-rolled eval harness (AIP Evals gives us rubric + dashboard for free); LangChain / LangGraph / CrewAI (hide the prompt and orchestration decisions that are the interview value).
+**Considered and rejected:** DuckDB as substrate (Foundry Ontology gives us typed semantic graph + audit + branching that Postgres + Pydantic can't match cleanly); hand-rolled state machine library (Action Type validators put invariants at the data layer where they belong); Streamlit (not externally shareable); hand-rolled eval harness (AIP Evals gives us rubric + dashboard for free); LangChain / LangGraph / CrewAI (hide the prompt and orchestration decisions that are the architectural value).
 
 ---
 
@@ -407,7 +406,7 @@ frontend/
 
 ### §7.3 Auth
 
-For the demo: NextAuth with passkey or email-magic-link, behind a hardcoded allowlist (your email + a few demo accounts for recruiters). Backend calls to Foundry use a service-account personal access token in Vercel env vars.
+For the demo: NextAuth with passkey or email-magic-link, behind a hardcoded allowlist (your email + a few demo accounts). Backend calls to Foundry use a service-account personal access token in Vercel env vars.
 
 Production would shift to Foundry's hosted OAuth, but that's deferred.
 
@@ -469,18 +468,16 @@ Three pre-seeded demo claims targeting specific narrative beats:
 
 **Acceptance gate:** All three specialists run end-to-end on the full ~500 claims; AIP Evals dashboards populated with Layer C-statutory, C-policy, D, time-to-recognition, and matched-pair metrics; truth-layer attribution clean.
 
-### Weekend 4 — Workspace polish + demo + interview narrative
+### Weekend 4 — Workspace polish + demo + walkthrough
 
-**Goals:** Demo-ready system, INTERVIEW_NARRATIVE.md, Loom walkthrough.
+**Goals:** Demo-ready system, Loom walkthrough.
 
 - Polish Next.js views: claim list, claim detail, review queue, audit drawer, eval tab
 - Demo walkthrough script seeding the three specific demo claims
 - README with problem statement, architecture diagram, how-to-run-locally, eval baseline numbers
-- `docs/INTERVIEW_NARRATIVE.md` — the cheatsheet for what to say per interview round (carry forward day-1 PLAN.md §10 as seed, refine against this tech plan)
 - 5-minute Loom walkthrough showing both the Vercel public demo URL and the Foundry side (Ontology Manager, Action Type validators, AIP Evals dashboard)
-- Public Vercel URL goes into the resume / portfolio link
 
-**Acceptance gate:** Shareable Vercel URL (recruiter clicks → workspace works); Foundry side polished enough for a screenshare deep-dive; README, INTERVIEW_NARRATIVE.md, Loom recorded.
+**Acceptance gate:** Shareable Vercel URL (viewer clicks → workspace works); Foundry side polished enough for a screenshare deep-dive; README and Loom recorded.
 
 ---
 
@@ -495,23 +492,6 @@ The combination answers "why did we set the reserve at $X on claim Y on date Z" 
 
 ---
 
-## §10 — Interview narrative mapping
-
-| Interview moment | Winning artifact |
-|---|---|
-| **Palantir FDE — ontology round** | Foundry Ontology Manager walkthrough: object types, link types, the typed semantic graph. Walk through `CoverageRequest` with its seven status dimensions, the link to `LiabilityAssessment` (versioned), the link via `FinancialTransaction` to `FinancialPosting`. |
-| **Palantir FDE — invariants / validation** | Action Type TypeScript validators: the illegal-combination matrix and financial-posting rules encoded at the data layer. Demonstrate that an external caller trying to write an illegal state combination is rejected by Foundry. |
-| **Palantir FDE — Functions / SQL** | `get_financials_as_of` Function in Code Repositories: real Python, window-function query over `FinancialPosting`, demonstrably correct under backdated `effective_at` corrections. |
-| **Palantir FDE — system design** | Whiteboard the three-layer architecture (§4). Defend the per-component decisions (§2): why Foundry holds the data layer, why our Python holds the specialists, why Next.js holds the UI. The "right tool per layer" framing is itself an FDE signal. |
-| **Palantir FDE — deployment / FDE day-job** | OSDK app registration, generated SDK, the Python backend on Railway calling Foundry over HTTPS. This is what FDE deployment to a customer looks like in miniature. |
-| **AI PM — problem framing** | THESIS.md + STRATEGY.md. The "specialist team for the adjuster" framing. The automatic-vs-human-approved boundary. |
-| **AI PM — AI architecture** | The three Python specialists with full prompt control. The deterministic-spine pattern (Action Type validators veto LLM proposals that violate state invariants). The Anthropic SDK + structured outputs choice. |
-| **AI PM — failure modes + evals** | AIP Evals dashboard with truth-layer attribution. Walk through Layer C-statutory vs C-policy split and why it matters. Show the time-to-recognition harness results. |
-| **AI PM — go-to-market** | STRATEGY.md + research/specialty-tpa-auto-property-workflow.md §18. The "configuration is the moat" thesis. The expansion arc. |
-| **Generalist — code quality** | Two repos visible: the Foundry Code Repositories repo (ontology Functions + Action Type validators); the GitHub repo for the Railway Python backend; the GitHub repo for the Vercel Next.js frontend. Three repos, clean separation, polyglot stack, production-shaped. |
-
----
-
 ## §11 — Cut criteria
 
 If behind schedule, drop in this order:
@@ -520,10 +500,10 @@ If behind schedule, drop in this order:
 2. **Drop matched-pair config sensitivity test.** High-value but specialist still works without it.
 3. **Drop time-to-recognition replay harness.** Keep end-state eval only.
 4. **Drop AIP Evals integration; ship a custom in-repo eval dashboard in Next.js.** Risk if AIP Evals turns out to be harder to wire than expected. Custom dashboard is more work but bounded.
-5. **Drop the Next.js workspace; ship Streamlit fallback.** Last resort. Recruiter still sees a clickable demo, but the polish is lower. Vercel still hosts something.
+5. **Drop the Next.js workspace; ship Streamlit fallback.** Last resort. External viewer still sees a clickable demo, but the polish is lower. Vercel still hosts something.
 6. **Drop the Recovery specialist; demo only Reserve + Closure.** Final cut. STRATEGY §6 is the framing that survives.
 
-**Do not cut:** Foundry Ontology, Action Type validators (the illegal-combination matrix), the OSDK integration, the AgentAction audit trail. These are the structural interview surfaces.
+**Do not cut:** Foundry Ontology, Action Type validators (the illegal-combination matrix), the OSDK integration, the AgentAction audit trail. These are the structural anchor surfaces.
 
 ---
 
@@ -537,8 +517,8 @@ If behind schedule, drop in this order:
 | Action Type TypeScript validators hit Foundry-specific edge cases | Mirror the validation logic as a Python pre-check in the Railway backend; specialist calls the Python validator before triggering the Action Type, so we get defense-in-depth |
 | Synthesis cost exceeds budget | Cost is metered after Weekend 2's 100-claim subset run. If 5× over estimate, cut to ~300 claims |
 | FARS/CRSS yield insufficient for trucking portfolio | Weekend 2 yield validation gate. Broaden portfolio if needed |
-| Demo dependency on Foundry uptime during interview | Pre-recorded Loom is mandatory fallback. Vercel demo works even if Foundry is down (with cached data) |
-| "Why aren't you using AIP Logic / Workshop" interviewer question | Prepared answer (§2.4): per-component first-principles eval; AIP Logic constrains specialist orchestration; Workshop isn't externally shareable; AIP Evals IS used and is the right call there |
+| Demo dependency on Foundry uptime during a live walkthrough | Pre-recorded Loom is mandatory fallback. Vercel demo works even if Foundry is down (with cached data) |
+| "Why aren't you using AIP Logic / Workshop" question | Prepared answer (§2.4): per-component first-principles eval; AIP Logic constrains specialist orchestration; Workshop isn't externally shareable; AIP Evals IS used and is the right call there |
 | Vercel + Railway + Foundry = three vendors. Operational complexity for a demo. | Acceptable. The three-vendor split is the architecture — it's the demonstration that we can integrate Foundry with arbitrary cloud infra |
 
 ---
@@ -550,7 +530,7 @@ If behind schedule, drop in this order:
 - **Action Type validator expressiveness.** Can TypeScript validators express the full illegal-combination matrix cleanly, or do we need Code Repositories Function callouts? Resolved Weekend 1.
 - **AIP Evals target-function wrapper for Railway endpoints.** Does AIP Evals call out to external HTTPS endpoints cleanly, or do we wrap in a Foundry Function? Resolved Weekend 2.
 - **Document storage for synthetic PDFs/text.** Foundry Datasets vs S3? Lean Foundry Datasets (one less vendor). Revisit if file-size limits are hit.
-- **NextAuth vs Foundry-hosted auth on Vercel.** NextAuth for recruiter shareability; Foundry auth in production.
+- **NextAuth vs Foundry-hosted auth on Vercel.** NextAuth for external shareability; Foundry auth in production.
 
 ---
 
@@ -563,7 +543,7 @@ Each weekend ends with a binary gate. If the gate fails, the next weekend starts
 | 1 | Foundry quotas documented; three-layer architecture live (Vercel reads Foundry, Railway writes Foundry); Action Type rejects an illegal state combination |
 | 2 | Reserve specialist runs end-to-end on 100 synthetic claims with AIP Evals Layer-C metrics; yield validation passed; cost budget on track |
 | 3 | All three specialists run on full ~500 claims; AIP Evals dashboard populated with all truth layers; truth-layer attribution clean |
-| 4 | Vercel public URL works; Foundry side polished enough to screenshare; INTERVIEW_NARRATIVE.md + Loom recorded |
+| 4 | Vercel public URL works; Foundry side polished enough to screenshare; Loom recorded |
 
 ---
 

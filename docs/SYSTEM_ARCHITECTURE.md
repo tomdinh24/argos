@@ -74,7 +74,7 @@ aliases:
 4. **Typed `pending_recommendations` collection** — promotes JSON-files-on-disk to first-class Caseload field. Load-bearing only when Foundry projection starts.
 5. **Reserve/Liability/Recovery/Closure Foundry bridges** — Coverage bridge shipped 2026-06-02 per [`docs/architecture/foundry-bridge-pattern.md`](./architecture/foundry-bridge-pattern.md). The other 4 writeback workflows follow the same ~30-line-per-bridge pattern. Each requires its corresponding Foundry Action Type to exist first (currently NOT built; blocked on UI clicks or Code Repo YAML — Tom's call).
 6. **Foundry Object Types scale-out** — promote the remaining 15 existing Pydantic types + 10 missing types (LossOccurrence, Party, CoverageDecision, ReserveTransaction, RecoveryTarget, ClosureDefect, AuthorityRequest, BadFaithSignal, ExposureLayerSnapshot, FinancialSnapshot) → first-class Foundry Object Types; build their Action Types from `services/orchestrator/*_actions.py`; wire AIP Evals from the four locked threshold docs. Blocked: Foundry Platform SDK is read-only for type definitions on Developer Tier; needs UI clicks or Code Repo YAML pipeline. Only after items 1–3 and Foundry-side type creation are done.
-6. **Vercel cockpit (Next.js)** — the interview surface. Build after Foundry projection so it has typed objects to render.
+6. **Vercel cockpit (Next.js)** — the operator-facing UI. Build after Foundry projection so it has typed objects to render.
 
 ### §0.3 — Maintenance protocol
 
@@ -104,7 +104,7 @@ This document answers:
 4. **What happens when something breaks?** (Failure modes)
 5. **How does this scale to production?** (Scaling story)
 
-This is the architecture an interviewer asks to see on a whiteboard. It's also what a triangulation review evaluates before we commit.
+This is the architecture a reviewer asks to see on a whiteboard. It's also what a triangulation review evaluates before we commit.
 
 ---
 
@@ -175,7 +175,7 @@ Three vendors, three responsibilities. Per-component decisions in [TECH_PLAN.md 
 | Specialist orchestration | Railway (FastAPI) | Long-running LLM calls; full Python iteration loop; not edge-suitable |
 | Synthesis pipeline | Railway (worker) | Batch job, ~hours of compute, not request-shaped |
 | Eval orchestration | Railway (worker) | Polling AIP Evals, batch comparisons |
-| Typed semantic data | Foundry Ontology | Unique-to-Foundry primitive; FDE interview centerpiece |
+| Typed semantic data | Foundry Ontology | Unique-to-Foundry primitive: typed semantic graph + validation + audit + branching attached to the type itself |
 | Mutation surface | Foundry Action Types | Built-in audit/permissions; validators in TypeScript |
 | Ontology-touching compute | Foundry Code Repositories | Direct ontology access; bitemporal queries |
 | Eval framework | Foundry AIP Evals | Custom rubric + golden set + dashboard |
@@ -346,7 +346,7 @@ Next.js /eval page reads eval_results_latest via OSDK; renders dashboard
 
 | Boundary | Mechanism | Notes |
 |---|---|---|
-| User → Vercel | NextAuth: passkey or email magic link | Allowlist of emails (yours + a few recruiter accounts); no public open access |
+| User → Vercel | NextAuth: passkey or email magic link | Allowlist of emails (yours + a few demo accounts); no public open access |
 | Vercel → Foundry | Service-account personal access token in Vercel env var | Token has read-everything + trigger-specific-Action-Types scopes |
 | Vercel → Railway | Signed JWT (short-lived, shared secret in env) | Each Server Action signs a JWT; Railway verifies before processing |
 | Railway → Foundry | Service-account personal access token in Railway env var | Separate token from Vercel's; different scopes (can trigger more Action Types) |
@@ -367,7 +367,7 @@ Next.js /eval page reads eval_results_latest via OSDK; renders dashboard
 - DLP, secrets scanning, SOC 2 trail
 - Production-grade rate limiting on the public Vercel surface
 
-All of these are appropriate for a portfolio demo. Production deployment would add them.
+All of these are appropriate for the current build. Production deployment would add them.
 
 ### §4.4 Data sensitivity boundary
 
@@ -390,7 +390,7 @@ The synthetic data has zero real PII — it's all generated. No HIPAA, no PCI, n
 The single irreducible point of failure is **Foundry** — the substrate. Mitigation:
 - Pre-recorded Loom is the demo fallback
 - Local Vercel + cached data CAN work in degraded mode (browse-only) if we cache responses
-- For interview day: rehearse with the actual stack 30 min before; if anything is flaky, switch to Loom
+- Pre-demo: rehearse with the actual stack 30 min before; if anything is flaky, switch to Loom
 
 ### §5.2 LLM-specific failure modes
 

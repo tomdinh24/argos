@@ -485,7 +485,6 @@ This is **two layers of defense** before any state changes.
 - **Safe to deploy.** The LLM cannot single-handedly move a claim to a state that violates the ontology.
 - **Auditable.** Every state change has either a rule-based provenance (Action Type validator passed) or an explicit human-approved provenance (someone clicked Approve in the workspace).
 - **Real-claims-system pattern.** This is how real claims systems are built (Guidewire, Duck Creek, in-house carrier platforms all have analogous structures).
-- **Interview narrative.** *"The deterministic skeleton is what makes the LLM safe to deploy. The LLM is what makes the skeleton flexible enough to handle real-world messiness."*
 
 ---
 
