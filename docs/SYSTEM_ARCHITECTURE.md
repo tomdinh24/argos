@@ -61,7 +61,7 @@ aliases:
 | **Eval suite (anchor-pair thresholds)** | eval | all four analytical workflows covered — Coverage, Document Reader, Triage, Brief, **Liability** (15 + 8, green 2026-06-02), **Reserve** (15 + 15 sub-cases, green 2026-06-02), **Recovery** (15 + 14 sub-cases, green 2026-06-02), **Closure** (15 + 9 sub-cases, green 2026-06-02) | [`docs/evals/`](./evals/), [`tests/evals/liability/`](../tests/evals/liability/), [`tests/evals/reserve/`](../tests/evals/reserve/), [`tests/evals/recovery/`](../tests/evals/recovery/), [`tests/evals/closure/`](../tests/evals/closure/) |
 | **AF signatory roster** | data | seed-only (9 NAICs) — no refresh path | [`services/recovery/constants.py`](../src/argos/services/recovery/constants.py) |
 | **FastAPI service** (`/workflow/{name}/run`) | infra | NOT built — runner is in-process only | — |
-| **Foundry tenant** (Ontology, Action Types, Code Repos, AIP Evals) | infra | NOT built — Pydantic-only today | — |
+| **Foundry tenant** (Ontology, Action Types, Code Repos, AIP Evals) | infra | vertical slice shipped 2026-06-02 — 1 Object Type (`ClaimsV1`, 15 props) + 1 Action Type (`apply-coverage-decision`) + OSDK round-trip (read + invoke + verify) proven via [`scripts/foundry_smoke_test.py`](../scripts/foundry_smoke_test.py); remaining 15 existing Pydantic types + 10 missing types + their Action Types + AIP Evals NOT built | [`scripts/export_claims_to_foundry_csv.py`](../scripts/export_claims_to_foundry_csv.py), [`data/foundry-uploads/claims_v1.csv`](../data/foundry-uploads/claims_v1.csv), [`foundry/action-types/apply-coverage-decision.ts`](../foundry/action-types/apply-coverage-decision.ts), [`scripts/foundry_smoke_test.py`](../scripts/foundry_smoke_test.py) |
 | **Vercel / Next.js cockpit** | infra | NOT built — pytest is the demo today | — |
 | **Railway worker** | infra | NOT built | — |
 
@@ -71,7 +71,7 @@ aliases:
 2. **AF signatory roster refresh path** — scrape AF's signatory list quarterly, version the roster.
 3. **Overdue OBR sweep** — `OutboundRequest.status → "overdue"` transition function.
 4. **Typed `pending_recommendations` collection** — promotes JSON-files-on-disk to first-class Caseload field. Load-bearing only when Foundry projection starts.
-5. **Foundry projection** — promote 10 missing object types (LossOccurrence, Party, CoverageDecision, ReserveTransaction, RecoveryTarget, ClosureDefect, AuthorityRequest, BadFaithSignal, ExposureLayerSnapshot, FinancialSnapshot) from nested fields → first-class ontology objects. Build Action Types, OSDK shims, AIP Evals. Multi-week — only after items 1–3 are done.
+5. **Foundry projection scale-out** — vertical slice (1 Object Type + 1 Action Type + OSDK round-trip) proven 2026-06-02. Next: promote the remaining 15 existing Pydantic types + 10 missing types (LossOccurrence, Party, CoverageDecision, ReserveTransaction, RecoveryTarget, ClosureDefect, AuthorityRequest, BadFaithSignal, ExposureLayerSnapshot, FinancialSnapshot) → first-class Object Types; build their Action Types from `services/orchestrator/*_actions.py`; wire AIP Evals from the four locked threshold docs. Only after items 1–3 are done.
 6. **Vercel cockpit (Next.js)** — the interview surface. Build after Foundry projection so it has typed objects to render.
 
 ### §0.3 — Maintenance protocol
