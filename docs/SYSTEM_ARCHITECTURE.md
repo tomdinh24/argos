@@ -67,7 +67,7 @@ aliases:
 
 ### §0.2 — What ships next (ranked, per 2026-06-02 audit)
 
-1. **Document Reader `subrogation` v3 anchor-pair eval** — three new pairs locked in `docs/evals/document-reader-anchor-pairs-v3-subrogation-thresholds.md` (consent-to-settle, AF eligibility, made-whole waiver). Runtime / dispatcher / schema / prompt all shipped 2026-06-02; eval execution awaits the next intentional Reader live-API run.
+1. ~~Document Reader `subrogation` v3 anchor-pair eval~~ — **SHIPPED 2026-06-02 (e2a3c32)**. All 3 pairs (consent-to-settle, AF eligibility, made-whole waiver) PASS on first live run; composite SHIP (v3). Variant B reasoning explicitly rules out liability/damages on Pairs 5 and 7. Run history stamped in [`docs/evals/document-reader-anchor-pairs-v3-subrogation-thresholds.md`](./evals/document-reader-anchor-pairs-v3-subrogation-thresholds.md).
 2. **AF signatory roster refresh path** — scrape AF's signatory list quarterly, version the roster.
 3. **Overdue OBR sweep** — `OutboundRequest.status → "overdue"` transition function.
 4. **Typed `pending_recommendations` collection** — promotes JSON-files-on-disk to first-class Caseload field. Load-bearing only when Foundry projection starts.

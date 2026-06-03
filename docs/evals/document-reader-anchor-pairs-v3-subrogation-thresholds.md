@@ -219,3 +219,4 @@ the eval result IS the answer; do not re-engineer the prompt mid-run.
 | Date | SHA | Pair 5 | Pair 6 | Pair 7 | Composite | Notes |
 |---|---|---|---|---|---|---|
 | 2026-06-02 | (pending live-API run) | — | — | — | — | Locked; awaits next intentional Reader eval refresh. |
+| 2026-06-02 | e2a3c32 | PASS | PASS | PASS | **SHIP (v3)** | First live run, claude-sonnet-4-6. All 7 per-variant + paired-delta checks green on every pair. Reader's Variant B `reason` text explicitly rules out `liability` and `damages` postures on Pairs 5 and 7 ("no liability or damages posture shift" / "no liability/damages shift"), which is the specific failure mode the v3 doc was grading against. Excerpt-overlap ratios = 1.0 on all three Variant Bs. Result JSON: [`data/eval-runs/document-reader-anchors/anchor_pairs_run.json`](../../data/eval-runs/document-reader-anchors/anchor_pairs_run.json). |
