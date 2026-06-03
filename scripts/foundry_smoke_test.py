@@ -1,62 +1,86 @@
 """Foundry vertical-slice smoke test.
 
 Proves the Dataset -> Object Type -> Action Type -> OSDK round-trip by:
-  1. Reading CLM-001's current coverage_posture via OSDK
-  2. Invoking apply_coverage_decision(CLM-001, ROR_issued) via OSDK
-  3. Re-reading CLM-001 and asserting the property flipped
+  1. Reading <claim>'s current coverage_posture via OSDK
+  2. Invoking apply_coverage_decision(<claim>, <new posture>) via OSDK
+  3. Re-reading <claim> and asserting the property flipped
 
 If this passes, the write leg is proven via the channel Argos's production
 code on Railway will use. Replaces the broken Foundry Preview-panel path.
 
-Usage:
-    export FOUNDRY_TOKEN=...   # user bearer token from Developer Console
-    /Users/tomlam/miniconda3/bin/python scripts/foundry_smoke_test.py
+Auth: UserTokenAuth via FOUNDRY_TOKEN env var (Developer Console bearer).
+Bearer tokens expire (~14d for Developer-Console-issued tokens); rotate
+by regenerating in Developer Console -> Tokens. The Developer Tier blocks
+the client_credentials grant (Application permissions are greyed out in
+Developer Console), so ConfidentialClientAuth is NOT available without a
+tier upgrade. When the tier is bumped, swap UserTokenAuth here for
+ConfidentialClientAuth(client_id, client_secret) using FOUNDRY_CLIENT_ID
+/ FOUNDRY_CLIENT_SECRET (already in .env).
 
-Cleanup TODO (post-slice):
-    Re-install argos_osdk_sdk into argos/.venv (it currently lives in
-    miniconda base because Tom's pip install targeted the wrong env).
+Usage:
+    uv run python scripts/foundry_smoke_test.py
+    uv run python scripts/foundry_smoke_test.py --posture denied
+    uv run python scripts/foundry_smoke_test.py --claim CLM-007 --posture accepted
 """
 from __future__ import annotations
 
+import argparse
 import os
 import sys
 
+from dotenv import load_dotenv
+
 from argos_osdk_sdk import FoundryClient, UserTokenAuth
 
-HOSTNAME = "argos.usw-17.palantirfoundry.com"
-TARGET_CLAIM = "CLM-001"
-NEW_POSTURE = "ROR_issued"
+
+VALID_POSTURES = ("under_investigation", "ROR_issued", "denied", "accepted")
 
 
 def main() -> int:
+    load_dotenv()
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--claim", default="CLM-001", help="Claim ID to mutate")
+    parser.add_argument(
+        "--posture",
+        default="ROR_issued",
+        choices=VALID_POSTURES,
+        help="New coverage_posture value",
+    )
+    args = parser.parse_args()
+
+    hostname = os.environ["FOUNDRY_HOSTNAME"]
     token = os.environ.get("FOUNDRY_TOKEN")
     if not token:
-        print("ERROR: FOUNDRY_TOKEN not set in environment.", file=sys.stderr)
+        print(
+            "ERROR: FOUNDRY_TOKEN not set. Export it in your shell or add to .env.",
+            file=sys.stderr,
+        )
         return 2
 
-    client = FoundryClient(auth=UserTokenAuth(token=token), hostname=HOSTNAME)
+    client = FoundryClient(auth=UserTokenAuth(token=token), hostname=hostname)
 
-    print(f"READ  {TARGET_CLAIM} (before)...")
-    before = client.ontology.objects.ClaimsV1.get(TARGET_CLAIM)
+    print(f"READ  {args.claim} (before)...")
+    before = client.ontology.objects.ClaimsV1.get(args.claim)
     print(f"  coverage_posture = {before.coverage_posture!r}")
 
-    print(f"INVOKE apply_coverage_decision({TARGET_CLAIM}, {NEW_POSTURE!r})...")
+    print(f"INVOKE apply_coverage_decision({args.claim}, {args.posture!r})...")
     result = client.ontology.actions.apply_coverage_decision(
-        claims_v1=TARGET_CLAIM,
-        new_parameter=NEW_POSTURE,
+        claims_v1=args.claim,
+        new_parameter=args.posture,
     )
     print(f"  result = {result!r}")
 
-    print(f"READ  {TARGET_CLAIM} (after)...")
-    after = client.ontology.objects.ClaimsV1.get(TARGET_CLAIM)
+    print(f"READ  {args.claim} (after)...")
+    after = client.ontology.objects.ClaimsV1.get(args.claim)
     print(f"  coverage_posture = {after.coverage_posture!r}")
 
-    if after.coverage_posture == NEW_POSTURE:
-        print(f"\nSLICE CLOSED: {TARGET_CLAIM}.coverage_posture flipped to {NEW_POSTURE}.")
+    if after.coverage_posture == args.posture:
+        print(f"\nSLICE CLOSED: {args.claim}.coverage_posture is now {args.posture!r}.")
         return 0
 
     print(
-        f"\nWRITE DID NOT LAND. Expected {NEW_POSTURE!r}, got {after.coverage_posture!r}.",
+        f"\nWRITE DID NOT LAND. Expected {args.posture!r}, got {after.coverage_posture!r}.",
         file=sys.stderr,
     )
     return 1
