@@ -569,7 +569,8 @@ object_types:
       - { name: ledger_entry_id, type: string, required: false }
       - { name: locator, type: string, required: true }  # page / paragraph / section / field / row identifier
       - { name: text_excerpt, type: string, required: true }
-      - { name: relation, type: string, required: true,
+      # api_name `relation` is reserved in Foundry; renamed citation_relation.
+      - { name: citation_relation, type: string, required: true,
           enum: [supports, refutes, contextual] }
       - { name: claim_text, type: string, required: true }
       - { name: probability, type: number, required: false }  # the probability the cited claim carries, if applicable
