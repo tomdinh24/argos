@@ -22,9 +22,9 @@ import logging
 from typing import Literal
 
 from argos.services.foundry.client import (
-    FoundryBridgeDisabled,
     bridge_is_enabled,
     get_foundry_client,
+    raise_if_action_invalid,
 )
 
 logger = logging.getLogger(__name__)
@@ -112,6 +112,10 @@ def propagate_coverage_decision_to_foundry(
             f"new_posture={new_posture!r}: {e}"
         ) from e
 
+    raise_if_action_invalid(
+        result, CoverageBridgeError, "apply_coverage_decision_v2",
+        claim_id=claim_id, new_posture=new_posture,
+    )
     operation_id = getattr(result, "operation_id", None)
     logger.info(
         "coverage bridge: Foundry write committed claim_id=%s new_posture=%s "

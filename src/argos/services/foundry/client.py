@@ -116,10 +116,29 @@ def reset_client_cache() -> None:
     get_foundry_client.cache_clear()
 
 
+def raise_if_action_invalid(result, bridge_error_cls, action_name: str, **call_args) -> None:
+    """Raise the bridge's typed error if Foundry returned validation=INVALID.
+
+    OSDK's SyncApplyActionResponse can come back with operation_id=None
+    AND validation.result='INVALID' on a successful HTTP round-trip when
+    Foundry rejected the parameters (e.g. unknown enum value). Without
+    this check, bridges silently return None and the caller can't tell
+    the difference between "flag was off" and "Foundry rejected the
+    write." This is the canonical post-call check every bridge runs.
+    """
+    validation = getattr(result, "validation", None)
+    if validation is not None and getattr(validation, "result", None) == "INVALID":
+        args_str = ", ".join(f"{k}={v!r}" for k, v in call_args.items())
+        raise bridge_error_cls(
+            f"Foundry {action_name} validation INVALID for {args_str}: {validation}"
+        )
+
+
 __all__ = [
     "FoundryBridgeDisabled",
     "FoundryBridgeNotConfigured",
     "bridge_is_enabled",
     "get_foundry_client",
+    "raise_if_action_invalid",
     "reset_client_cache",
 ]

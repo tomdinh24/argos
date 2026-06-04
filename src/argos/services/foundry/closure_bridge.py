@@ -15,6 +15,7 @@ from typing import Literal
 from argos.services.foundry.client import (
     bridge_is_enabled,
     get_foundry_client,
+    raise_if_action_invalid,
 )
 
 logger = logging.getLogger(__name__)
@@ -107,6 +108,10 @@ def propagate_closure_decision_to_foundry(
             f"recommendation={recommendation!r}: {e}"
         ) from e
 
+    raise_if_action_invalid(
+        result, ClosureBridgeError, "apply_closure_decision",
+        claim_id=claim_id, recommendation=recommendation,
+    )
     operation_id = getattr(result, "operation_id", None)
     logger.info(
         "closure bridge: Foundry write committed claim_id=%s recommendation=%s "
@@ -169,6 +174,10 @@ def propagate_reopen_decision_to_foundry(
             f"reopen_reason={reopen_reason!r}: {e}"
         ) from e
 
+    raise_if_action_invalid(
+        result, ClosureBridgeError, "apply_reopen_decision",
+        claim_id=claim_id, reopen_reason=reopen_reason,
+    )
     operation_id = getattr(result, "operation_id", None)
     logger.info(
         "reopen bridge: Foundry write committed claim_id=%s reopen_reason=%s "

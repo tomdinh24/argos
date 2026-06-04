@@ -15,6 +15,7 @@ from typing import Literal
 from argos.services.foundry.client import (
     bridge_is_enabled,
     get_foundry_client,
+    raise_if_action_invalid,
 )
 
 logger = logging.getLogger(__name__)
@@ -90,6 +91,10 @@ def propagate_recovery_decision_to_foundry(
             f"decision={decision!r}: {e}"
         ) from e
 
+    raise_if_action_invalid(
+        result, RecoveryBridgeError, "apply_recovery_decision",
+        claim_id=claim_id, decision=decision,
+    )
     operation_id = getattr(result, "operation_id", None)
     logger.info(
         "recovery bridge: Foundry write committed claim_id=%s decision=%s "

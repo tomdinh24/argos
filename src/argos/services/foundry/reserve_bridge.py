@@ -15,6 +15,7 @@ import logging
 from argos.services.foundry.client import (
     bridge_is_enabled,
     get_foundry_client,
+    raise_if_action_invalid,
 )
 
 logger = logging.getLogger(__name__)
@@ -87,6 +88,10 @@ def propagate_reserve_decision_to_foundry(
             f"accept={accept!r}: {e}"
         ) from e
 
+    raise_if_action_invalid(
+        result, ReserveBridgeError, "apply_reserve_decision",
+        claim_id=claim_id, accept=accept,
+    )
     operation_id = getattr(result, "operation_id", None)
     logger.info(
         "reserve bridge: Foundry write committed claim_id=%s accept=%s "
