@@ -35,18 +35,23 @@ ONTOLOGY_RID = "ri.ontology.main.ontology.88f01e1f-0987-467d-88a4-c500edf5692f"
 NAMESPACE_RID = "ri.compass.main.folder.0aa063b2-0b86-4059-9058-9665ec11b6f3"
 SAVE_LOCATION_FOLDER_RID = "ri.compass.main.folder.e00e25bd-d33c-4398-ba71-1e8630b0114f"
 
-BRANCH_NAME = "argos-ontology-poc-2"
+BRANCH_NAME = "argos-ontology-poc-2b"
 BRANCH_DESCRIPTION = (
-    "Link Types + Action Types scale-out. Adds foreign-key edges between the "
-    "28 existing Object Types and the 6 orchestrator action types."
+    "Link Types + Action Types scale-out (prioritized cut). 48 link types + "
+    "6 action types fit within the ontology's 60 one-to-many link cap. "
+    "Re-run after poc-2 hit the 60-link cap mid-execution."
 )
-PROPOSAL_TITLE = "Argos ontology — Link Types + Action Types"
+PROPOSAL_TITLE = "Argos ontology — Link Types + Action Types (prioritized)"
 PROPOSAL_DESCRIPTION = (
-    "Second branch of the Argos ontology scale-out. Adds: "
-    "(a) auto-derived Link Types from foreign-key property names, "
-    "(b) six Action Types mirroring the orchestrator-level handlers "
+    "Second branch of the Argos ontology scale-out, prioritized to fit "
+    "the 60 one-to-many link-type cap. Adds: "
+    "(a) 48 auto-derived Link Types from foreign-key property names; "
+    "8 lower-value links (audit-only Party variants + self-referential "
+    "version/tree edges) deferred to a follow-up once Palantir raises the "
+    "ontology cap. "
+    "(b) Six Action Types mirroring the orchestrator-level handlers "
     "(coverage, reserve, liability, recovery, closure, reopen). "
-    "Object Types from argos-ontology-poc-1 are assumed already merged to main."
+    "Object Types from argos-ontology-poc-1 are merged to main."
 )
 
 # YAML primitive -> Foundry property type.
@@ -98,6 +103,24 @@ FK_ALIASES = {
 # model_id would point to a Model object type that doesn't exist in the
 # ontology; add it later if/when we introduce a Model registry.
 FK_SKIP = {"entity_id", "model_id"}
+
+# Foundry ontology has a 60 one-to-many link-type cap (verified 2026-06-03,
+# poc-2 hit it at 60/60). Auto-derivation generates 56 candidate links, plus
+# ~12 already exist from poc-1 + prior work, so we must drop 8 to fit.
+# Dropped: low-value audit-only and self-referential edges. Re-enable once
+# Palantir raises the cap.
+LINK_DROP_FK = {
+    # Audit-only Party links (covered by AgentAction -> Party general link)
+    "carrier_party_id",            # CoverageLayer  -> Party
+    "assessed_by_party_id",        # LiabilityAssessment -> Party
+    "requested_by_party_id",       # AuthorityRequest -> Party
+    "decided_by_party_id",         # AuthorityDecision -> Party
+    "adverse_carrier_party_id",    # Recovery -> Party (primary adverse_party_id kept)
+    # Self-referential edges (walked rarely; tree/version queries can hit object directly)
+    "parent_request_id",           # AuthorityRequest -> AuthorityRequest
+    "reverses_transaction_id",     # FinancialTransaction -> FinancialTransaction
+    "superseded_by_assessment_id", # LiabilityAssessment -> LiabilityAssessment
+}
 
 
 def pascal_to_kebab(name: str) -> str:
@@ -239,7 +262,7 @@ def derive_link_types(object_types: list[dict]) -> tuple[list[dict], list[str]]:
             name = prop["name"]
             if name == pk_name or not name.endswith("_id"):
                 continue
-            if name in FK_SKIP:
+            if name in FK_SKIP or name in LINK_DROP_FK:
                 continue
             target = pk_registry.get(name) or FK_ALIASES.get(name)
             if target is None:

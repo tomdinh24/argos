@@ -15,13 +15,13 @@
     "  At the end, report: globalBranchRid, ontologyBranchRid, proposal RID, and per-section RID tables: {apiName -> linkTypeRid} and {apiName -> actionTypeRid}.",
     "If ANY call fails, stop and report the failure with the full tool response."
   ],
-  "branchName": "argos-ontology-poc-2",
-  "branchDescription": "Link Types + Action Types scale-out. Adds foreign-key edges between the 28 existing Object Types and the 6 orchestrator action types.",
+  "branchName": "argos-ontology-poc-2b",
+  "branchDescription": "Link Types + Action Types scale-out (prioritized cut). 48 link types + 6 action types fit within the ontology's 60 one-to-many link cap. Re-run after poc-2 hit the 60-link cap mid-execution.",
   "namespaceRid": "ri.compass.main.folder.0aa063b2-0b86-4059-9058-9665ec11b6f3",
   "ontologyRid": "ri.ontology.main.ontology.88f01e1f-0987-467d-88a4-c500edf5692f",
   "saveLocationFolderRid": "ri.compass.main.folder.e00e25bd-d33c-4398-ba71-1e8630b0114f",
-  "proposalTitle": "Argos ontology \u2014 Link Types + Action Types",
-  "proposalDescription": "Second branch of the Argos ontology scale-out. Adds: (a) auto-derived Link Types from foreign-key property names, (b) six Action Types mirroring the orchestrator-level handlers (coverage, reserve, liability, recovery, closure, reopen). Object Types from argos-ontology-poc-1 are assumed already merged to main.",
+  "proposalTitle": "Argos ontology \u2014 Link Types + Action Types (prioritized)",
+  "proposalDescription": "Second branch of the Argos ontology scale-out, prioritized to fit the 60 one-to-many link-type cap. Adds: (a) 48 auto-derived Link Types from foreign-key property names; 8 lower-value links (audit-only Party variants + self-referential version/tree edges) deferred to a follow-up once Palantir raises the ontology cap. (b) Six Action Types mirroring the orchestrator-level handlers (coverage, reserve, liability, recovery, closure, reopen). Object Types from argos-ontology-poc-1 are merged to main.",
   "objectTypes": [],
   "linkTypes": [
     {
@@ -83,18 +83,6 @@
       "targetPropertyName": "policy_period_id",
       "cardinality": "MANY_TO_ONE",
       "required": true
-    },
-    {
-      "apiName": "CoverageLayerParty",
-      "displayName": "CoverageLayer -> Party via carrier_party_id",
-      "description": "Foreign-key edge: CoverageLayer.carrier_party_id references Party.<pk>.",
-      "sourceObjectTypeApiName": "CoverageLayer",
-      "sourcePropertyName": "carrier_party_id",
-      "sourcePropertyApiName": "carrierPartyId",
-      "targetObjectTypeApiName": "Party",
-      "targetPropertyName": "party_id",
-      "cardinality": "MANY_TO_ONE",
-      "required": false
     },
     {
       "apiName": "RiskUnitPolicyPeriod",
@@ -265,30 +253,6 @@
       "required": true
     },
     {
-      "apiName": "LiabilityAssessmentParty",
-      "displayName": "LiabilityAssessment -> Party via assessed_by_party_id",
-      "description": "Foreign-key edge: LiabilityAssessment.assessed_by_party_id references Party.<pk>.",
-      "sourceObjectTypeApiName": "LiabilityAssessment",
-      "sourcePropertyName": "assessed_by_party_id",
-      "sourcePropertyApiName": "assessedByPartyId",
-      "targetObjectTypeApiName": "Party",
-      "targetPropertyName": "party_id",
-      "cardinality": "MANY_TO_ONE",
-      "required": true
-    },
-    {
-      "apiName": "LiabilityAssessmentLiabilityAssessment",
-      "displayName": "LiabilityAssessment -> LiabilityAssessment via superseded_by_assessment_id",
-      "description": "Foreign-key edge: LiabilityAssessment.superseded_by_assessment_id references LiabilityAssessment.<pk>.",
-      "sourceObjectTypeApiName": "LiabilityAssessment",
-      "sourcePropertyName": "superseded_by_assessment_id",
-      "sourcePropertyApiName": "supersededByAssessmentId",
-      "targetObjectTypeApiName": "LiabilityAssessment",
-      "targetPropertyName": "assessment_id",
-      "cardinality": "MANY_TO_ONE",
-      "required": false
-    },
-    {
       "apiName": "FinancialTransactionClaimExposure",
       "displayName": "FinancialTransaction -> ClaimExposure via exposure_id",
       "description": "Foreign-key edge: FinancialTransaction.exposure_id references ClaimExposure.<pk>.",
@@ -325,18 +289,6 @@
       "required": false
     },
     {
-      "apiName": "FinancialTransactionFinancialTransaction",
-      "displayName": "FinancialTransaction -> FinancialTransaction via reverses_transaction_id",
-      "description": "Foreign-key edge: FinancialTransaction.reverses_transaction_id references FinancialTransaction.<pk>.",
-      "sourceObjectTypeApiName": "FinancialTransaction",
-      "sourcePropertyName": "reverses_transaction_id",
-      "sourcePropertyApiName": "reversesTransactionId",
-      "targetObjectTypeApiName": "FinancialTransaction",
-      "targetPropertyName": "transaction_id",
-      "cardinality": "MANY_TO_ONE",
-      "required": false
-    },
-    {
       "apiName": "FinancialPostingFinancialTransaction",
       "displayName": "FinancialPosting -> FinancialTransaction via transaction_id",
       "description": "Foreign-key edge: FinancialPosting.transaction_id references FinancialTransaction.<pk>.",
@@ -367,18 +319,6 @@
       "sourceObjectTypeApiName": "Recovery",
       "sourcePropertyName": "adverse_party_id",
       "sourcePropertyApiName": "adversePartyId",
-      "targetObjectTypeApiName": "Party",
-      "targetPropertyName": "party_id",
-      "cardinality": "MANY_TO_ONE",
-      "required": false
-    },
-    {
-      "apiName": "RecoveryParty",
-      "displayName": "Recovery -> Party via adverse_carrier_party_id",
-      "description": "Foreign-key edge: Recovery.adverse_carrier_party_id references Party.<pk>.",
-      "sourceObjectTypeApiName": "Recovery",
-      "sourcePropertyName": "adverse_carrier_party_id",
-      "sourcePropertyApiName": "adverseCarrierPartyId",
       "targetObjectTypeApiName": "Party",
       "targetPropertyName": "party_id",
       "cardinality": "MANY_TO_ONE",
@@ -481,30 +421,6 @@
       "required": true
     },
     {
-      "apiName": "AuthorityRequestParty",
-      "displayName": "AuthorityRequest -> Party via requested_by_party_id",
-      "description": "Foreign-key edge: AuthorityRequest.requested_by_party_id references Party.<pk>.",
-      "sourceObjectTypeApiName": "AuthorityRequest",
-      "sourcePropertyName": "requested_by_party_id",
-      "sourcePropertyApiName": "requestedByPartyId",
-      "targetObjectTypeApiName": "Party",
-      "targetPropertyName": "party_id",
-      "cardinality": "MANY_TO_ONE",
-      "required": true
-    },
-    {
-      "apiName": "AuthorityRequestAuthorityRequest",
-      "displayName": "AuthorityRequest -> AuthorityRequest via parent_request_id",
-      "description": "Foreign-key edge: AuthorityRequest.parent_request_id references AuthorityRequest.<pk>.",
-      "sourceObjectTypeApiName": "AuthorityRequest",
-      "sourcePropertyName": "parent_request_id",
-      "sourcePropertyApiName": "parentRequestId",
-      "targetObjectTypeApiName": "AuthorityRequest",
-      "targetPropertyName": "request_id",
-      "cardinality": "MANY_TO_ONE",
-      "required": false
-    },
-    {
       "apiName": "AuthorityDecisionAuthorityRequest",
       "displayName": "AuthorityDecision -> AuthorityRequest via request_id",
       "description": "Foreign-key edge: AuthorityDecision.request_id references AuthorityRequest.<pk>.",
@@ -513,18 +429,6 @@
       "sourcePropertyApiName": "requestId",
       "targetObjectTypeApiName": "AuthorityRequest",
       "targetPropertyName": "request_id",
-      "cardinality": "MANY_TO_ONE",
-      "required": true
-    },
-    {
-      "apiName": "AuthorityDecisionParty",
-      "displayName": "AuthorityDecision -> Party via decided_by_party_id",
-      "description": "Foreign-key edge: AuthorityDecision.decided_by_party_id references Party.<pk>.",
-      "sourceObjectTypeApiName": "AuthorityDecision",
-      "sourcePropertyName": "decided_by_party_id",
-      "sourcePropertyApiName": "decidedByPartyId",
-      "targetObjectTypeApiName": "Party",
-      "targetPropertyName": "party_id",
       "cardinality": "MANY_TO_ONE",
       "required": true
     },
