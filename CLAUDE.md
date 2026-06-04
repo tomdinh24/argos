@@ -10,7 +10,7 @@ Before architectural, naming, flow, or "what should we build next" work:
 2. **[docs/SYSTEM_ARCHITECTURE.md](./docs/SYSTEM_ARCHITECTURE.md)** —
    deployment topology, request flow, security model.
 3. **[docs/AGENT_ARCHITECTURE.md](./docs/AGENT_ARCHITECTURE.md)** —
-   specialist topology, runtime, eval wiring, failure modes.
+   workflow + agent topology, runtime, eval wiring, failure modes.
 
 For implementation details, the canonical specs live in `docs/specs/`.
 
@@ -54,12 +54,13 @@ a new entry.
 
 Skip the log for: variable renames driven by style, lint cleanup,
 fixture tweaks, doc-only edits. Anything that affects architecture,
-an LLM-facing surface, an eval baseline, the build plan, or specialist
+an LLM-facing surface, an eval baseline, the build plan, or workflow/agent
 composition belongs in the log.
 
 ## Repo conventions
 
-- Python: `from __future__ import annotations`; Pydantic v2 schemas; specialists return result objects, not bare dicts.
+- Python: `from __future__ import annotations`; Pydantic v2 schemas; workflows/agents return result objects, not bare dicts.
+- **Policy-engine-first**: deterministic policy gates + within-bucket scoring decide; the LLM does extraction / materiality only — never free-form ranking. ("Workflow" = stateless LLM call; "agent" = tool loop. Don't say "specialist".)
 - LLM-facing surfaces (system prompts, tool names, JSON schema field names) are sealed against locked anchor-pair evals in `docs/evals/`. Touching them invalidates thresholds → don't do it without a documented re-run plan.
 - Python-internal names should be human-readable English. Use Pydantic field aliases when the wire format must stay different (see the `RelevanceCall` pattern at `src/argos/schemas/specialists/document_reader.py`).
 - Tests: `pytest -q` runs the full suite. Targeted: `pytest tests/services/info_map/`.
