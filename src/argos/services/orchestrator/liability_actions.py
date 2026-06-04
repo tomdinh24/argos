@@ -20,15 +20,22 @@ feedback memory [[multi_agent_decision_framework]].
 """
 from __future__ import annotations
 
+import logging
 from datetime import datetime, timezone
 from pathlib import Path
 
 from argos.ontology.types import Caseload, Claim
+from argos.services.foundry.liability_bridge import (
+    LiabilityBridgeError,
+    propagate_liability_decision_to_foundry,
+)
 from argos.services.orchestrator.audit_log import (
     VALIDATOR_PASS,
     append_agent_action,
     build_agent_action,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def apply_liability_decision(
@@ -83,6 +90,38 @@ def apply_liability_decision(
         for c in caseload.claims
     ]
     new_caseload = caseload.model_copy(update={"claims": new_claims})
+
+    # Foundry-side propagation. Feature-flagged inside the bridge.
+    # Errors are logged, not raised — the Pydantic substrate has
+    # already committed and downstream Argos consumers read from it.
+    try:
+        operation_id = propagate_liability_decision_to_foundry(
+            claim_id=claim_id,
+            accept=True,
+            source_assessment_id=source_assessment_id,
+        )
+        if operation_id is not None:
+            logger.info(
+                "liability decision propagated to Foundry: claim_id=%s "
+                "operation_id=%s source_assessment_id=%s",
+                claim_id,
+                operation_id,
+                source_assessment_id,
+            )
+    except LiabilityBridgeError as e:
+        logger.error(
+            "liability decision Pydantic-side committed but Foundry "
+            "propagation failed: claim_id=%s err=%s",
+            claim_id,
+            e,
+        )
+    except Exception as e:  # noqa: BLE001 — surface unexpected bridge failures via log, don't crash caller
+        logger.exception(
+            "liability decision: unexpected error during Foundry "
+            "propagation for claim_id=%s: %s",
+            claim_id,
+            e,
+        )
 
     if audit_log_root is not None:
         summary = "Liability apportionment committed"

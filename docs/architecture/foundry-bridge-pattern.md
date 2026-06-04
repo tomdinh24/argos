@@ -4,7 +4,7 @@ tags:
   - type/architecture
   - status/living
 created: 2026-06-02
-updated: 2026-06-02
+updated: 2026-06-03
 ---
 
 # Foundry bridge pattern
@@ -162,12 +162,12 @@ We pick the latter.
 
 | Workflow | Bridge module | Foundry Action Type | Status |
 |---|---|---|---|
-| Coverage | [`coverage_bridge.py`](../../src/argos/services/foundry/coverage_bridge.py) | `apply-coverage-decision` | shipped 2026-06-02 |
-| Reserve | TODO | TODO (`apply-reserve-decision`) | NOT built |
-| Liability | TODO | TODO (`apply-liability-decision`) | NOT built |
-| Recovery | TODO | TODO (`apply-recovery-decision`) | NOT built |
-| Closure | TODO | TODO (`apply-closure-decision`, `apply-reopen-decision`) | NOT built |
-| AgentAction emission | TODO | TODO (`emit-agent-action`) | blocked on Foundry `AgentAction` + `EvidenceCitation` Object Types — needs UI clicks or Code Repo |
+| Coverage | [`coverage_bridge.py`](../../src/argos/services/foundry/coverage_bridge.py) | `apply-coverage-decision` (and `-v2` post-poc-2b merge) | shipped 2026-06-02 |
+| Reserve | [`reserve_bridge.py`](../../src/argos/services/foundry/reserve_bridge.py) | `apply-reserve-decision` (poc-2b) | shipped 2026-06-03 — waiting on OSDK regen post-merge to flip integration test from skipif to live |
+| Liability | [`liability_bridge.py`](../../src/argos/services/foundry/liability_bridge.py) | `apply-liability-decision` (poc-2b) | shipped 2026-06-03 — same OSDK-regen gate |
+| Recovery | [`recovery_bridge.py`](../../src/argos/services/foundry/recovery_bridge.py) | `apply-recovery-decision` (poc-2b) | shipped 2026-06-03 — same OSDK-regen gate |
+| Closure | [`closure_bridge.py`](../../src/argos/services/foundry/closure_bridge.py) | `apply-closure-decision`, `apply-reopen-decision` (poc-2b) | shipped 2026-06-03 — two functions in one bridge module; same OSDK-regen gate |
+| AgentAction emission | TODO | TODO (`emit-agent-action`) | unblocked 2026-06-03 — `AgentAction` + `EvidenceCitation` Object Types exist in main ontology (poc-1 merged); needs an action-type definition + bridge module |
 
 ## How to add a new bridge
 

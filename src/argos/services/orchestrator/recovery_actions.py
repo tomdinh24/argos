@@ -20,16 +20,23 @@ human commits them. See feedback memory
 """
 from __future__ import annotations
 
+import logging
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal
 
 from argos.ontology.types import Caseload, Claim
+from argos.services.foundry.recovery_bridge import (
+    RecoveryBridgeError,
+    propagate_recovery_decision_to_foundry,
+)
 from argos.services.orchestrator.audit_log import (
     VALIDATOR_PASS,
     append_agent_action,
     build_agent_action,
 )
+
+logger = logging.getLogger(__name__)
 
 
 RecoveryDecisionLiteral = Literal[
@@ -103,6 +110,39 @@ def apply_recovery_decision(
         for c in caseload.claims
     ]
     new_caseload = caseload.model_copy(update={"claims": new_claims})
+
+    # Foundry-side propagation. Feature-flagged inside the bridge.
+    # Errors are logged, not raised — the Pydantic substrate has
+    # already committed and downstream Argos consumers read from it.
+    try:
+        operation_id = propagate_recovery_decision_to_foundry(
+            claim_id=claim_id,
+            decision=decision,
+            source_assessment_id=source_assessment_id,
+        )
+        if operation_id is not None:
+            logger.info(
+                "recovery decision propagated to Foundry: claim_id=%s "
+                "decision=%s operation_id=%s source_assessment_id=%s",
+                claim_id,
+                decision,
+                operation_id,
+                source_assessment_id,
+            )
+    except RecoveryBridgeError as e:
+        logger.error(
+            "recovery decision Pydantic-side committed but Foundry "
+            "propagation failed: claim_id=%s err=%s",
+            claim_id,
+            e,
+        )
+    except Exception as e:  # noqa: BLE001 — surface unexpected bridge failures via log, don't crash caller
+        logger.exception(
+            "recovery decision: unexpected error during Foundry "
+            "propagation for claim_id=%s: %s",
+            claim_id,
+            e,
+        )
 
     if audit_log_root is not None:
         summary = f"Recovery decision committed: {decision}"

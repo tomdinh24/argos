@@ -764,11 +764,19 @@
           "displayName": "Recommendation",
           "type": "string",
           "required": true,
-          "description": "The closure recommendation to commit",
+          "description": "The closure recommendation to commit (mirrors the Pydantic Recommendation Literal in schemas/workflows/closure.py)",
           "enum": [
-            "close_full",
-            "close_with_followups",
-            "hold_open"
+            "ready_to_close_with_payment",
+            "ready_to_close_without_payment",
+            "closed_with_open_recovery",
+            "soft_close_pending_medicare_final_demand",
+            "soft_close_pending_section_111_confirmation",
+            "soft_close_pending_lien_release_letter",
+            "soft_close_pending_release_execution",
+            "blocked_by_defects",
+            "requires_senior_review",
+            "requires_legal_review",
+            "recommend_reopen"
           ]
         },
         {

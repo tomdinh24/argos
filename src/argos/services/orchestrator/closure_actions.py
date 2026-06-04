@@ -25,10 +25,18 @@ for provenance.
 """
 from __future__ import annotations
 
+import logging
 from typing import Literal
 
 from argos.ontology.types import Caseload, Claim
 from argos.schemas.workflows.closure import Recommendation
+from argos.services.foundry.closure_bridge import (
+    ClosureBridgeError,
+    propagate_closure_decision_to_foundry,
+    propagate_reopen_decision_to_foundry,
+)
+
+logger = logging.getLogger(__name__)
 
 
 # Recommendations that flip Claim.status to "closed"
@@ -134,7 +142,42 @@ def apply_closure_decision(
         new_claim if c.claim_id == claim_id else c
         for c in caseload.claims
     ]
-    return caseload.model_copy(update={"claims": new_claims})
+    new_caseload = caseload.model_copy(update={"claims": new_claims})
+
+    # Foundry-side propagation. Feature-flagged inside the bridge.
+    # Errors are logged, not raised — the Pydantic substrate has
+    # already committed and downstream Argos consumers read from it.
+    try:
+        operation_id = propagate_closure_decision_to_foundry(
+            claim_id=claim_id,
+            recommendation=recommendation,
+            source_assessment_id=source_assessment_id,
+        )
+        if operation_id is not None:
+            logger.info(
+                "closure decision propagated to Foundry: claim_id=%s "
+                "recommendation=%s operation_id=%s source_assessment_id=%s",
+                claim_id,
+                recommendation,
+                operation_id,
+                source_assessment_id,
+            )
+    except ClosureBridgeError as e:
+        logger.error(
+            "closure decision Pydantic-side committed but Foundry "
+            "propagation failed: claim_id=%s err=%s",
+            claim_id,
+            e,
+        )
+    except Exception as e:  # noqa: BLE001 — surface unexpected bridge failures via log, don't crash caller
+        logger.exception(
+            "closure decision: unexpected error during Foundry "
+            "propagation for claim_id=%s: %s",
+            claim_id,
+            e,
+        )
+
+    return new_caseload
 
 
 def apply_reopen_decision(
@@ -187,7 +230,40 @@ def apply_reopen_decision(
         new_claim if c.claim_id == claim_id else c
         for c in caseload.claims
     ]
-    return caseload.model_copy(update={"claims": new_claims})
+    new_caseload = caseload.model_copy(update={"claims": new_claims})
+
+    # Foundry-side propagation. Feature-flagged inside the bridge.
+    try:
+        operation_id = propagate_reopen_decision_to_foundry(
+            claim_id=claim_id,
+            reopen_reason=reopen_reason,
+            source_assessment_id=source_assessment_id,
+        )
+        if operation_id is not None:
+            logger.info(
+                "reopen decision propagated to Foundry: claim_id=%s "
+                "reopen_reason=%s operation_id=%s source_assessment_id=%s",
+                claim_id,
+                reopen_reason,
+                operation_id,
+                source_assessment_id,
+            )
+    except ClosureBridgeError as e:
+        logger.error(
+            "reopen decision Pydantic-side committed but Foundry "
+            "propagation failed: claim_id=%s err=%s",
+            claim_id,
+            e,
+        )
+    except Exception as e:  # noqa: BLE001 — surface unexpected bridge failures via log, don't crash caller
+        logger.exception(
+            "reopen decision: unexpected error during Foundry "
+            "propagation for claim_id=%s: %s",
+            claim_id,
+            e,
+        )
+
+    return new_caseload
 
 
 __all__ = [
