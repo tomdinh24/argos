@@ -1,6 +1,6 @@
 ---
 created: 2026-06-01
-last_updated: 2026-06-02
+last_updated: 2026-06-03
 title: Argos Architecture Decisions Log
 status: living
 tags:
@@ -41,6 +41,46 @@ specialists compose.
 **Operating rule.** Code and plans should align with what's in this
 doc. If you're about to write code that contradicts an entry, stop
 and surface the conflict.
+
+---
+
+## 2026-06-03 — Foundry ontology schema ops execute through AI FDE chat; Code Agent template is the wrong abstraction
+
+**Decision:** Argos ontology scale-out runs through a deterministic Python generator (`scripts/generate_foundry_ontology_spec.py`) that emits an AI FDE-readable worklist JSON. AI FDE chat (Palantir MCP tools) is the execution surface for schema-plane operations: Object Types, Link Types, Action Types, Global Branches, Proposals. The TypeScript Code Agent template approach (a deployed Function that calls Palantir MCP from AIP Logic) is dead — it cannot reach those tools at runtime.
+
+**Why:** Spent a session attempting the Code Agent approach. Built and deployed an `argos-ontology` Foundry repo with `src/agent/index.ts` calling `@anthropic-ai/claude-agent-sdk` `query()` configured with the Palantir MCP server. Function registered fine; AIP Logic invocation succeeded; output was `null` in 2.04 seconds with zero tool calls. AI FDE diagnosed: **Palantir MCP only mounts inside interactive AI FDE / AIP Agent Studio sessions.** A Function invoked from AIP Logic runs in a stateless compute environment with no MCP server process listening. The `@foundry/functions-api` SDK is data-plane only — it can create/edit instances of Object Types but not the Types themselves. Schema-plane = admin-plane = AI FDE chat or undocumented internal REST endpoints that vary by stack.
+
+Architecture as built:
+```
+foundry/ontology/object-types.yaml              (source of truth, hand-edited)
+  → scripts/generate_foundry_ontology_spec.py    (YAML → AI FDE worklist; auto-derives links from FK property names; FK_ALIASES map for named mismatches; LINK_DROP_FK set for the 60-link cap)
+  → foundry/ontology/ai-fde-spec.json            (generated artifact)
+  → argos-ontology/specs/ai-fde-spec.json        (Foundry-side repo, AI FDE reads by code-repo RID)
+  → AI FDE chat invocation                       (executes via mounted MCP)
+  → new global branch + proposal in Foundry      (human review → merge to main ontology)
+```
+
+Shipped via this pipeline 2026-06-03:
+- `argos-ontology-poc-1`: 28 Object Types, merged into main ontology
+- `argos-ontology-poc-2b`: 48 Link Types + 6 Action Types (ApplyCoverage/Reserve/Liability/Recovery/Closure/Reopen Decision), pending merge
+
+Foundry hard limits discovered: **60 one-to-many link types per ontology** (platform-enforced, not per-branch). Auto-derivation generated 56 candidate links; combined with ~12 pre-existing, this exceeded the cap. Dropped 8 lower-value links (5 audit-only `*_party_id` Party variants covered by `AgentAction → Party`, 3 self-referential edges: `parent_request_id`, `reverses_transaction_id`, `superseded_by_assessment_id`). All evidence-plane edges (`EvidenceCitation → AgentAction/Document/SpecialistConfig/FinancialPosting`, `AgentAction → Claim/ClaimExposure/Party`) preserved — they're load-bearing for the sourced-claims thesis. Also: **link type IDs collide across active branches**, not just within one; conflicting branches must be archived before re-running with the same IDs.
+
+**Out of scope:**
+
+- **Raising the 60-link cap via Palantir support** — declined. The 8 dropped links are audit-attribution and version-walk edges that can be derived via SQL joins on demand. Not worth a support ticket.
+- **External REST client for ontology schema ops** — would technically work (`@osdk/foundry.admin` may expose them, or browser-DevTools-traced internal endpoints). Rejected because endpoints vary by stack version and require reverse-engineering for each operation. AI FDE is faster, reproducible via the versioned spec file, and the right tool for one-shot ontology scale-out.
+- **Wiring the Action Types to real write-back logic in Foundry** — Action Types in Foundry serve as named schema contracts; actual write-back uses Python bridges (`src/argos/services/foundry/*_bridge.py`) per the asymmetric-commit pattern. AI FDE applied placeholder `modifyObject` rules setting `lifecycle-status` as scaffolding; replace if/when function-backed actions are introduced.
+- **Foundry-side Code Agent retained as historical reference** — `argos-ontology/src/agent/` stays in place; the repo is now repurposed as the AI FDE spec host (README updated to explain).
+
+**Code touched:**
+
+- `foundry/ontology/object-types.yaml` — added `action_types:` block (6 actions with parameters + enums lifted from `services/orchestrator/*_actions.py`); renamed `EvidenceCitation.relation` → `citation_relation` (Foundry reserved word).
+- `scripts/generate_foundry_ontology_spec.py` — YAML → AI FDE worklist JSON; PK registry + `FK_ALIASES` + `LINK_DROP_FK` + `FK_SKIP`; emits Object/Link/Action Type entries with `<DATASET_RID_FOR_*>` and `<ONTOLOGY_BRANCH_RID>` placeholders for AI FDE substitution.
+- `foundry/ontology/ai-fde-spec.json` — generated; committed for traceability against the YAML source.
+- `argos-ontology/README.md` — rewritten to flag Code Agent dead-end and document the spec-host role.
+- `argos-ontology/specs/ai-fde-spec.json` — snapshots pushed for AI FDE to read by code-repo RID.
+- `docs/SYSTEM_ARCHITECTURE.md` §0.1 (Foundry tenant row updated to "scale-out shipped") + §0.2 (item 6 marked shipped; item 5 bridges unblocked, now top-ranked).
 
 ---
 

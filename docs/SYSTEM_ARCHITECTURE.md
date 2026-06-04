@@ -4,7 +4,7 @@ tags:
   - type/architecture
   - status/living
 created: 2026-05-28
-updated: 2026-06-02
+updated: 2026-06-03
 aliases:
   - System Architecture
 ---
@@ -62,7 +62,7 @@ aliases:
 | **Eval suite (anchor-pair thresholds)** | eval | all four analytical workflows covered — Coverage, Document Reader, Triage, Brief, **Liability** (15 + 8, green 2026-06-02), **Reserve** (15 + 15 sub-cases, green 2026-06-02), **Recovery** (15 + 14 sub-cases, green 2026-06-02), **Closure** (15 + 9 sub-cases, green 2026-06-02) | [`docs/evals/`](./evals/), [`tests/evals/liability/`](../tests/evals/liability/), [`tests/evals/reserve/`](../tests/evals/reserve/), [`tests/evals/recovery/`](../tests/evals/recovery/), [`tests/evals/closure/`](../tests/evals/closure/) |
 | **AF signatory roster** | data | seed-only (9 NAICs) — no refresh path | [`services/recovery/constants.py`](../src/argos/services/recovery/constants.py) |
 | **FastAPI service** (`/workflow/{name}/run`) | infra | NOT built — runner is in-process only | — |
-| **Foundry tenant** (Ontology, Action Types, Code Repos, AIP Evals) | infra | vertical slice shipped 2026-06-02 — 1 Object Type (`ClaimsV1`, 15 props) + 1 Action Type (`apply-coverage-decision`) + OSDK round-trip (read + invoke + verify) proven via [`scripts/foundry_smoke_test.py`](../scripts/foundry_smoke_test.py); remaining 15 existing Pydantic types + 10 missing types + their Action Types + AIP Evals NOT built | [`scripts/export_claims_to_foundry_csv.py`](../scripts/export_claims_to_foundry_csv.py), [`data/foundry-uploads/claims_v1.csv`](../data/foundry-uploads/claims_v1.csv), [`foundry/action-types/apply-coverage-decision.ts`](../foundry/action-types/apply-coverage-decision.ts), [`scripts/foundry_smoke_test.py`](../scripts/foundry_smoke_test.py) |
+| **Foundry tenant** (Ontology, Action Types, Code Repos, AIP Evals) | infra | scale-out shipped 2026-06-03 — **28 Object Types** (poc-1, merged) + **48 Link Types** + **6 Action Types** (poc-2b, proposal `7eb1bbe9`, pending merge) via AI FDE-driven worklist (YAML → spec generator → AI FDE MCP execution). 8 lower-value links deferred to fit Foundry's 60 one-to-many link cap. Code Agent template approach (argos-ontology repo `src/agent/`) diagnosed dead-end — Palantir MCP doesn't mount in Function runtime, only in interactive AI FDE / Agent Studio sessions; repo repurposed as Foundry-side spec host. Original Jun-02 vertical slice (`ClaimsV1` + `apply-coverage-decision`) superseded; OSDK regen against `apply-coverage-decision-v2` + cleanup of old action type pending. AIP Evals NOT built. | [`foundry/ontology/object-types.yaml`](../foundry/ontology/object-types.yaml), [`foundry/ontology/ai-fde-spec.json`](../foundry/ontology/ai-fde-spec.json), [`scripts/generate_foundry_ontology_spec.py`](../scripts/generate_foundry_ontology_spec.py), [`scripts/foundry_smoke_test.py`](../scripts/foundry_smoke_test.py) |
 | **Vercel / Next.js cockpit** | infra | NOT built — pytest is the demo today | — |
 | **Railway worker** | infra | NOT built | — |
 
@@ -72,9 +72,9 @@ aliases:
 2. **AF signatory roster refresh path** — scrape AF's signatory list quarterly, version the roster.
 3. **Overdue OBR sweep** — `OutboundRequest.status → "overdue"` transition function.
 4. **Typed `pending_recommendations` collection** — promotes JSON-files-on-disk to first-class Caseload field. Load-bearing only when Foundry projection starts.
-5. **Reserve/Liability/Recovery/Closure Foundry bridges** — Coverage bridge shipped 2026-06-02 per [`docs/architecture/foundry-bridge-pattern.md`](./architecture/foundry-bridge-pattern.md). The other 4 writeback workflows follow the same ~30-line-per-bridge pattern. Each requires its corresponding Foundry Action Type to exist first (currently NOT built; blocked on UI clicks or Code Repo YAML — Tom's call).
-6. **Foundry Object Types scale-out** — promote the remaining 15 existing Pydantic types + 10 missing types (LossOccurrence, Party, CoverageDecision, ReserveTransaction, RecoveryTarget, ClosureDefect, AuthorityRequest, BadFaithSignal, ExposureLayerSnapshot, FinancialSnapshot) → first-class Foundry Object Types; build their Action Types from `services/orchestrator/*_actions.py`; wire AIP Evals from the four locked threshold docs. Blocked: Foundry Platform SDK is read-only for type definitions on Developer Tier; needs UI clicks or Code Repo YAML pipeline. Only after items 1–3 and Foundry-side type creation are done.
-6. **Vercel cockpit (Next.js)** — the operator-facing UI. Build after Foundry projection so it has typed objects to render.
+5. **Reserve/Liability/Recovery/Closure Foundry bridges** — **UNBLOCKED 2026-06-03**: ApplyReserveDecision, ApplyLiabilityDecision, ApplyRecoveryDecision, ApplyClosureDecision, ApplyReopenDecision now exist in Foundry (poc-2b proposal `7eb1bbe9`, pending merge). Coverage bridge shipped 2026-06-02 per [`docs/architecture/foundry-bridge-pattern.md`](./architecture/foundry-bridge-pattern.md). The other 4 writeback workflows follow the same ~30-line-per-bridge pattern. **This is now the highest-leverage next move.**
+6. ~~**Foundry Object Types scale-out**~~ — **SHIPPED 2026-06-03 via AI FDE-driven generator** (poc-1 28 Object Types merged + poc-2b 48 Link Types + 6 Action Types pending merge). Source-of-truth in [`foundry/ontology/object-types.yaml`](../foundry/ontology/object-types.yaml); regeneration via [`scripts/generate_foundry_ontology_spec.py`](../scripts/generate_foundry_ontology_spec.py); spec snapshot lives at `argos-ontology` Foundry code repo for AI FDE to read. 8 link types deferred due to Foundry 60 one-to-many cap (audit-only Party variants + 3 self-refs). AIP Evals against the four locked threshold docs NOT built.
+7. **Vercel cockpit (Next.js)** — the operator-facing UI. Build after Foundry projection so it has typed objects to render.
 
 ### §0.3 — Maintenance protocol
 
