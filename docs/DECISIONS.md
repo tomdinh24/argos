@@ -44,6 +44,33 @@ and surface the conflict.
 
 ---
 
+## 2026-06-04 — AgentAction bridge shipped; live round-trip blocked by Foundry-side rule gap
+
+**Decision:** The 6th and final Foundry bridge — [`agent_action_bridge.py`](../src/argos/services/foundry/agent_action_bridge.py) — is shipped and wired into [`audit_log.py::append_agent_action`](../src/argos/services/orchestrator/audit_log.py). Every local `AgentAction` row written to the per-claim JSONL log now also propagates to the Argos ontology via `emit-agent-action` (RID `ri.actions.main.action-type.388fb5af-6111-4c27-8861-dd0aab8d007e`). 19/19 unit tests pass. Bridge code is verified.
+
+**Live round-trip is a known xfail:** Foundry's deployed declarative `modifyObject` rule for `emit-agent-action` does not populate every non-nullable property on the `AgentAction` Object Type — most likely `created_at` (which AI FDE's reference TypeScript source explicitly set via `Timestamp.now()`, but the declarative rule does not). Every call from the bridge returns `Actions:NonNullablePropertyContainsNull` regardless of what payload we send. This is a Foundry-side schema-rule mismatch, not a code defect.
+
+**Path to close:** one focused AI FDE session to fix the declarative rule — either add parameters for the missing fields with documented defaults, set fixed defaults inside the rule, or make those Object Type fields nullable. The bridge code does not change. The integration test xfail flips to pass automatically once the rule is corrected.
+
+**Code touched:**
+
+- New: `src/argos/services/foundry/agent_action_bridge.py` (the bridge module, ~180 lines)
+- New: `tests/services/foundry/test_agent_action_bridge.py` (3 unit + 1 integration xfail)
+- Modified: `src/argos/services/orchestrator/audit_log.py` (wires the bridge into the append path)
+- Modified: `docs/architecture/foundry-bridge-pattern.md` (status table + deferred function-backed upgrade with pre-baked TypeScript source)
+- Modified: `docs/SYSTEM_ARCHITECTURE.md` §0.1 (bridge layer row updated)
+
+**Bridge mapping (local Pydantic AgentAction → Foundry emit-agent-action):**
+
+The local `AgentAction` carries 7 fields; the Foundry Object Type takes 16. Bridge fills documented defaults for fields the local model doesn't capture (`prompt_version="v0"`, `model_id="claude-sonnet-4-6"`, `triggered_by="system"`, `escalation_outcome="applied_automatically"`). Local `action_type` literal maps to Foundry `status` via a registry that treats system-emitted rows as `auto_applied` and validator failures as `schema_violation`. Optional kwargs on the bridge let callers override when the workflow runner starts emitting richer provenance (input hashes, snapshots, reasoning traces, citations).
+
+**Out of scope:**
+
+- **Function-backed `emit-agent-action` for atomic `AgentAction` + `EvidenceCitation` materialization** — declined for this session. AI FDE drafted the TypeScript source; it is captured verbatim in [`docs/architecture/foundry-bridge-pattern.md`](./architecture/foundry-bridge-pattern.md) for a future single-prompt session when cross-claim citation SQL becomes load-bearing. Until then, citations stay first-class in the local JSONL.
+- **Expanding the local Pydantic `AgentAction` to match the 16-field Foundry shape** — declined. The simpler local model is intentional and used everywhere in the orchestrator. The bridge does the mapping; the local model stays small.
+
+---
+
 ## 2026-06-04 — Foundry bridges verified against live Argos ontology; OSDK package renamed `argos_osdk_sdk` → `argos_live_sdk`
 
 **Decision:** All 5 Foundry writeback bridges (Coverage, Reserve, Liability, Recovery, Closure+Reopen) are end-to-end verified against the live Argos ontology (RID `88f01e1f-...`). The Python OSDK package consumed by `services/foundry/*_bridge.py` is now `argos_live_sdk` (v0.1.0), replacing `argos_osdk_sdk` (v0.4.0).

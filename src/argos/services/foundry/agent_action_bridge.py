@@ -110,17 +110,16 @@ def propagate_agent_action_to_foundry(
     # rule ignores them, but the parameter signature still requires
     # parallel-array-shaped input.
     n = len(citation_ids or [])
-    empty_arrays_correct_length = lambda: [None] * n  # noqa: E731
 
     citation_ids = citation_ids or []
-    document_ids = document_ids or empty_arrays_correct_length()
-    sourced_rule_ids = sourced_rule_ids or empty_arrays_correct_length()
-    ledger_entry_ids = ledger_entry_ids or empty_arrays_correct_length()
-    locators = locators or [""] * n
-    text_excerpts = text_excerpts or [""] * n
-    citation_relations = citation_relations or [""] * n
-    claim_texts = claim_texts or [""] * n
-    probabilities = probabilities or empty_arrays_correct_length()
+    document_ids = document_ids if document_ids is not None else [None] * n
+    sourced_rule_ids = sourced_rule_ids if sourced_rule_ids is not None else [None] * n
+    ledger_entry_ids = ledger_entry_ids if ledger_entry_ids is not None else [None] * n
+    locators = locators if locators is not None else [""] * n
+    text_excerpts = text_excerpts if text_excerpts is not None else [""] * n
+    citation_relations = citation_relations if citation_relations is not None else [""] * n
+    claim_texts = claim_texts if claim_texts is not None else [""] * n
+    probabilities = probabilities if probabilities is not None else [None] * n
 
     status = _ACTION_TYPE_TO_STATUS.get(action.action_type, "auto_applied")
 
@@ -128,6 +127,28 @@ def propagate_agent_action_to_foundry(
     # Foundry-side `output_json` is the validated specialist payload;
     # for system-emitted ledger rows we serialise the summary text.
     _output_json = output_json if output_json is not None else action.summary
+
+    # Foundry OSDK uses an Empty.value sentinel for "not set" on nullable
+    # params. Passing None explicitly overrides the sentinel with a wire
+    # null, which Foundry rejects as NonNullablePropertyContainsNull.
+    # Build kwargs dict, omitting nullable fields when None.
+    optional_kwargs: dict = {}
+    if request_id is not None:
+        optional_kwargs["request_id"] = request_id
+    if approved_by_party_id is not None:
+        optional_kwargs["approved_by_party_id"] = approved_by_party_id
+    if approved_at is not None:
+        optional_kwargs["approved_at"] = approved_at
+    if citation_ids:
+        optional_kwargs["citation_ids"] = citation_ids
+        optional_kwargs["document_ids"] = [d or "" for d in document_ids]
+        optional_kwargs["sourced_rule_ids"] = [r or "" for r in sourced_rule_ids]
+        optional_kwargs["ledger_entry_ids"] = [le or "" for le in ledger_entry_ids]
+        optional_kwargs["locators"] = locators
+        optional_kwargs["text_excerpts"] = text_excerpts
+        optional_kwargs["citation_relations"] = citation_relations
+        optional_kwargs["claim_texts"] = claim_texts
+        optional_kwargs["probabilities"] = [p if p is not None else 0.0 for p in probabilities]
 
     client = get_foundry_client()
     try:
@@ -145,18 +166,7 @@ def propagate_agent_action_to_foundry(
             triggered_at=action.timestamp,
             status=status,
             escalation_outcome=escalation_outcome,
-            request_id=request_id,
-            approved_by_party_id=approved_by_party_id,
-            approved_at=approved_at,
-            citation_ids=citation_ids,
-            document_ids=document_ids,
-            sourced_rule_ids=sourced_rule_ids,
-            ledger_entry_ids=ledger_entry_ids,
-            locators=locators,
-            text_excerpts=text_excerpts,
-            citation_relations=citation_relations,
-            claim_texts=claim_texts,
-            probabilities=probabilities,
+            **optional_kwargs,
         )
     except Exception as e:
         raise AgentActionBridgeError(
