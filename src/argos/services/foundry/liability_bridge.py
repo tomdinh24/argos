@@ -53,7 +53,7 @@ def propagate_liability_decision_to_foundry(
     Raises:
         LiabilityBridgeError — OSDK call failed.
         FoundryBridgeNotConfigured — env vars missing.
-        ImportError — argos_osdk_sdk not installed.
+        ImportError — argos_live_sdk not installed.
     """
     if not bridge_is_enabled():
         logger.debug(

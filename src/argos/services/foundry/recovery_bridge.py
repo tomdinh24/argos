@@ -65,7 +65,7 @@ def propagate_recovery_decision_to_foundry(
     Raises:
         RecoveryBridgeError — OSDK call failed.
         FoundryBridgeNotConfigured — env vars missing.
-        ImportError — argos_osdk_sdk not installed.
+        ImportError — argos_live_sdk not installed.
     """
     if not bridge_is_enabled():
         logger.debug(

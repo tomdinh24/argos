@@ -1,6 +1,6 @@
 ---
 created: 2026-06-01
-last_updated: 2026-06-03
+last_updated: 2026-06-04
 title: Argos Architecture Decisions Log
 status: living
 tags:
@@ -41,6 +41,37 @@ specialists compose.
 **Operating rule.** Code and plans should align with what's in this
 doc. If you're about to write code that contradicts an entry, stop
 and surface the conflict.
+
+---
+
+## 2026-06-04 — Foundry bridges verified against live Argos ontology; OSDK package renamed `argos_osdk_sdk` → `argos_live_sdk`
+
+**Decision:** All 5 Foundry writeback bridges (Coverage, Reserve, Liability, Recovery, Closure+Reopen) are end-to-end verified against the live Argos ontology (RID `88f01e1f-...`). The Python OSDK package consumed by `services/foundry/*_bridge.py` is now `argos_live_sdk` (v0.1.0), replacing `argos_osdk_sdk` (v0.4.0).
+
+**Why two packages existed:** Two distinct OSDK Applications had been provisioned in Foundry Developer Console. `argos_osdk_sdk` bound to ontology `d7926c75-...` (legacy pre-scale-out); `argos_live_sdk` bound to the Argos ontology `88f01e1f-...` (poc-2b merged). The class name `OntologyD7926c75F74b4c5dA0d1E21b156c5b0aActionTypes` appears in both — confirmed to be a stale generator artifact, not the actual bound ontology. Diagnostic ladder that proved the binding difference:
+
+| SDK + token | Result | What it told us |
+|---|---|---|
+| `argos_osdk_sdk` v0.4.0 + new token | `UnauthorizedError` | App-level auth rejected; SDK targets wrong ontology |
+| `argos_osdk_sdk` v0.4.0 + old long-lived token | `ActionTypeNotFound: apply-reserve-decision` | Bound ontology (d7926c75) doesn't have the poc-2b actions |
+| `argos_live_sdk` v0.1.0 + new token | `ObjectNotFound: primaryKey CLM-001` | Auth ✅, ontology binding ✅, action types resolve ✅; only missing seed data |
+
+**Code touched:**
+
+- Renamed package import `argos_osdk_sdk` → `argos_live_sdk` across `services/foundry/{client,coverage,reserve,liability,recovery,closure}_bridge.py`, `tests/services/foundry/test_coverage_bridge.py`, `scripts/foundry_smoke_test.py`.
+- `coverage_bridge.py`: action name `apply_coverage_decision` → `apply_coverage_decision_v2`; parameter `claims_v1=` → `claim=`; parameter `new_parameter=` → `new_posture=`. Tracks the post-poc-2b rename AI FDE applied for the v2 collision.
+- Other 5 bridges already used the v0.4.0 signatures (`claim=`, `source_assessment_id=`); no signature changes needed.
+
+**Verification status:**
+
+- 16 unit tests pass (flag-off no-ops, env-missing raises, optional-kwarg handling).
+- 5 integration tests (`-m foundry_integration`) hit the live tenant, auth, resolve the action types — fail only on `ObjectNotFound` for fixture `CLM-001`. That is a seed-data gap in the live Argos ontology, NOT a bridge defect. Bridges are correct end-to-end.
+
+**Out of scope:**
+
+- **Seeding test data into the live ontology** — deferred. Either create a `CLM-001` Claim via Foundry's Object Type Manager UI, or update test fixtures to a real primary key once any real Claim row exists. Bridges don't block on this.
+- **Granting list/iterate permissions on Claim** — the user token can invoke actions but cannot iterate objects. Action-write is the path Argos needs; read-iterate isn't on the critical path.
+- **Decommissioning the legacy `argos_osdk_sdk` OSDK App in Foundry** — leave it; it does no harm and removing it requires Developer Console clicks not worth the time.
 
 ---
 

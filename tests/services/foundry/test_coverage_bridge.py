@@ -95,7 +95,7 @@ def test_bridge_round_trip_flips_claim_posture(monkeypatch):
     suite without polluting other claims. Final state after this test
     is always `under_investigation`.
     """
-    from argos_osdk_sdk import FoundryClient, UserTokenAuth
+    from argos_live_sdk import FoundryClient, UserTokenAuth
 
     monkeypatch.setenv("ARGOS_FOUNDRY_BRIDGE_ENABLED", "1")
     reset_client_cache()

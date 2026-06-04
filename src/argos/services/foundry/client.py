@@ -21,7 +21,7 @@ Foundry; only the writeback layer (`services/orchestrator/*_actions.py`
     missing AND the bridge was asked to propagate.
 
 This module does NOT import the OSDK at module load. Reason: the OSDK
-package (`argos_osdk_sdk`) is a private Foundry-pypi install and may
+package (`argos_live_sdk`) is a private Foundry-pypi install and may
 not be present in every environment (CI without secrets, contributor
 machines). The import is deferred to the call site so absence is a
 runtime error only when the bridge is actually invoked.
@@ -35,12 +35,12 @@ from typing import TYPE_CHECKING
 from dotenv import load_dotenv
 
 if TYPE_CHECKING:
-    from argos_osdk_sdk import FoundryClient
+    from argos_live_sdk import FoundryClient
 
 
 # Lazy import sentinel — see module docstring.
 _OSDK_IMPORT_ERROR_HINT = (
-    "argos_osdk_sdk is not installed. Install per "
+    "argos_live_sdk is not installed. Install per "
     "`docs/foundry-osdk-install.md` (private Foundry pypi)."
 )
 
@@ -73,12 +73,12 @@ def bridge_is_enabled() -> bool:
 def get_foundry_client() -> "FoundryClient":
     """Build (and cache) the FoundryClient from env.
 
-    Lazy-imports argos_osdk_sdk so the rest of Argos imports cleanly
+    Lazy-imports argos_live_sdk so the rest of Argos imports cleanly
     in envs without the private OSDK installed.
 
     Raises:
         FoundryBridgeNotConfigured — env vars missing.
-        ImportError — argos_osdk_sdk not installed (with install hint).
+        ImportError — argos_live_sdk not installed (with install hint).
 
     TODO(post tier-bump): swap UserTokenAuth for ConfidentialClientAuth
     using FOUNDRY_CLIENT_ID + FOUNDRY_CLIENT_SECRET (already in .env);
@@ -100,7 +100,7 @@ def get_foundry_client() -> "FoundryClient":
         )
 
     try:
-        from argos_osdk_sdk import FoundryClient, UserTokenAuth
+        from argos_live_sdk import FoundryClient, UserTokenAuth
     except ImportError as e:
         raise ImportError(_OSDK_IMPORT_ERROR_HINT) from e
 

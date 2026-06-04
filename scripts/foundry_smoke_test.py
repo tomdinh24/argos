@@ -30,7 +30,7 @@ import sys
 
 from dotenv import load_dotenv
 
-from argos_osdk_sdk import FoundryClient, UserTokenAuth
+from argos_live_sdk import FoundryClient, UserTokenAuth
 
 
 VALID_POSTURES = ("under_investigation", "ROR_issued", "denied", "accepted")

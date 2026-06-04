@@ -82,7 +82,7 @@ def propagate_closure_decision_to_foundry(
     Raises:
         ClosureBridgeError — OSDK call failed.
         FoundryBridgeNotConfigured — env vars missing.
-        ImportError — argos_osdk_sdk not installed.
+        ImportError — argos_live_sdk not installed.
     """
     if not bridge_is_enabled():
         logger.debug(
@@ -144,7 +144,7 @@ def propagate_reopen_decision_to_foundry(
         ClosureBridgeError — OSDK call failed (shared with closure
             since they're paired functions of the same workflow).
         FoundryBridgeNotConfigured — env vars missing.
-        ImportError — argos_osdk_sdk not installed.
+        ImportError — argos_live_sdk not installed.
     """
     if not bridge_is_enabled():
         logger.debug(

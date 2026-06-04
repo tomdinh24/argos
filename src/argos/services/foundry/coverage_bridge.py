@@ -76,7 +76,7 @@ def propagate_coverage_decision_to_foundry(
         FoundryBridgeNotConfigured — env vars missing; flag is on but
             we can't reach Foundry. Propagates unchanged from
             `client.get_foundry_client()`.
-        ImportError — argos_osdk_sdk not installed; same propagation.
+        ImportError — argos_live_sdk not installed; same propagation.
 
     Design notes:
       - We do NOT swallow OSDK errors. A bridge that says "I tried" but
@@ -98,9 +98,9 @@ def propagate_coverage_decision_to_foundry(
     client = get_foundry_client()
 
     try:
-        result = client.ontology.actions.apply_coverage_decision(
-            claims_v1=claim_id,
-            new_parameter=new_posture,
+        result = client.ontology.actions.apply_coverage_decision_v2(
+            claim=claim_id,
+            new_posture=new_posture,
         )
     except Exception as e:
         # Catch the broad Exception is deliberate: OSDK raises a wide

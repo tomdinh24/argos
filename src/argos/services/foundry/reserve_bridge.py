@@ -62,7 +62,7 @@ def propagate_reserve_decision_to_foundry(
             action, network/auth failure, etc.).
         FoundryBridgeNotConfigured — env vars missing; propagates from
             `client.get_foundry_client()`.
-        ImportError — argos_osdk_sdk not installed; same propagation.
+        ImportError — argos_live_sdk not installed; same propagation.
     """
     if not bridge_is_enabled():
         logger.debug(
