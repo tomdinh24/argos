@@ -175,6 +175,116 @@ We pick the latter.
 | Liability | [`liability_bridge.py`](../../src/argos/services/foundry/liability_bridge.py) | `apply-liability-decision` | live-verified 2026-06-04 |
 | Recovery | [`recovery_bridge.py`](../../src/argos/services/foundry/recovery_bridge.py) | `apply-recovery-decision` | live-verified 2026-06-04 |
 | Closure | [`closure_bridge.py`](../../src/argos/services/foundry/closure_bridge.py) | `apply-closure-decision`, `apply-reopen-decision` | live-verified 2026-06-04 |
+| AgentAction emission | [`agent_action_bridge.py`](../../src/argos/services/foundry/agent_action_bridge.py) | `emit-agent-action` | shipped 2026-06-04 — wired into [`audit_log.py::append_agent_action`](../../src/argos/services/orchestrator/audit_log.py); integration test pending OSDK regen to v0.2.0 |
+
+## Deferred: function-backed `emit-agent-action` for atomic citation materialization
+
+The shipped `emit-agent-action` Action Type uses Foundry's declarative
+rule, which materializes the `AgentAction` object but **ignores the
+parallel citation arrays** (Foundry's declarative rules can't iterate
+arrays to create N child objects). The bridge call signature already
+accepts citation parameters, so the OSDK invocation doesn't change
+when the rule upgrades — only the Foundry-side execution does.
+
+Local `EvidenceCitation` rows remain first-class in
+[`audit_log.py`](../../src/argos/services/orchestrator/audit_log.py)
+JSONL. This satisfies the discovery-survivable record and the
+cockpit's "show me the receipts" pane. Cross-claim SQL on citations
+("across all AgentActions claiming P=80%, what fraction resolved?")
+is what the upgrade unlocks — not yet load-bearing.
+
+When calibration eval becomes real work, run a fresh AI FDE session
+with the prompt: "Take the TypeScript source below, create a Foundry
+TypeScript Functions repo, publish v0.1.0, swap `emit-agent-action`'s
+rule from declarative to ontologyEditFunction referencing the
+published function." Pre-baked source (drafted by AI FDE in the
+2026-06-04 session, ready to paste):
+
+```typescript
+import { OntologyEditFunction, Edits } from "@foundry/functions-api";
+import { Objects } from "@foundry/ontology-api";
+
+export class EmitAgentActionFunction {
+  @OntologyEditFunction()
+  public emitAgentAction(
+    // AgentAction fields
+    agentActionId: string,
+    specialist: string,
+    claim: Objects.Claim,
+    promptVersion: string,
+    modelId: string,
+    inputHash: string,
+    inputSnapshotPath: string,
+    outputJson: string,
+    reasoningTrace: string,
+    triggeredBy: string,
+    triggeredAt: Timestamp,
+    status: string,
+    escalationOutcome: string,
+    requestId: string | undefined,
+    approvedByPartyId: string | undefined,
+    approvedAt: Timestamp | undefined,
+    // Citation parallel arrays
+    citationIds: string[],
+    documentIds: string[],
+    sourcedRuleIds: string[],
+    ledgerEntryIds: string[],
+    locators: string[],
+    textExcerpts: string[],
+    citationRelations: string[],
+    claimTexts: string[],
+    probabilities: number[],
+  ): void {
+    const n = citationIds.length;
+    const arrays = [documentIds, sourcedRuleIds, ledgerEntryIds, locators, textExcerpts, citationRelations, claimTexts, probabilities];
+    for (const arr of arrays) {
+      if (arr.length !== n) {
+        throw new Error(`All citation arrays must be same length. Expected ${n}, got ${arr.length}`);
+      }
+    }
+
+    const agentAction = Objects.create().agentAction(agentActionId);
+    agentAction.specialist = specialist;
+    agentAction.claimId = claim.claimId;
+    agentAction.promptVersion = promptVersion;
+    agentAction.modelId = modelId;
+    agentAction.inputHash = inputHash;
+    agentAction.inputSnapshotPath = inputSnapshotPath;
+    agentAction.outputJson = outputJson;
+    agentAction.reasoningTrace = reasoningTrace;
+    agentAction.triggeredBy = triggeredBy;
+    agentAction.triggeredAt = triggeredAt;
+    agentAction.status = status;
+    agentAction.escalationOutcome = escalationOutcome;
+    agentAction.approvedByPartyId = approvedByPartyId;
+    agentAction.approvedAt = approvedAt;
+
+    for (let i = 0; i < n; i++) {
+      const hasDoc = documentIds[i] !== "";
+      const hasRule = sourcedRuleIds[i] !== "";
+      const hasLedger = ledgerEntryIds[i] !== "";
+      const setCount = [hasDoc, hasRule, hasLedger].filter(Boolean).length;
+
+      if (setCount !== 1) {
+        throw new Error(
+          `Citation row ${i}: exactly one of (document_id, sourced_rule_id, ledger_entry_id) must be set. Got ${setCount}.`
+        );
+      }
+
+      const citation = Objects.create().evidenceCitation(citationIds[i]);
+      citation.agentActionId = agentActionId;
+      citation.documentId = hasDoc ? documentIds[i] : undefined;
+      citation.sourcedRuleId = hasRule ? sourcedRuleIds[i] : undefined;
+      citation.ledgerEntryId = hasLedger ? ledgerEntryIds[i] : undefined;
+      citation.locator = locators[i];
+      citation.textExcerpt = textExcerpts[i];
+      citation.citationRelation = citationRelations[i];
+      citation.claimText = claimTexts[i];
+      citation.probability = probabilities[i] !== 0 ? probabilities[i] : undefined;
+    }
+  }
+}
+```
 | AgentAction emission | TODO | TODO (`emit-agent-action`) | unblocked 2026-06-03 — `AgentAction` + `EvidenceCitation` Object Types exist in main ontology (poc-1 merged); needs an action-type definition + bridge module |
 
 ## How to add a new bridge

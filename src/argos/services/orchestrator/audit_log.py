@@ -23,15 +23,28 @@ result" without re-deriving from the workflow-results JSON.
 The store is intentionally dumb: filesystem JSONL. Promotion to a
 typed Caseload field or a Postgres table is §0.2 item #7
 (`pending_recommendations` collection) — orthogonal to this log.
+
+Foundry mirroring: when `ARGOS_FOUNDRY_BRIDGE_ENABLED=1`, every
+appended row is also propagated to the Foundry ontology via the
+`emit-agent-action` Action Type. Local JSONL remains canonical;
+Foundry-side projection enables cross-claim SQL. Bridge failures
+log + continue — they do not affect the local-side write.
 """
 from __future__ import annotations
 
 import json
+import logging
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
 from argos.ontology.types import AgentAction
+from argos.services.foundry.agent_action_bridge import (
+    AgentActionBridgeError,
+    propagate_agent_action_to_foundry,
+)
+
+logger = logging.getLogger(__name__)
 
 
 # Action-type literals — kept aligned with AgentAction.action_type.
@@ -55,12 +68,44 @@ def append_agent_action(
 
     Creates `log_root` if missing. Returns the log-file path written
     to. Append-only — never reads or rewrites existing rows.
+
+    Side effect: when the Foundry bridge feature flag is on, also
+    propagates this AgentAction to the Foundry ontology via the
+    `emit-agent-action` Action Type. Local JSONL is committed first
+    and unconditionally; Foundry propagation errors are logged but do
+    not raise — same asymmetric-commit pattern as the other bridges.
     """
     log_root.mkdir(parents=True, exist_ok=True)
     path = _log_path(log_root, action.claim_id)
     line = action.model_dump_json()
     with path.open("a", encoding="utf-8") as f:
         f.write(line + "\n")
+
+    try:
+        operation_id = propagate_agent_action_to_foundry(action)
+        if operation_id is not None:
+            logger.info(
+                "audit_log: AgentAction mirrored to Foundry "
+                "action_id=%s claim_id=%s operation_id=%s",
+                action.action_id,
+                action.claim_id,
+                operation_id,
+            )
+    except AgentActionBridgeError as e:
+        logger.error(
+            "audit_log: local row committed but Foundry propagation "
+            "failed: action_id=%s err=%s",
+            action.action_id,
+            e,
+        )
+    except Exception as e:  # noqa: BLE001 — log unexpected bridge errors, don't crash logging
+        logger.exception(
+            "audit_log: unexpected error mirroring AgentAction to "
+            "Foundry: action_id=%s: %s",
+            action.action_id,
+            e,
+        )
+
     return path
 
 
