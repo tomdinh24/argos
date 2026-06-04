@@ -4,7 +4,7 @@ tags:
   - type/architecture
   - status/living
 created: 2026-05-28
-updated: 2026-06-03
+updated: 2026-06-04
 aliases:
   - System Architecture
 ---
@@ -51,7 +51,7 @@ aliases:
 | **Correspondence Advance** | orchestration | shipped | [`services/orchestrator/correspondence_loop.py`](../src/argos/services/orchestrator/correspondence_loop.py) |
 | **Claim Advance (cross-stream)** | orchestration | shipped | [`services/orchestrator/claim_advance.py`](../src/argos/services/orchestrator/claim_advance.py) |
 | **Coverage writeback** | action | shipped; Foundry bridge shipped 2026-06-02 | [`services/orchestrator/coverage_actions.py`](../src/argos/services/orchestrator/coverage_actions.py), [`services/foundry/coverage_bridge.py`](../src/argos/services/foundry/coverage_bridge.py) |
-| **Foundry bridge layer** | infra | shipped 2026-06-03 — all 5 workflow bridges built (Coverage, Reserve, Liability, Recovery, Closure with closure+reopen); 16 unit tests passing; live integration tests gated on OSDK regen against poc-2b's action types. AgentAction emission bridge NOT built — unblocked but pending action type definition. | [`services/foundry/`](../src/argos/services/foundry/), [`docs/architecture/foundry-bridge-pattern.md`](./architecture/foundry-bridge-pattern.md) |
+| **Foundry bridge layer** | infra | **live-verified 2026-06-04** — all 5 workflow bridges (Coverage, Reserve, Liability, Recovery, Closure with closure+reopen) round-trip against the live Argos ontology. 21/21 tests green (16 unit + 5 live integration against seeded `CLM-001`). Bridges via Python OSDK `argos_live_sdk` (legacy `argos_osdk_sdk` retired — bound to wrong ontology hex). INVALID-validation check added to client.py → mandatory post-call on every bridge. AgentAction emission bridge NOT built — unblocked but pending action type definition. | [`services/foundry/`](../src/argos/services/foundry/), [`docs/architecture/foundry-bridge-pattern.md`](./architecture/foundry-bridge-pattern.md) |
 | **Closure writeback** | action | shipped 2026-06-02 — `apply_closure_decision` + `apply_reopen_decision` | [`services/orchestrator/closure_actions.py`](../src/argos/services/orchestrator/closure_actions.py) |
 | **Reserve writeback** | action | shipped 2026-06-02 — `apply_reserve_decision` | [`services/orchestrator/reserve_actions.py`](../src/argos/services/orchestrator/reserve_actions.py) |
 | **Liability writeback** | action | shipped 2026-06-02 — `apply_liability_decision` | [`services/orchestrator/liability_actions.py`](../src/argos/services/orchestrator/liability_actions.py) |
@@ -72,7 +72,7 @@ aliases:
 2. **AF signatory roster refresh path** — scrape AF's signatory list quarterly, version the roster.
 3. **Overdue OBR sweep** — `OutboundRequest.status → "overdue"` transition function.
 4. **Typed `pending_recommendations` collection** — promotes JSON-files-on-disk to first-class Caseload field. Load-bearing only when Foundry projection starts.
-5. ~~**Reserve/Liability/Recovery/Closure Foundry bridges**~~ — **SHIPPED 2026-06-03.** All 5 workflow bridges built and unit-tested; live integration tests skipped pending OSDK regen against poc-2b's merged action types. AgentAction emission bridge remains as a follow-up (unblocked but not yet built).
+5. ~~**Reserve/Liability/Recovery/Closure Foundry bridges**~~ — **LIVE-VERIFIED 2026-06-04.** All 5 workflow bridges round-trip against the live Argos ontology; 21/21 tests green. Package migrated `argos_osdk_sdk` → `argos_live_sdk` (correct ontology binding). INVALID-validation check added to the bridge contract. AgentAction emission bridge remains as a follow-up (unblocked but not yet built).
 6. ~~**Foundry Object Types scale-out**~~ — **SHIPPED 2026-06-03 via AI FDE-driven generator** (poc-1 28 Object Types merged + poc-2b 48 Link Types + 6 Action Types pending merge). Source-of-truth in [`foundry/ontology/object-types.yaml`](../foundry/ontology/object-types.yaml); regeneration via [`scripts/generate_foundry_ontology_spec.py`](../scripts/generate_foundry_ontology_spec.py); spec snapshot lives at `argos-ontology` Foundry code repo for AI FDE to read. 8 link types deferred due to Foundry 60 one-to-many cap (audit-only Party variants + 3 self-refs). AIP Evals against the four locked threshold docs NOT built.
 7. **Vercel cockpit (Next.js)** — the operator-facing UI. Build after Foundry projection so it has typed objects to render.
 

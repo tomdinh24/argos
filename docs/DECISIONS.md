@@ -62,10 +62,14 @@ and surface the conflict.
 - `coverage_bridge.py`: action name `apply_coverage_decision` → `apply_coverage_decision_v2`; parameter `claims_v1=` → `claim=`; parameter `new_parameter=` → `new_posture=`. Tracks the post-poc-2b rename AI FDE applied for the v2 collision.
 - Other 5 bridges already used the v0.4.0 signatures (`claim=`, `source_assessment_id=`); no signature changes needed.
 
-**Verification status:**
+**Verification status: 21/21 GREEN.**
 
 - 16 unit tests pass (flag-off no-ops, env-missing raises, optional-kwarg handling).
-- 5 integration tests (`-m foundry_integration`) hit the live tenant, auth, resolve the action types — fail only on `ObjectNotFound` for fixture `CLM-001`. That is a seed-data gap in the live Argos ontology, NOT a bridge defect. Bridges are correct end-to-end.
+- 5 integration tests (`-m foundry_integration`) pass against the live Argos ontology. AI FDE seeded a `Claim` row with `claim_id="CLM-001"` and fixed the `apply-closure-decision` Action Type's `recommendation` enum from 3 placeholder values to the 11 real Pydantic Literal values. Every bridge round-trips: invocation → Foundry validation=VALID → `operation_id` RID returned.
+
+**Bridge-contract addition surfaced by this verification arc:**
+
+Bridges now validate `result.validation.result == 'INVALID'` post-call and raise their typed error if Foundry rejected parameters on a HTTP 200 response. The original contract only checked `result.operation_id`, which silently treated INVALID-validation responses as "flag was off" — masking the closure-enum drift for an entire commit. Helper lives at `src/argos/services/foundry/client.py::raise_if_action_invalid`. Every future bridge MUST call it post-OSDK-call; the bridge-pattern doc is updated accordingly.
 
 **Out of scope:**
 

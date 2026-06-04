@@ -4,7 +4,7 @@ tags:
   - type/architecture
   - status/living
 created: 2026-06-02
-updated: 2026-06-03
+updated: 2026-06-04
 ---
 
 # Foundry bridge pattern
@@ -45,6 +45,7 @@ is the canonical reference implementation.
 from argos.services.foundry.client import (
     bridge_is_enabled,
     get_foundry_client,
+    raise_if_action_invalid,
 )
 
 class <Workflow>BridgeError(RuntimeError):
@@ -60,13 +61,20 @@ def propagate_<workflow>_decision_to_foundry(
     client = get_foundry_client()
     try:
         result = client.ontology.actions.<foundry_action_name>(
-            claims_v1=claim_id,
+            claim=claim_id,
             <foundry_param_mapping>,
         )
     except Exception as e:
         raise <Workflow>BridgeError(
             f"Foundry <foundry_action_name> failed for claim_id={claim_id!r}: {e}"
         ) from e
+    # MANDATORY: HTTP 200 + validation=INVALID happens (e.g. unknown enum
+    # value); without this check the bridge silently returns None and the
+    # caller can't tell "flag off" from "Foundry rejected the write."
+    raise_if_action_invalid(
+        result, <Workflow>BridgeError, "<foundry_action_name>",
+        claim_id=claim_id, <param_diagnostics>,
+    )
     return getattr(result, "operation_id", None)
 ```
 
@@ -162,11 +170,11 @@ We pick the latter.
 
 | Workflow | Bridge module | Foundry Action Type | Status |
 |---|---|---|---|
-| Coverage | [`coverage_bridge.py`](../../src/argos/services/foundry/coverage_bridge.py) | `apply-coverage-decision` (and `-v2` post-poc-2b merge) | shipped 2026-06-02 |
-| Reserve | [`reserve_bridge.py`](../../src/argos/services/foundry/reserve_bridge.py) | `apply-reserve-decision` (poc-2b) | shipped 2026-06-03 — waiting on OSDK regen post-merge to flip integration test from skipif to live |
-| Liability | [`liability_bridge.py`](../../src/argos/services/foundry/liability_bridge.py) | `apply-liability-decision` (poc-2b) | shipped 2026-06-03 — same OSDK-regen gate |
-| Recovery | [`recovery_bridge.py`](../../src/argos/services/foundry/recovery_bridge.py) | `apply-recovery-decision` (poc-2b) | shipped 2026-06-03 — same OSDK-regen gate |
-| Closure | [`closure_bridge.py`](../../src/argos/services/foundry/closure_bridge.py) | `apply-closure-decision`, `apply-reopen-decision` (poc-2b) | shipped 2026-06-03 — two functions in one bridge module; same OSDK-regen gate |
+| Coverage | [`coverage_bridge.py`](../../src/argos/services/foundry/coverage_bridge.py) | `apply-coverage-decision-v2` | live-verified 2026-06-04 |
+| Reserve | [`reserve_bridge.py`](../../src/argos/services/foundry/reserve_bridge.py) | `apply-reserve-decision` | live-verified 2026-06-04 |
+| Liability | [`liability_bridge.py`](../../src/argos/services/foundry/liability_bridge.py) | `apply-liability-decision` | live-verified 2026-06-04 |
+| Recovery | [`recovery_bridge.py`](../../src/argos/services/foundry/recovery_bridge.py) | `apply-recovery-decision` | live-verified 2026-06-04 |
+| Closure | [`closure_bridge.py`](../../src/argos/services/foundry/closure_bridge.py) | `apply-closure-decision`, `apply-reopen-decision` | live-verified 2026-06-04 |
 | AgentAction emission | TODO | TODO (`emit-agent-action`) | unblocked 2026-06-03 — `AgentAction` + `EvidenceCitation` Object Types exist in main ontology (poc-1 merged); needs an action-type definition + bridge module |
 
 ## How to add a new bridge
