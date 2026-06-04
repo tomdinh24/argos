@@ -175,7 +175,7 @@ We pick the latter.
 | Liability | [`liability_bridge.py`](../../src/argos/services/foundry/liability_bridge.py) | `apply-liability-decision` | live-verified 2026-06-04 |
 | Recovery | [`recovery_bridge.py`](../../src/argos/services/foundry/recovery_bridge.py) | `apply-recovery-decision` | live-verified 2026-06-04 |
 | Closure | [`closure_bridge.py`](../../src/argos/services/foundry/closure_bridge.py) | `apply-closure-decision`, `apply-reopen-decision` | live-verified 2026-06-04 |
-| AgentAction emission | [`agent_action_bridge.py`](../../src/argos/services/foundry/agent_action_bridge.py) | `emit-agent-action` | shipped 2026-06-04 — wired into [`audit_log.py::append_agent_action`](../../src/argos/services/orchestrator/audit_log.py); integration test pending OSDK regen to v0.2.0 |
+| AgentAction emission | [`agent_action_bridge.py`](../../src/argos/services/foundry/agent_action_bridge.py) | `emit-agent-action` | live-verified 2026-06-04 — wired into [`audit_log.py::append_agent_action`](../../src/argos/services/orchestrator/audit_log.py); round-trip passes against `argos_live_sdk` v0.2.0 |
 
 ## Deferred: function-backed `emit-agent-action` for atomic citation materialization
 

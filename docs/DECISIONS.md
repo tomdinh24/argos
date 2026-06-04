@@ -44,13 +44,13 @@ and surface the conflict.
 
 ---
 
-## 2026-06-04 — AgentAction bridge shipped; live round-trip blocked by Foundry-side rule gap
+## 2026-06-04 — AgentAction bridge shipped and live-verified; Foundry bridge arc fully closed (6/6 green)
 
-**Decision:** The 6th and final Foundry bridge — [`agent_action_bridge.py`](../src/argos/services/foundry/agent_action_bridge.py) — is shipped and wired into [`audit_log.py::append_agent_action`](../src/argos/services/orchestrator/audit_log.py). Every local `AgentAction` row written to the per-claim JSONL log now also propagates to the Argos ontology via `emit-agent-action` (RID `ri.actions.main.action-type.388fb5af-6111-4c27-8861-dd0aab8d007e`). 19/19 unit tests pass. Bridge code is verified.
+**Decision:** The 6th and final Foundry bridge — [`agent_action_bridge.py`](../src/argos/services/foundry/agent_action_bridge.py) — is shipped, wired into [`audit_log.py::append_agent_action`](../src/argos/services/orchestrator/audit_log.py), and **live-verified against the Argos ontology**. Every local `AgentAction` row written to the per-claim JSONL log now also propagates to the Argos ontology via `emit-agent-action` (RID `ri.actions.main.action-type.388fb5af-6111-4c27-8861-dd0aab8d007e`).
 
-**Live round-trip is a known xfail:** Foundry's deployed declarative `modifyObject` rule for `emit-agent-action` does not populate every non-nullable property on the `AgentAction` Object Type — most likely `created_at` (which AI FDE's reference TypeScript source explicitly set via `Timestamp.now()`, but the declarative rule does not). Every call from the bridge returns `Actions:NonNullablePropertyContainsNull` regardless of what payload we send. This is a Foundry-side schema-rule mismatch, not a code defect.
+**Test state: 25/25.** 19 unit tests + 6 live integration tests, all green.
 
-**Path to close:** one focused AI FDE session to fix the declarative rule — either add parameters for the missing fields with documented defaults, set fixed defaults inside the rule, or make those Object Type fields nullable. The bridge code does not change. The integration test xfail flips to pass automatically once the rule is corrected.
+**Foundry-side rule gap surfaced and closed mid-session:** the initial declarative `modifyObject` rule for `emit-agent-action` did not populate every non-nullable property on the `AgentAction` Object Type, returning `Actions:NonNullablePropertyContainsNull` on every invocation. A focused AI FDE follow-up corrected the rule (defaults applied for system-generated fields like `created_at`; `requires_human_approval` silently defaults to `false`). Zero code changes on the Argos side — the bridge call signature was already correct.
 
 **Code touched:**
 

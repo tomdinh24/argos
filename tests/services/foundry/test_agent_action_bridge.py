@@ -72,20 +72,6 @@ def test_citation_arrays_default_to_empty(monkeypatch):
     not os.environ.get("FOUNDRY_TOKEN"),
     reason="FOUNDRY_TOKEN not set; integration test skipped",
 )
-@pytest.mark.xfail(
-    reason=(
-        "Foundry-side rule gap: emit-agent-action's declarative "
-        "modifyObject rule does not populate all non-nullable AgentAction "
-        "properties (e.g. created_at — set in AI FDE's TypeScript source "
-        "but not in the deployed declarative rule). Foundry returns "
-        "Actions:NonNullablePropertyContainsNull regardless of what the "
-        "bridge sends. Needs a one-prompt AI FDE follow-up to either "
-        "(a) add parameters for the missing fields, (b) set fixed defaults "
-        "in the rule, or (c) make those Object Type fields nullable. "
-        "Bridge code is verified; this is purely a Foundry-side fix."
-    ),
-    strict=True,
-)
 def test_bridge_round_trip_records_operation_id(monkeypatch):
     """Live OSDK call against the live Argos ontology.
 
