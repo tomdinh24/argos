@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "setup": "uv sync --dev && (cd web && npm install)",
+    "run": "npx --yes concurrently -k -n api,web \"uv run uvicorn argos.api.app:app --port $CONDUCTOR_PORT\" \"cd web && NEXT_PUBLIC_API_BASE=http://localhost:$CONDUCTOR_PORT npm run dev -- -p $((CONDUCTOR_PORT+1))\""
+  },
+  "runScriptMode": "concurrent"
+}
