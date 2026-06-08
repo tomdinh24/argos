@@ -1,0 +1,48 @@
+{
+  "request_id": "RES-REQ-004",
+  "reviewed_as_of": "2026-06-08T06:22:22.404478Z",
+  "per_component": [
+    {
+      "component": "indemnity",
+      "current_outstanding": 159600.0,
+      "recommended_outstanding_band": {
+        "p10": 139650.0,
+        "p50": 159600.0,
+        "p90": 179550.0
+      },
+      "rationale": "within recovery \u2014 insured 95% at fault",
+      "triggers_fired": [],
+      "evidence_citations": [
+        {
+          "document_id": null,
+          "sourced_rule_id": "reserve.constants.indemnity",
+          "ledger_entry_id": null,
+          "locator": "constants.py",
+          "text_excerpt": "Notice threshold rule from constants.NOTICE_THRESHOLDS_V1 fired deterministically on calculator inputs.",
+          "relation": "supports"
+        }
+      ]
+    }
+  ],
+  "notice_obligations_triggered": [
+    {
+      "notice_type": "excess_carrier",
+      "probability": 1.0,
+      "reasoning": "reserve $159,600.00 = 53% of per-person limit $300,000.00; insured liability 95% (clear)",
+      "required_by_date": "2026-06-23T06:22:22.404478Z",
+      "evidence_citations": [
+        {
+          "document_id": null,
+          "sourced_rule_id": "reserve.constants.notice",
+          "ledger_entry_id": null,
+          "locator": "constants.py",
+          "text_excerpt": "Notice threshold rule from constants.NOTICE_THRESHOLDS_V1 fired deterministically on calculator inputs.",
+          "relation": "supports"
+        }
+      ]
+    }
+  ],
+  "authority_required_level": "manager",
+  "no_change_warranted": false,
+  "rationale": "RESERVE EVALUATION \u2014 Claim CLM-004 | Eval #1 | 2026-06-08 | Examiner: system | constants v1.2026-06-01\nTRIGGER: CALENDAR_DIARY_90_DAY (2026-06-08)\n\nLIABILITY: Insured 95% at fault. FL \u00a7768.81 modified comparative: within recovery \u2014 insured 95% at fault. (no suit filed; pre-suit posture).\n\nPIP/THRESHOLD: PIP cap $10,000 (EMC undetermined), $0.00 paid of $10,000 cap. \u00a7627.737 verbal threshold: not yet established \u2014 non-econ priced at 50% probability.\n\nSPECIALS (indemnity build):\n  Medical paid-satisfied bills: $0.00\n  LOP/unsatisfied at insurance-equivalent: $84,000.00\n  Wage loss documented: $0.00\n  SPECIALS SUBTOTAL: $84,000.00\n\nGENERALS:\n  Severity tier: moderate_ortho_non_surgical (Confirmed disc bulge/herniation, fracture without surgery, sustained PT >12 weeks, possible permanency at MMI)\n  Multiplier band: 1.5\u00d7 \u2014 2.5\u00d7 specials\n  Venue calibrator: other_state (1.00\u00d7)\n  Threshold discount: 50%\n  GENERALS LOW: $63,000.00 | CENTRAL: $84,000.00 | HIGH: $105,000.00\n\nINDEMNITY RESERVE (gross \u00d7 liability%):\n  Low: $139,650.00 | Central: $159,600.00 | High: $179,550.00\n  Recommended posting: $159,600.00\n\nALAE: not opened (pre-suit)\nULAE: not allocated per-claim per industry practice; portfolio-level overhead.\n\nDELTA FROM PRIOR: initial reserve \u2014 no prior basis\n\nAUTHORITY:\n  Reserve $159,600.00 (indemnity $159,600.00 + ALAE p50 $0.00)\n  vs examiner authority $25,000.00: manager\n  Required approver: Claims supervisor + roundtable\n  TRIGGERED [excess_carrier] \u2014 reserve $159,600.00 = 53% of per-person limit $300,000.00; insured liability 95% (clear); due by 2026-06-23\n\nBAD-FAITH RISK MARKERS (2 active):\n  time_demand_with_deadline\n  represented_by_counsel\n  \u00a7624.155(4) 90-day safe harbor: no_actual_notice_logged\n  \u00a7624.155(3) 60-day CRN cure: none filed\n"
+}

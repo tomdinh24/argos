@@ -4,7 +4,7 @@ tags:
   - type/architecture
   - status/living
 created: 2026-06-04
-updated: 2026-06-04
+updated: 2026-06-07
 ---
 
 # Argos cockpit — single-claim, single-adjuster user surface
@@ -44,44 +44,79 @@ regulator) can open at any point in the lifecycle.
 
 ## Screens
 
-Five surfaces. Each is defined by **the data it reads** and **the
+Six surfaces. Each is defined by **the data it reads** and **the
 Action Type it fires** on commit. No screen renders state it doesn't
 need; no screen invents an Action Type that doesn't exist in the
-ontology.
+ontology. Visual register and access-pattern mirror the
+[Talos](https://github.com/tomdinh24/talos) demo so both products read
+as one family.
 
-### Screen 1 — Caseload Inbox
+### Screen 0 — Landing / Access
 
-The queue. Lists every claim assigned to the adjuster, sorted by
-surfaced priority.
+Two-pane gate. Left: brand orb + headline ("Sourced claims operations
+for specialty TPAs") + "Private demo · by invitation" foot. Right:
+access-token field with mono labels (`001 / ACCESS`, `002 / AUTH`) +
+"Enter" button. Soft client-side gate via `NEXT_PUBLIC_ACCESS_CODE`;
+real protection is the FastAPI bearer-token guard on every endpoint.
+
+**Reads:** nothing. **Fires:** local `setAuthed(true)` → routes to Home.
+
+### Screen 1 — Home (Caseload Inbox + Add Example)
+
+The queue plus the demo-seeding affordance. Lists every claim
+assigned to the adjuster, sorted by surfaced priority. Primary CTA
+above the list: **"Add example claim"** opens a modal with N pre-shaped
+scenarios (moderate auto BI, high-severity auto BI, lien-bearing,
+recoverable). Click → seeds → `advance_claim` auto-fires intake →
+brief → coverage. Row appears with a "Triaging…" progress chip that
+resolves to "Coverage ready · review."
 
 **Reads:** `GET /caseload` → list of `{claim_id, posture, latest_event,
-next_action, severity_score}`. Backed by the Pydantic `Caseload`
-projection over the ontology.
+next_action, severity_score, triage_state}`. Backed by the Pydantic
+`Caseload` projection over the ontology.
 
-**Fires:** nothing — click-through to Screen 2.
+**Fires:**
 
-**Demo-mode:** one claim seeded (`CLM-001`). The caseload list shows
-that one row. No empty-state polish needed.
+- Click "Add example claim" → modal → `POST /demo/seed-claim {scenario:
+  "moderate_bi" | "high_severity_bi" | "lien_bearing" | "recoverable"}`.
+- Click claim row → routes to Screen 2.
+
+**Demo-mode:** starts with `CLM-001` seeded. Tom or anyone clicking
+through can add 1–3 more example claims to show the home-page list
+shape under load.
 
 ### Screen 2 — Claim Cockpit (the central screen)
 
 Single-claim view. This is where 95% of the adjuster's time lives.
 
-**Layout:**
+**Layout (shipped — revises the original left-rail console; see
+[DECISIONS 2026-06-07](../DECISIONS.md)).** Mobile-first single column,
+with an `.app--wide` desktop variant. Same tokens, layout-only.
 
-- **Header.** Claim ID, parties, current posture, current reserve,
-  current liability split. Updates live as workflows re-run.
-- **Left rail.** Workflow tabs — Brief / Coverage / Reserve / Liability
-  / Recovery / Closure / Documents / Audit. Each tab shows a status
-  chip (pending review / accepted / blocked).
-- **Main pane.** Renders the active workflow's assessment object —
-  e.g. for Coverage, the full `CoverageReport` with its
-  `EvidenceCitation` rows clickable to Screen 4. For Reserve, the
-  `ReserveAnalysis` breakdown table. The pane includes a "commit
-  decision" button that opens Screen 3.
-- **Right rail.** AgentAction timeline — chronological list of
-  workflow runs ("Coverage ran 12 min ago", "Reserve recomputed on new
-  MRI"), each clickable to Screen 5 filtered to that run.
+- **Header card.** Insured, the facts grid (loss type, date of loss,
+  severity, jurisdiction, policy, status), and a **single status chip**
+  — the triage band (Now / Today / Later). No separate Eisenhower
+  descriptor.
+- **Three tabs — Overview / Workflow / Sources.** The Workflow tab
+  carries a `N needs you` notification badge; Sources carries a count.
+  - **Overview.** The claim brief (citation-chipped) + a "New
+    information / since you last looked" log (unreviewed items flagged
+    with a notification tag).
+  - **Workflow.** A lifecycle accordion stacking all five stages
+    (Coverage → Closure). Stages before the active one read as
+    accepted; the first unsettled stage is the one that needs the
+    adjuster and opens by default. Each stage body renders that
+    workflow's assessment object — coverage map + outcome distribution
+    (`CoverageReport`), reserve findings + component band ranges +
+    pre-booking checks + editable amount (`ReserveAnalysis`), liability
+    allocation + evidence (`LiabilityAssessment`), recovery status +
+    checklist + net-economics (`RecoveryAssessment`), closure readiness
+    + decision recap (`ClosureAssessment`) — and **commits inline** via
+    one contextual CTA per stage (no separate drawer). Every
+    `EvidenceCitation` row is clickable to Screen 4.
+  - **Sources.** One searchable / type-filterable table of every
+    document read — merges the old Documents tab and pinned-citations
+    list. Rows and inline `[n]` chips open Screen 4.
 
 **Reads:**
 
@@ -98,7 +133,14 @@ Single-claim view. This is where 95% of the adjuster's time lives.
 
 **Fires:** none directly — the commit button opens Screen 3.
 
-### Screen 3 — Decision Drawer
+### Screen 3 — Decision Drawer (superseded — folded into per-stage commit)
+
+> **Superseded by [DECISIONS 2026-06-07](../DECISIONS.md).** The shipped
+> cockpit commits inline via one contextual CTA per stage inside the
+> Workflow accordion — there is no separate drawer. The override fields
+> and Approve / reject / modify affordances below now live in the stage
+> body itself. The Action-Type wiring in the table is unchanged and
+> remains the target backend surface.
 
 Slides in from the right when the adjuster clicks "commit" on any
 workflow's recommendation. Modal-ish but doesn't block the cockpit

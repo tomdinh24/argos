@@ -1,0 +1,306 @@
+{
+  "request_id": "REQ-016",
+  "reviewed_as_of": "2026-04-14T00:00:00Z",
+  "evidence_found": [
+    {
+      "document_id": null,
+      "sourced_rule_id": "POL-PLACEHOLDER-2026::CP-AUTO-BI-STANDARD",
+      "ledger_entry_id": null,
+      "locator": "Policy Coverages \u2014 CP-AUTO-BI-STANDARD",
+      "text_excerpt": "coverage_type: auto_BI | limit_per_occurrence: 1,000,000.00 | limit_per_person: 300000.0 | limit_aggregate: 1000000.0 | deductible: 0.00 | SIR: None",
+      "relation": "supports"
+    },
+    {
+      "document_id": null,
+      "sourced_rule_id": "POL-PLACEHOLDER-2026::PP-FIXTURE-2026",
+      "ledger_entry_id": null,
+      "locator": "Policy Period \u2014 PP-FIXTURE-2026",
+      "text_excerpt": "effective_from: 2026-01-01 | effective_to: 2026-12-31 | status: in_force",
+      "relation": "supports"
+    },
+    {
+      "document_id": null,
+      "sourced_rule_id": "REQ-016::LOSS_FACTS",
+      "ledger_entry_id": null,
+      "locator": "Coverage Request \u2014 REQ-016, Loss Facts",
+      "text_excerpt": "Auto bodily injury claim, severity tier 'serious'. Claim opened 2026-04-14. Litigation flag: True; represented: True; complaint: False.",
+      "relation": "contextual"
+    },
+    {
+      "document_id": null,
+      "sourced_rule_id": "REQ-016::LOSS_DATE",
+      "ledger_entry_id": null,
+      "locator": "Coverage Request \u2014 REQ-016, Loss Date",
+      "text_excerpt": "Loss Date: 2026-04-13",
+      "relation": "supports"
+    }
+  ],
+  "assessments": [
+    {
+      "claim_text": "The loss date of 2026-04-13 falls within the policy period (2026-01-01 to 2026-12-31), satisfying the in-force requirement.",
+      "probability": 0.99,
+      "reasoning": "The policy period record shows effective_from 2026-01-01 and effective_to 2026-12-31 with status in_force. The loss date of 2026-04-13 sits squarely within that window. No documents contradict this. Residual 1% uncertainty accounts for the absence of a premium payment ledger or cancellation/endorsement records in the file.",
+      "evidence_citations": [
+        {
+          "document_id": null,
+          "sourced_rule_id": "POL-PLACEHOLDER-2026::PP-FIXTURE-2026",
+          "ledger_entry_id": null,
+          "locator": "Policy Period \u2014 PP-FIXTURE-2026",
+          "text_excerpt": "effective_from: 2026-01-01 | effective_to: 2026-12-31 | status: in_force",
+          "relation": "supports"
+        },
+        {
+          "document_id": null,
+          "sourced_rule_id": "REQ-016::LOSS_DATE",
+          "ledger_entry_id": null,
+          "locator": "Coverage Request \u2014 REQ-016, Loss Date",
+          "text_excerpt": "Loss Date: 2026-04-13",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "The claim targets coverage type auto_BI (CP-AUTO-BI-STANDARD), which is the coverage type carried on this policy.",
+      "probability": 0.99,
+      "reasoning": "The coverage request targets CP-AUTO-BI-STANDARD, which is defined as coverage_type auto_BI on the policy. The loss facts describe an auto bodily injury claim. The types are aligned. No documents on file contradict this.",
+      "evidence_citations": [
+        {
+          "document_id": null,
+          "sourced_rule_id": "POL-PLACEHOLDER-2026::CP-AUTO-BI-STANDARD",
+          "ledger_entry_id": null,
+          "locator": "Policy Coverages \u2014 CP-AUTO-BI-STANDARD",
+          "text_excerpt": "coverage_type: auto_BI | limit_per_occurrence: 1,000,000.00 | limit_per_person: 300000.0 | limit_aggregate: 1000000.0 | deductible: 0.00 | SIR: None",
+          "relation": "supports"
+        },
+        {
+          "document_id": null,
+          "sourced_rule_id": "REQ-016::LOSS_FACTS",
+          "ledger_entry_id": null,
+          "locator": "Coverage Request \u2014 REQ-016, Loss Facts",
+          "text_excerpt": "Auto bodily injury claim, severity tier 'serious'. Claim opened 2026-04-14. Litigation flag: True; represented: True; complaint: False.",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "Applicable per-person limit is $300,000 and per-occurrence limit is $1,000,000, with no deductible or SIR obligation.",
+      "probability": 0.99,
+      "reasoning": "Policy data is unambiguous. limit_per_person: 300,000; limit_per_occurrence: 1,000,000; deductible: 0.00; SIR: None. No endorsements, declarations pages, or schedule modifications are on file to alter these figures.",
+      "evidence_citations": [
+        {
+          "document_id": null,
+          "sourced_rule_id": "POL-PLACEHOLDER-2026::CP-AUTO-BI-STANDARD",
+          "ledger_entry_id": null,
+          "locator": "Policy Coverages \u2014 CP-AUTO-BI-STANDARD",
+          "text_excerpt": "limit_per_occurrence: 1,000,000.00 | limit_per_person: 300000.0 | limit_aggregate: 1000000.0 | deductible: 0.00 | SIR: None",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "The claimant (PTY-CLM-016) is represented by counsel and the matter is in litigation (no complaint filed yet), increasing the probability of coverage questions being contested and of limits demands.",
+      "probability": 0.92,
+      "reasoning": "Loss facts state litigation flag: True; represented: True; complaint: False. This is a serious-severity BI claim with counsel engaged before a complaint is filed. The absence of a complaint could mean pre-suit demand is imminent. This contextual factor does not itself raise a coverage defense, but it elevates the risk that policy limits and any coverage conditions (e.g., cooperation clause, notice requirements) will be scrutinized.",
+      "evidence_citations": [
+        {
+          "document_id": null,
+          "sourced_rule_id": "REQ-016::LOSS_FACTS",
+          "ledger_entry_id": null,
+          "locator": "Coverage Request \u2014 REQ-016, Loss Facts",
+          "text_excerpt": "Auto bodily injury claim, severity tier 'serious'. Claim opened 2026-04-14. Litigation flag: True; represented: True; complaint: False.",
+          "relation": "contextual"
+        }
+      ]
+    },
+    {
+      "claim_text": "No policy exclusions, endorsements, cancellations, or conditions have been produced in this file; their potential existence is an unresolved gap.",
+      "probability": 0.85,
+      "reasoning": "Zero documents were provided. The file contains only structured policy metadata and the intake summary. No declarations page, policy form text, endorsement schedule, cancellation notice, premium payment record, or prior claims history is available for review. This is a material gap: exclusions, named-driver restrictions, vehicle schedule conditions, cooperation-clause compliance, and notice requirements under the CA00 form cannot be evaluated without the policy form documents.",
+      "evidence_citations": [
+        {
+          "document_id": null,
+          "sourced_rule_id": "POL-PLACEHOLDER-2026::CP-AUTO-BI-STANDARD",
+          "ledger_entry_id": null,
+          "locator": "Policy Coverages \u2014 CP-AUTO-BI-STANDARD",
+          "text_excerpt": "coverage_type: auto_BI | limit_per_occurrence: 1,000,000.00 | limit_per_person: 300000.0 | limit_aggregate: 1000000.0 | deductible: 0.00 | SIR: None",
+          "relation": "contextual"
+        }
+      ]
+    },
+    {
+      "claim_text": "Because no policy form documents, exclusions, or incident reports are on file, a reservation of rights cannot be ruled out pending completion of the file.",
+      "probability": 0.45,
+      "reasoning": "The severity is 'serious,' litigation is flagged, and the claimant is represented. The CA00 form (Commercial Auto) typically contains a suite of exclusions (owned-vehicle coverage conditions, permissive-use requirements, intentional acts, etc.) and cooperation/notice conditions. None of these can be evaluated because no policy text documents were provided. The probability that one or more of these conditions will require investigation \u2014 and thus a reservation of rights \u2014 is materially non-trivial given the claim profile.",
+      "evidence_citations": [
+        {
+          "document_id": null,
+          "sourced_rule_id": "REQ-016::LOSS_FACTS",
+          "ledger_entry_id": null,
+          "locator": "Coverage Request \u2014 REQ-016, Loss Facts",
+          "text_excerpt": "Auto bodily injury claim, severity tier 'serious'. Claim opened 2026-04-14. Litigation flag: True; represented: True; complaint: False.",
+          "relation": "contextual"
+        },
+        {
+          "document_id": null,
+          "sourced_rule_id": "POL-PLACEHOLDER-2026::CP-AUTO-BI-STANDARD",
+          "ledger_entry_id": null,
+          "locator": "Policy Coverages \u2014 CP-AUTO-BI-STANDARD",
+          "text_excerpt": "coverage_type: auto_BI | limit_per_occurrence: 1,000,000.00 | limit_per_person: 300000.0 | limit_aggregate: 1000000.0 | deductible: 0.00 | SIR: None",
+          "relation": "contextual"
+        }
+      ]
+    }
+  ],
+  "synthesis": {
+    "outcomes": [
+      {
+        "claim_text": "Clean Coverage \u2014 policy in force, coverage type matched, loss date within period, no exclusions or conditions identified that preclude coverage.",
+        "probability": 0.5,
+        "reasoning": "On the face of the structured data alone, all threshold coverage conditions appear met: in-force policy, matching coverage type, loss date within period, no deductible/SIR. In the absence of policy form text revealing exclusions or conditions, clean coverage is plausible. However, the complete absence of supporting documents prevents a high-confidence clean coverage determination.",
+        "evidence_citations": [
+          {
+            "document_id": null,
+            "sourced_rule_id": "POL-PLACEHOLDER-2026::PP-FIXTURE-2026",
+            "ledger_entry_id": null,
+            "locator": "Policy Period \u2014 PP-FIXTURE-2026",
+            "text_excerpt": "effective_from: 2026-01-01 | effective_to: 2026-12-31 | status: in_force",
+            "relation": "supports"
+          },
+          {
+            "document_id": null,
+            "sourced_rule_id": "POL-PLACEHOLDER-2026::CP-AUTO-BI-STANDARD",
+            "ledger_entry_id": null,
+            "locator": "Policy Coverages \u2014 CP-AUTO-BI-STANDARD",
+            "text_excerpt": "coverage_type: auto_BI | limit_per_occurrence: 1,000,000.00 | limit_per_person: 300000.0 | limit_aggregate: 1000000.0 | deductible: 0.00 | SIR: None",
+            "relation": "supports"
+          }
+        ]
+      },
+      {
+        "claim_text": "Reservation of Rights \u2014 coverage conditions or exclusions under the CA00 form (e.g., cooperation, notice, permissive use, vehicle schedule) require investigation before coverage can be confirmed.",
+        "probability": 0.43,
+        "reasoning": "The serious-severity, litigation-flagged profile combined with a complete absence of policy form documents, incident reports, and cooperation/notice compliance records makes a reservation of rights a materially likely outcome. CA00 forms carry multiple conditions that are common sources of ROR in auto BI litigation. Without policy text, exclusion schedules, or driver/vehicle records, these cannot be cleared.",
+        "evidence_citations": [
+          {
+            "document_id": null,
+            "sourced_rule_id": "REQ-016::LOSS_FACTS",
+            "ledger_entry_id": null,
+            "locator": "Coverage Request \u2014 REQ-016, Loss Facts",
+            "text_excerpt": "Auto bodily injury claim, severity tier 'serious'. Claim opened 2026-04-14. Litigation flag: True; represented: True; complaint: False.",
+            "relation": "contextual"
+          }
+        ]
+      },
+      {
+        "claim_text": "Denial \u2014 an exclusion, condition, or coverage gap ultimately bars coverage for this claim.",
+        "probability": 0.07,
+        "reasoning": "On the structured data available, no grounds for outright denial are apparent. However, the complete absence of policy form text means known CA00 exclusions cannot be evaluated. A low but non-trivial probability of denial is assigned to account for the possibility that investigation reveals a coverage bar (e.g., non-covered vehicle, excluded driver, intentional act).",
+        "evidence_citations": [
+          {
+            "document_id": null,
+            "sourced_rule_id": "POL-PLACEHOLDER-2026::CP-AUTO-BI-STANDARD",
+            "ledger_entry_id": null,
+            "locator": "Policy Coverages \u2014 CP-AUTO-BI-STANDARD",
+            "text_excerpt": "coverage_type: auto_BI | limit_per_occurrence: 1,000,000.00 | limit_per_person: 300000.0 | limit_aggregate: 1000000.0 | deductible: 0.00 | SIR: None",
+            "relation": "contextual"
+          }
+        ]
+      }
+    ],
+    "would_shift_distribution": [
+      "Production of the CA00 policy form and endorsement schedule \u2014 would clarify whether any exclusions apply and shift mass away from ROR/denial toward clean coverage if none are identified.",
+      "Vehicle schedule and driver record confirming the involved vehicle and operator were covered under the policy \u2014 would increase clean coverage probability.",
+      "Incident/accident report and claimant contact establishing cooperation-clause compliance by the insured \u2014 would reduce ROR probability.",
+      "Premium payment confirmation and absence of any cancellation/non-renewal notice \u2014 would increase confidence in the in-force determination.",
+      "Pre-suit demand letter or complaint once filed \u2014 would crystallize the claim's value relative to limits and may surface additional coverage questions.",
+      "Prior claims history or aggregate exhaustion ledger \u2014 would confirm whether the $1,000,000 per-occurrence aggregate remains available."
+    ]
+  },
+  "coverage_analysis_memo": {
+    "body": "COVERAGE ANALYSIS MEMORANDUM\n\nTo: Adjuster of Record\nFrom: Argos Coverage Specialist\nRe: REQ-016 / CLM-016 \u2014 Auto BI, Serious Severity, Litigated\nPolicy: PLACEHOLDER-001 (POL-PLACEHOLDER-2026) | CA00 Form | FL\nReviewed As Of: 2026-04-14\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nI. THRESHOLD COVERAGE INDICATORS\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n1. POLICY IN FORCE\nThe policy period runs 2026-01-01 through 2026-12-31 and carries status in_force. The loss date of 2026-04-13 falls within that period. (Probability: 0.99)\n\n2. COVERAGE TYPE ALIGNMENT\nThe targeted coverage, CP-AUTO-BI-STANDARD, is defined as coverage_type: auto_BI. The loss facts describe an auto bodily injury claim. The types are aligned. (Probability: 0.99)\n\n3. APPLICABLE LIMITS\nPer-person: $300,000 | Per-occurrence: $1,000,000 | Aggregate: $1,000,000 | Deductible: $0 | SIR: None. No endorsements, schedules, or modifications are on file to alter these figures. (Probability: 0.99)\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nII. CLAIM PROFILE AND RISK FACTORS\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nThe intake summary characterizes this as a 'serious' severity auto BI claim. The litigation flag is True; the claimant is represented by counsel; no complaint has yet been filed. Given the serious severity designation, a pre-suit demand approaching or reaching the $300,000 per-person limit is plausible. The absence of a complaint at this stage may indicate pre-suit negotiations are anticipated.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIII. MATERIAL FILE GAPS (CRITICAL)\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nZero documents were produced with this coverage request. The following items are absent and prevent a complete coverage determination:\n\n\u2022 CA00 policy form text and endorsement schedule \u2014 exclusions, conditions, covered auto definitions, and driver restrictions cannot be evaluated.\n\u2022 Declarations page \u2014 vehicle schedule and named insured confirmation unavailable.\n\u2022 Incident/accident report \u2014 facts of loss, involved vehicle, driver identity, and fault unknown from primary source documents.\n\u2022 Cooperation and notice compliance documentation \u2014 whether the insured has complied with the CA00 cooperation and timely-notice conditions is unknown.\n\u2022 Premium payment / cancellation records \u2014 no ledger entry confirms continued in-force status beyond structured metadata.\n\u2022 Prior claims / aggregate exhaustion ledger \u2014 aggregate availability unverified.\n\nThese gaps are material. No coverage determination that purports to be final should issue until the file is supplemented.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIV. OUTCOME DISTRIBUTION\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nClean Coverage:         0.50\nReservation of Rights:  0.43\nDenial:                 0.07\n                       \u2500\u2500\u2500\u2500\u2500\nTotal:                  1.00\n\nThe ROR probability is elevated primarily by the complete absence of policy form documents and the litigated, serious-severity profile \u2014 not by any identified exclusion or condition breach. The denial probability is low but non-trivial solely because CA00 exclusions cannot be screened without policy text.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nV. WHAT WOULD SHIFT THE DISTRIBUTION\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n\u2022 CA00 form + endorsement schedule \u2192 if no exclusions apply, shifts mass to clean coverage.\n\u2022 Vehicle/driver records confirming covered auto and permissive operator \u2192 increases clean coverage probability.\n\u2022 Cooperation/notice compliance confirmation \u2192 reduces ROR probability.\n\u2022 Premium/cancellation records confirming in-force status \u2192 increases confidence.\n\u2022 Pre-suit demand or complaint \u2192 crystallizes value relative to limits; may surface new coverage questions.\n\u2022 Aggregate exhaustion ledger \u2192 confirms limit availability.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nVI. LIMITS NOTICE\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nGiven the 'serious' severity designation and represented-claimant status, the adjuster should assess whether the $300,000 per-person limit is adequate to satisfy a potential demand. Excess/umbrella notification and bad-faith prophylaxis protocols should be evaluated in accordance with Florida law and the client program guidelines.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nNOTE ON DOCUMENT AVAILABILITY\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nAll conclusions in this memorandum are drawn exclusively from structured policy metadata and the intake summary. No policy form, endorsement, incident report, or other document was available for review. This analysis is preliminary. A final coverage determination requires document production.",
+    "citations": [
+      {
+        "document_id": null,
+        "sourced_rule_id": "POL-PLACEHOLDER-2026::PP-FIXTURE-2026",
+        "ledger_entry_id": null,
+        "locator": "Policy Period \u2014 PP-FIXTURE-2026",
+        "text_excerpt": "effective_from: 2026-01-01 | effective_to: 2026-12-31 | status: in_force",
+        "relation": "supports"
+      },
+      {
+        "document_id": null,
+        "sourced_rule_id": "POL-PLACEHOLDER-2026::CP-AUTO-BI-STANDARD",
+        "ledger_entry_id": null,
+        "locator": "Policy Coverages \u2014 CP-AUTO-BI-STANDARD",
+        "text_excerpt": "coverage_type: auto_BI | limit_per_occurrence: 1,000,000.00 | limit_per_person: 300000.0 | limit_aggregate: 1000000.0 | deductible: 0.00 | SIR: None",
+        "relation": "supports"
+      },
+      {
+        "document_id": null,
+        "sourced_rule_id": "REQ-016::LOSS_FACTS",
+        "ledger_entry_id": null,
+        "locator": "Coverage Request \u2014 REQ-016, Loss Facts",
+        "text_excerpt": "Auto bodily injury claim, severity tier 'serious'. Claim opened 2026-04-14. Litigation flag: True; represented: True; complaint: False.",
+        "relation": "contextual"
+      },
+      {
+        "document_id": null,
+        "sourced_rule_id": "REQ-016::LOSS_DATE",
+        "ledger_entry_id": null,
+        "locator": "Coverage Request \u2014 REQ-016, Loss Date",
+        "text_excerpt": "Loss Date: 2026-04-13",
+        "relation": "supports"
+      }
+    ]
+  },
+  "ror_letter": {
+    "body": "RESERVATION OF RIGHTS LETTER\n[DRAFT \u2014 FOR ADJUSTER REVIEW ONLY \u2014 NOT FOR ISSUANCE WITHOUT ADJUSTER AUTHORIZATION]\n\n[Date]\n\nNamed Insured: [Named Insured Name \u2014 PTY-NAMED-INSURED-PLACEHOLDER]\n[Named Insured Address]\n\nRe:   Policy No.:    PLACEHOLDER-001\n      Claim No.:     CLM-016\n      Date of Loss:  April 13, 2026\n      Claimant:      PTY-CLM-016\n      Coverage:      Commercial Auto Bodily Injury (CA00 Form)\n\nDear [Named Insured],\n\n[Carrier / TPA Name] has received notice of the above-referenced bodily injury claim. We write to acknowledge receipt, to confirm that we are investigating this matter, and to advise you of a reservation of rights pending completion of our coverage investigation.\n\nI. ACKNOWLEDGMENT OF CLAIM\n\nWe have received notice of an auto bodily injury claim arising from an incident on April 13, 2026, involving claimant PTY-CLM-016. The matter has been identified as serious in severity. The claimant is represented by counsel, and litigation has been flagged. No complaint has been filed as of the date of this letter.\n\nII. POLICY INFORMATION\n\nThe above-referenced policy (PLACEHOLDER-001) is a Commercial Auto policy written on the CA00 form, with an effective period of January 1, 2026 through December 31, 2026. The applicable Bodily Injury liability coverage (CP-AUTO-BI-STANDARD) carries a per-person limit of $300,000 and a per-occurrence limit of $1,000,000, with no deductible or self-insured retention.\n\nIII. BASIS FOR RESERVATION OF RIGHTS\n\nWhile we have commenced our investigation and have confirmed that the loss date falls within the policy period and that the claimed coverage type aligns with the policy's auto BI coverage, our investigation is not yet complete. Specifically, the following items remain unresolved and may bear on the availability of coverage:\n\n1. Covered Auto / Vehicle Schedule: We have not yet confirmed whether the vehicle involved in the incident was a covered auto under the policy's vehicle schedule.\n\n2. Operator Status: We have not yet confirmed whether the driver at the time of the incident was a permissive operator or otherwise covered under the policy's terms.\n\n3. Policy Conditions \u2014 Notice and Cooperation: The CA00 policy form imposes conditions including timely notice of loss and a duty to cooperate in the investigation and defense of claims. We are reviewing compliance with these conditions.\n\n4. Applicable Exclusions: The CA00 form contains a number of exclusions that may be relevant to the circumstances of this loss. We are reviewing the facts of the incident against those exclusions and will advise if any appear to apply.\n\n5. Additional Policy Conditions: Other policy conditions may bear on coverage depending on the facts developed during investigation.\n\nIV. RESERVATION\n\nBy undertaking investigation and, to the extent applicable, defense of this matter, [Carrier / TPA Name] does not waive and expressly reserves all rights, defenses, and privileges available under the policy, at law, or in equity, including but not limited to the right to disclaim or limit coverage based on any ground identified during the investigation. This reservation of rights is not an admission or denial of coverage.\n\nV. YOUR DUTIES UNDER THE POLICY\n\nWe remind you of your obligations under the policy, including the duty to cooperate fully in the investigation and defense of this claim, to promptly provide all requested information and documentation, and to refrain from making any voluntary payments or admissions without our prior written consent.\n\nVI. INDEPENDENT COUNSEL\n\nBecause we are reserving our rights, you may have the right under Florida law to retain independent counsel at our expense in connection with the defense of this matter. Please consult with your own legal counsel regarding this right.\n\nIf you have any questions regarding this letter or our investigation, please contact [Adjuster Name] at [Contact Information].\n\nSincerely,\n\n[Adjuster Name]\n[Title]\n[Carrier / TPA Name]\n[Address]\n[Phone / Email]\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nDRAFT NOTICE: This letter is a preliminary draft generated from structured policy metadata and an intake summary only. No policy form text, endorsements, or incident documents were reviewed. The adjuster must verify all factual recitals, confirm applicable CA00 form language, and review this draft with coverage counsel before issuance. Florida-specific statutory and common-law requirements for reservation of rights letters must be independently verified.",
+    "citations": [
+      {
+        "document_id": null,
+        "sourced_rule_id": "POL-PLACEHOLDER-2026::PP-FIXTURE-2026",
+        "ledger_entry_id": null,
+        "locator": "Policy Period \u2014 PP-FIXTURE-2026",
+        "text_excerpt": "effective_from: 2026-01-01 | effective_to: 2026-12-31 | status: in_force",
+        "relation": "supports"
+      },
+      {
+        "document_id": null,
+        "sourced_rule_id": "POL-PLACEHOLDER-2026::CP-AUTO-BI-STANDARD",
+        "ledger_entry_id": null,
+        "locator": "Policy Coverages \u2014 CP-AUTO-BI-STANDARD",
+        "text_excerpt": "coverage_type: auto_BI | limit_per_occurrence: 1,000,000.00 | limit_per_person: 300000.0 | limit_aggregate: 1000000.0 | deductible: 0.00 | SIR: None",
+        "relation": "supports"
+      },
+      {
+        "document_id": null,
+        "sourced_rule_id": "REQ-016::LOSS_FACTS",
+        "ledger_entry_id": null,
+        "locator": "Coverage Request \u2014 REQ-016, Loss Facts",
+        "text_excerpt": "Auto bodily injury claim, severity tier 'serious'. Claim opened 2026-04-14. Litigation flag: True; represented: True; complaint: False.",
+        "relation": "contextual"
+      }
+    ]
+  },
+  "denial_letter": {
+    "body": "COVERAGE DENIAL LETTER\n[DRAFT \u2014 FOR ADJUSTER REVIEW ONLY \u2014 NOT FOR ISSUANCE WITHOUT ADJUSTER AUTHORIZATION]\n[LOW PROBABILITY OUTCOME \u2014 0.07 \u2014 ISSUED FOR COMPLETENESS ONLY]\n\n[Date]\n\nNamed Insured: [Named Insured Name \u2014 PTY-NAMED-INSURED-PLACEHOLDER]\n[Named Insured Address]\n\nRe:   Policy No.:    PLACEHOLDER-001\n      Claim No.:     CLM-016\n      Date of Loss:  April 13, 2026\n      Claimant:      PTY-CLM-016\n      Coverage:      Commercial Auto Bodily Injury (CA00 Form)\n\nDear [Named Insured],\n\n[Carrier / TPA Name] has completed its coverage investigation of the above-referenced matter. Based on that investigation, we are writing to advise that coverage is not available for this claim for the reasons set forth below.\n\n[ADJUSTER INSTRUCTION: This denial letter is a placeholder draft only. At the time of this analysis, NO specific exclusion, condition breach, or coverage bar has been identified in the file. This draft must not be issued unless and until investigation reveals a specific, articulable, document-supported ground for denial \u2014 such as a determination that the vehicle was not a covered auto, the operator was not a permissive user, a named exclusion applies, or a policy condition (e.g., cooperation, notice) was materially breached. The specific denial ground(s) must be inserted here, with precise citation to the applicable policy language, before this letter is issued.]\n\nBASIS FOR DENIAL: [TO BE COMPLETED BY ADJUSTER WITH SPECIFIC POLICY LANGUAGE AND FACTUAL BASIS FOLLOWING INVESTIGATION]\n\nExample grounds that would require completion:\n\u2022 The vehicle involved in the loss was not listed on the covered auto schedule as required by [Policy Form Section ___].\n\u2022 The operator of the vehicle at the time of the loss did not have permission to use the vehicle, and coverage for non-permissive operators is excluded under [Policy Form Section ___].\n\u2022 The insured failed to comply with the cooperation clause in [Policy Form Section ___] by [describe specific failure], which has resulted in material prejudice to the carrier's ability to investigate and defend this claim.\n\u2022 The loss arose out of [describe excluded circumstance] which is excluded under [Policy Form Section ___].\n\nRESERVATION OF ALL RIGHTS\n\nBy issuing this denial letter, [Carrier / TPA Name] does not waive any rights, defenses, or privileges available under the policy, at law, or in equity. All such rights are expressly reserved.\n\nYou have the right to consult with an attorney regarding this denial. You may also have the right to pursue applicable remedies under Florida law, including but not limited to the Florida insurance code.\n\nIf you believe this denial is in error, or if you have additional information that may bear on our coverage determination, please contact [Adjuster Name] at [Contact Information] within [__] days.\n\nSincerely,\n\n[Adjuster Name]\n[Title]\n[Carrier / TPA Name]\n[Address]\n[Phone / Email]\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nDRAFT NOTICE: This letter is a low-probability-outcome draft generated from structured policy metadata and an intake summary only. No policy form text, endorsements, or incident documents were reviewed. This letter MUST NOT be issued without (1) identification of specific denial grounds supported by policy language, (2) review by coverage counsel, and (3) adjuster authorization. Florida statutory requirements for denial letters must be independently verified.",
+    "citations": [
+      {
+        "document_id": null,
+        "sourced_rule_id": "POL-PLACEHOLDER-2026::CP-AUTO-BI-STANDARD",
+        "ledger_entry_id": null,
+        "locator": "Policy Coverages \u2014 CP-AUTO-BI-STANDARD",
+        "text_excerpt": "coverage_type: auto_BI | limit_per_occurrence: 1,000,000.00 | limit_per_person: 300000.0 | limit_aggregate: 1000000.0 | deductible: 0.00 | SIR: None",
+        "relation": "contextual"
+      },
+      {
+        "document_id": null,
+        "sourced_rule_id": "REQ-016::LOSS_FACTS",
+        "ledger_entry_id": null,
+        "locator": "Coverage Request \u2014 REQ-016, Loss Facts",
+        "text_excerpt": "Auto bodily injury claim, severity tier 'serious'. Claim opened 2026-04-14. Litigation flag: True; represented: True; complaint: False.",
+        "relation": "contextual"
+      }
+    ]
+  }
+}

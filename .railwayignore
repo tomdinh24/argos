@@ -1,0 +1,12 @@
+# Backend-only deploy. Keep the upload lean and unambiguous so Nixpacks detects
+# the Python project at the root (pyproject.toml + requirements.txt) and never
+# tries to build the Next.js frontend.
+web/
+docs/
+tests/
+.git/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/

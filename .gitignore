@@ -33,3 +33,5 @@ data/raw/*
 
 # /codex session-id cache (per-machine ephemeral)
 .context/
+.vercel
+.gstack/

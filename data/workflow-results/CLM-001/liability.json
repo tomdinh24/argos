@@ -1,0 +1,175 @@
+{
+  "request_id": "LIA-REQ-001",
+  "reviewed_as_of": "2026-06-08T05:57:18.191490Z",
+  "apportionment": {
+    "V1_insured_driver": {
+      "fault_pct": "35.00",
+      "fault_pct_band_low": "30.00",
+      "fault_pct_band_high": "40.00",
+      "confidence": 0.93
+    },
+    "V2_claimant_driver": {
+      "fault_pct": "65.00",
+      "fault_pct_band_low": "60.00",
+      "fault_pct_band_high": "70.00",
+      "confidence": 0.93
+    }
+  },
+  "applicable_regime": {
+    "statute": "modified_51_bar_hb837",
+    "recovery_bar_triggered": true,
+    "bar_basis": "hb837_51_pct",
+    "date_of_loss_governing": "2026-04-13",
+    "explanation": "Accrual date 2026-04-13 \u2265 2023-03-24 \u2192 HB 837 modified-comparative 51% bar applies (\u00a7768.81(6))."
+  },
+  "exposure_ceiling": {
+    "vicarious_cap_applies": false,
+    "vicarious_cap_value": null,
+    "conditional_econ_layer": null,
+    "negligent_entrustment_uncapped_path_available": false,
+    "graves_lessor_removed": false,
+    "fabre_defendants": []
+  },
+  "rationale": {
+    "fact_pattern_anchor": {
+      "pattern": "rear_end",
+      "anchor_pct": "95",
+      "anchor_party_role": "rear_driver",
+      "controlling_authority": "Birge v. Charron, 107 So. 3d 350 (Fla. 2012); Pierce v. Progressive Am. Ins. Co.; Eppler v. Tarmac"
+    },
+    "evidence_adjustments": [
+      {
+        "evidence_item_idx": 0,
+        "direction": "claimant_more_fault",
+        "magnitude_points": "22.5",
+        "basis": "police_report_narrative (hard_data) \u2014 DOC-001-CHP"
+      },
+      {
+        "evidence_item_idx": 1,
+        "direction": "claimant_more_fault",
+        "magnitude_points": "22.5",
+        "basis": "police_report_field (hard_data) \u2014 DOC-001-CHP"
+      },
+      {
+        "evidence_item_idx": 2,
+        "direction": "claimant_more_fault",
+        "magnitude_points": "15",
+        "basis": "party_admission (party_admission) \u2014 DOC-001-CHP"
+      },
+      {
+        "evidence_item_idx": 3,
+        "direction": "neutral",
+        "magnitude_points": "12.5",
+        "basis": "er_record_mechanism (independent) \u2014 DOC-001-ED"
+      },
+      {
+        "evidence_item_idx": 4,
+        "direction": "neutral",
+        "magnitude_points": "12.5",
+        "basis": "expert_report_medical_causation (independent) \u2014 DOC-001-ORTHO"
+      }
+    ],
+    "doctrine_gates_applied": [
+      {
+        "doctrine_id": "hb_837_51_bar",
+        "effect": "Modified-comparative 51% bar for non-medical-negligence accruing after 2023-03-24.",
+        "statute_or_case_cite": "\u00a7768.81(6); HB 837 (eff. 2023-03-24)"
+      },
+      {
+        "doctrine_id": "rear_end_rebuttable_presumption",
+        "effect": "Rear driver presumed at fault unless four named rebuttals evidenced.",
+        "statute_or_case_cite": "Birge v. Charron; Pierce; Eppler; Douglas-Seibert"
+      },
+      {
+        "doctrine_id": "joint_several_abolished",
+        "effect": "Joint-and-several liability abolished for negligence.",
+        "statute_or_case_cite": "\u00a7768.81(3)"
+      }
+    ],
+    "net_apportionment_walk": "Start: rear_end anchor = 95% (rear_driver \u2192 V1_insured_driver).\n  claimant_more_fault: 22.5 pts (police_report_narrative (hard_data) \u2014 DOC-001-CHP)\n  claimant_more_fault: 22.5 pts (police_report_field (hard_data) \u2014 DOC-001-CHP)\n  claimant_more_fault: 15 pts (party_admission (party_admission) \u2014 DOC-001-CHP)\n  doctrine: hb_837_51_bar \u2014 \u00a7768.81(6); HB 837 (eff. 2023-03-24)\n  doctrine: rear_end_rebuttable_presumption \u2014 Birge v. Charron; Pierce; Eppler; Douglas-Seibert\n  doctrine: joint_several_abolished \u2014 \u00a7768.81(3)\nNet per party: V1_insured_driver=35.00%, V2_claimant_driver=65.00%"
+  },
+  "diligence_ledger": {
+    "posture_percent_by_party": {
+      "V1_insured_driver": "35.00",
+      "V2_claimant_driver": "65.00"
+    },
+    "basis_evidence": [
+      {
+        "source_doc_id": "DOC-001-CHP",
+        "quoted_span": "Vehicle 2 driver admits inattention; vehicle 1 stopped at red signal.",
+        "weight_class": "hard_data"
+      },
+      {
+        "source_doc_id": "DOC-001-CHP",
+        "quoted_span": "Primary collision factor: Vehicle 2 \u2014 failure to maintain a safe following distance.",
+        "weight_class": "hard_data"
+      },
+      {
+        "source_doc_id": "DOC-001-CHP",
+        "quoted_span": "Vehicle 2 driver admits inattention; vehicle 1 stopped at red signal.",
+        "weight_class": "party_admission"
+      },
+      {
+        "source_doc_id": "DOC-001-ED",
+        "quoted_span": "41-year-old restrained driver, rear-ended while stopped at a signal. Ambulatory at the scene, transported for evaluation.",
+        "weight_class": "independent"
+      },
+      {
+        "source_doc_id": "DOC-001-ORTHO",
+        "quoted_span": "Persistent cervical radiculopathy following MVC of 2026-05-22. Impression: C4-C5 disc herniation; surgical consult pending; conservative tx exhausted. Recommendation: Refer to spine surgery for operative evaluation; continue activity modification in the interim.",
+        "weight_class": "independent"
+      }
+    ],
+    "change_conditions": [
+      "If Birge-category rebuttal evidence lands (mechanical failure / sudden stop / lane-change-by-lead / illegal-stop), rear-driver anchor shifts down materially.",
+      "If damage_vs_mechanism consistency check resolves (corroborated or contradicted), apportionment may shift.",
+      "Demand on file \u2014 sufficient-evidence assessment is the gating next decision; new evidence may flip the \u00a7624.155(4) call."
+    ],
+    "next_review_date": "2026-06-28",
+    "next_review_trigger": "DEMAND_DEADLINE",
+    "prior_posture_delta": null,
+    "open_requests": [
+      {
+        "request_type": "recorded_statement_insured",
+        "requested_date": "2026-06-08",
+        "age_days": 0,
+        "target_party": "insured"
+      }
+    ],
+    "evidence_not_obtained": [],
+    "supervisor_disagreement_record": []
+  },
+  "rationale_text": "LIABILITY EVALUATION \u2014 Claim CLM-001 | Eval #1 | 2026-06-08 | Examiner: system | constants v1.2026-06-01\nTRIGGER: INITIAL_APPORTIONMENT (2026-06-08)\n\nPARTIES (N=2):\n  V1_insured_driver | role=insured_driver | identity_cite=DOC-001-CHP: 'Vehicle 1 (insured)'\n  V2_claimant_driver | role=claimant_driver | identity_cite=DOC-001-CHP: 'Vehicle 2 (third party)' \u2014 claimant identified as Marcus Webb per CLM-001 claim record\n\nFACT PATTERN: rear_end (anchor: 95% rear_driver; controlling: Birge v. Charron, 107 So. 3d 350 (Fla. 2012); Pierce v. Progressive Am. Ins. Co.; Eppler v. Tarmac)\n\nAPPLICABLE REGIME:\n  Statute: modified_51_bar_hb837\n  Accrual date 2026-04-13 \u2192 Accrual date 2026-04-13 \u2265 2023-03-24 \u2192 HB 837 modified-comparative 51% bar applies (\u00a7768.81(6)).\n  Recovery bar triggered: hb837_51_pct (triggered=True)\n\nEXPOSURE CEILING:\n  Vicarious cap: none\n  Negligent entrustment path: not_evidenced\n  Fabre defendants: none pled\n\nAPPORTIONMENT WALK (anchor \u2192 evidence \u2192 doctrine \u2192 net):\n  Start: rear_end anchor = 95% (rear_driver \u2192 V1_insured_driver).\n    claimant_more_fault: 22.5 pts (police_report_narrative (hard_data) \u2014 DOC-001-CHP)\n    claimant_more_fault: 22.5 pts (police_report_field (hard_data) \u2014 DOC-001-CHP)\n    claimant_more_fault: 15 pts (party_admission (party_admission) \u2014 DOC-001-CHP)\n    doctrine: hb_837_51_bar \u2014 \u00a7768.81(6); HB 837 (eff. 2023-03-24)\n    doctrine: rear_end_rebuttable_presumption \u2014 Birge v. Charron; Pierce; Eppler; Douglas-Seibert\n    doctrine: joint_several_abolished \u2014 \u00a7768.81(3)\n  Net per party: V1_insured_driver=35.00%, V2_claimant_driver=65.00%\n\nCONFIDENCE BAND: 30.00% \u2014 40.00% (confidence: 0.93)\n\nVARIANCE FLAGS (2 active):\n  - safe_harbor_clock_decision_required\n  - roundtable_recommended\n\n\u00a7316.066(4) EVIDENCE PACK CLASSIFICATION:\n  Trial-admissible: 4 items\n  Privileged statements (reserve-only): 1 items\n  Physical-evidence carveout: 0 items\n  Chemical-test carveout: 0 items\n\nDILIGENCE LEDGER:\n  Posture by party:\n    V1_insured_driver: 35.00%\n    V2_claimant_driver: 65.00%\n  Basis evidence (5 items):\n    [hard_data] DOC-001-CHP: \"Vehicle 2 driver admits inattention; vehicle 1 stopped at red signal.\"\n    [hard_data] DOC-001-CHP: \"Primary collision factor: Vehicle 2 \u2014 failure to maintain a safe following distance.\"\n    [party_admission] DOC-001-CHP: \"Vehicle 2 driver admits inattention; vehicle 1 stopped at red signal.\"\n    [independent] DOC-001-ED: \"41-year-old restrained driver, rear-ended while stopped at a signal. Ambulatory at the scene, transported for evaluation\"\n    [independent] DOC-001-ORTHO: \"Persistent cervical radiculopathy following MVC of 2026-05-22. Impression: C4-C5 disc herniation; surgical consult pendi\"\n  Change conditions:\n    - If Birge-category rebuttal evidence lands (mechanical failure / sudden stop / lane-change-by-lead / illegal-stop), rear-driver anchor shifts down materially.\n    - If damage_vs_mechanism consistency check resolves (corroborated or contradicted), apportionment may shift.\n    - Demand on file \u2014 sufficient-evidence assessment is the gating next decision; new evidence may flip the \u00a7624.155(4) call.\n  Next review: 2026-06-28 (trigger: DEMAND_DEADLINE)\n  Open requests:\n    - recorded_statement_insured \u2192 insured (age 0d, requested 2026-06-08)\n\nAUTHORITY:\n  Gross exposure: $0.00\n  Net apportioned exposure: $0.00\n  Required tier: roundtable\n  Committable at examiner: False\n  Basis: Mandatory-escalation variance flag active (safe_harbor_clock_decision_required)\n\nDOWNSTREAM HANDOFFS:\n  Reserve: insured_liability_pct=35.00, band=[30.00, 40.00], regime=modified_51_bar_hb837, ceiling=vicarious_cap_applies=False\n  Brief: rationale + diligence ledger + 4 trial-admissible items\n  Authority/Tender: tier=roundtable, committable_at_examiner=False\n  Coverage: owner_type=business_not_in_leasing, permissive_use=evidenced, line_of_business=auto_bi",
+  "variance_flags": [
+    "safe_harbor_clock_decision_required",
+    "roundtable_recommended"
+  ],
+  "authority_tier_required": {
+    "committable_at_examiner": false,
+    "required_tier": "roundtable",
+    "gross_exposure": "0.00",
+    "net_apportioned_exposure": "0.00",
+    "basis_for_tier": "Mandatory-escalation variance flag active (safe_harbor_clock_decision_required)"
+  },
+  "evidence_pack_classification": {
+    "reserve_only_evidence_idx": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "trial_admissible_evidence_idx": [
+      0,
+      1,
+      3,
+      4
+    ],
+    "privileged_316_066_excluded_idx": [
+      2
+    ],
+    "physical_evidence_carveout_admissible_idx": [],
+    "chemical_test_carveout_admissible_idx": []
+  },
+  "subro_referral": null
+}

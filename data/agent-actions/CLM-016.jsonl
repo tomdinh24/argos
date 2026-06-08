@@ -1,0 +1,4 @@
+{"action_id":"61e009b2b18e43488f3839979e931416","claim_id":"CLM-016","timestamp":"2026-06-04T23:27:54.991674Z","workflow":"coverage","action_type":"validator_fail","summary":"KeyError: 'ANTHROPIC_API_KEY'","success":false}
+{"action_id":"423a8eb7dabc4537aa7861d2e1397c02","claim_id":"CLM-016","timestamp":"2026-06-04T23:30:20.250309Z","workflow":"coverage","action_type":"analysis_emitted","summary":"Coverage analysis for CLM-016: clean=0.52, attempts=1","success":true}
+{"action_id":"326821dd19144f139487f13e5a95ced2","claim_id":"CLM-016","timestamp":"2026-06-04T23:34:31.382279Z","workflow":"coverage","action_type":"analysis_emitted","summary":"Coverage analysis for CLM-016: clean=0.50, attempts=1","success":true}
+{"action_id":"ca99e56907cf4597a07feee5cf9d1fe4","claim_id":"CLM-016","timestamp":"2026-06-08T05:34:29.448966Z","workflow":"reserve","action_type":"validator_pass","summary":"approved: Set reserve to $92,000","success":true}

@@ -44,6 +44,199 @@ and surface the conflict.
 
 ---
 
+## 2026-06-07 — Hosted backend = Railway (Phase 5 host pick + turnkey deploy config)
+
+**Decision:** The hosted demo backend runs on **Railway** (Tom's pick; the
+Vercel-hosted cockpit already targets it via `NEXT_PUBLIC_API_BASE`). The repo is
+made turnkey-deployable without a `pip install .` step: `railway.json` pins the
+Nixpacks builder + a `/healthz` health check + the start command
+`PYTHONPATH=src uvicorn argos.api.app:app --host 0.0.0.0 --port $PORT`;
+`requirements.txt` mirrors `pyproject.toml` for deterministic dep install;
+`.python-version` → 3.11 (the interpreter all evals/tests ran on); `Procfile` aligned. The two hero claims' pre-run results
+(`data/workflow-results/CLM-001`, `CLM-004`) are committed so a fresh deploy renders
+rich dossiers with no cold LLM run. Runbook: `docs/DEPLOY_RAILWAY.md`.
+
+**Why:** Procfile/Heroku-style app + small pure-Python dep set fits Railway's
+Nixpacks path with the least config. `PYTHONPATH=src` (vs `pip install .`) removes a
+build-time failure mode and keeps the start command identical local↔host.
+
+**Out of scope:** `ARGOS_FOUNDRY_BRIDGE_ENABLED` stays **OFF** on Railway until the
+OSDK is re-pinned to ontology `88f01e1f` (blocker below) — hosted decisions write the
+local JSONL audit log, not the ontology. Railway disk is ephemeral: committed pre-run
+results survive redeploys; runtime-written decisions do not (attach a volume for
+durable state). Secret entry (`ANTHROPIC_API_KEY`, `ARGOS_DEMO_TOKEN`) is operator-only.
+
+**Code touched:** `railway.json`, `requirements.txt`, `.python-version`, `Procfile`,
+`docs/DEPLOY_RAILWAY.md` (new); CORS `ARGOS_CORS_EXTRA` hook already present in
+`api/app.py`.
+
+---
+
+## 2026-06-07 — Cockpit wired LIVE end-to-end; Foundry write blocked by OSDK ontology drift (lesson: integration seams need a default-suite test)
+
+**Decision:** The cockpit now runs on the real backend pipeline rather than
+front-end fixtures. Three seams were wired and verified:
+
+1. **Read path** — the Next.js cockpit (`web/lib/api.ts`, `NEXT_PUBLIC_API_BASE`)
+   consumes the FastAPI surface on `:8071`. CORS allowlist corrected to include
+   the dev origin `:3007` (`api/app.py`).
+2. **Decision-commit path** — `POST /api/claims/{id}/decisions` now routes by
+   workflow to the orchestrator `apply_*_decision` handlers (was: logged an audit
+   row + advanced the chain, but **never called the handlers** — so no bridge
+   ever fired). The new caseload is written back to in-process state. The
+   human-decision audit row stays the single source (handlers called without
+   `audit_log_root` to avoid double-logging). Frontend CTAs call `postDecision`.
+3. **Live dossier** — the detail page renders from real workflow results via a
+   new `mappers.to_dossier()` + `ClaimDossier` wire schema (`api/schemas.py`).
+   Citations join `document_id → Document.body_text` so the viewer highlights the
+   cited passage in the real document. Coverage + liability are demo-rich; reserve
+   /recovery/closure render real but are thin where the synthetic claim lacks
+   structured financial inputs.
+
+**Eval-safe data enrichment:** both existing caseload builders are eval-locked
+(`synthetic_caseload.py` → triage-ranker; `caseload_with_realistic_docs.py` →
+reader-integration thresholds). Rather than mutate them, the cockpit uses a new
+**`ontology/cockpit_caseload.py`** wrapper that adds named insureds, varied loss
+types, and rich hero-claim documents. The locked fixtures are untouched (134
+ontology+triage tests still green). Triage-band display mapping (`_band_from_severity`)
+now surfaces serious/catastrophic as red — display-only, not eval-locked.
+
+**Why (the headline finding):** turning the Foundry write on
+(`ARGOS_FOUNDRY_BRIDGE_ENABLED=1`) proved the bridge wiring is correct — the
+decision routes to the handler, the handler invokes the OSDK action, and the
+asymmetric-commit degrades gracefully (local row commits, Foundry failure logged
+not raised). **But every bridge returns `ActionTypeNotFound`.** Root cause: the
+installed `argos_live_sdk` is **v0.2.0**, bound to the legacy ontology
+`d7926c75-…`; the 2026-06-04 entry verified **v0.1.0**, bound to the live ontology
+`88f01e1f-…`. The SDK drifted to a wrong-ontology build after that verification.
+The `ActionTypeNotFound: apply-reserve-decision` we hit is the exact signature row
+2 of that entry's diagnostic ladder flagged as the legacy binding. So the
+"6/6 bridges live-verified" claim is **stale — currently 0/6**.
+
+**Why it went undetected (the lesson):** `pyproject.toml` sets
+`addopts = "-m 'not eval and not foundry_integration'"` — the live Foundry tests
+are **excluded from the default suite**. When the SDK regressed, no default test
+failed. *Integration seams need a default-suite test that fails when a layer
+silently stops connecting; "each layer's unit tests pass" ≠ "the layers are
+connected," and an opt-in integration marker is invisible to that failure mode.*
+
+**Remaining steps (documented, not silently dropped):**
+
+- **Foundry write (external):** regenerate/pin `argos_live_sdk` to ontology
+  `88f01e1f-…` from the correct Foundry Developer Console OSDK Application; use the
+  matching token; re-run `pytest -m foundry_integration` (expect pass, or
+  `ObjectNotFound` → seed the claim row). No Argos code change needed — wiring is done.
+- **Pin the SDK** so a wrong-ontology bump can't silently land again.
+- **Calc-stage data depth:** reserve needs structured specials inputs to model
+  non-zero bands on payable claims (a "payable" hero, CLM-004, was added to show
+  the non-barred shape).
+- **Stage-header reconciliation:** the accordion summary labels come from
+  `_pending_rec_from_result` and can disagree with the dossier sections; unify.
+- **Hosted:** Vercel cockpit + deployed backend (`ARGOS_DEMO_TOKEN` must be set so
+  the API isn't open).
+
+**Out of scope (this session):** reserve-input extraction upgrades; per-stage
+structured-output emission for reserve/liability citations beyond what coverage
+already does.
+
+**Code touched:** `api/app.py` (CORS, decision routing, state write-back, json
+import), `api/schemas.py` (`ClaimDossier` + sections, `Citation.body`,
+`ClaimDetail.dossier`), `api/mappers.py` (`to_dossier` + helpers, `_num` for
+string-decimal coercion, liability/recovery decimal-bug fixes, band mapping),
+`ontology/cockpit_caseload.py` (new), `web/lib/api.ts` (`runWorkflow`,
+`postDecision`), `web/components/App.tsx` (`acceptStage` → `postDecision`),
+`tests/api/test_decision_flow.py` (new default-suite guardrail).
+
+---
+
+## 2026-06-07 — Cockpit claim-detail IA: Overview / Workflow / Sources tabs + lifecycle accordion, inline per-stage commit
+
+**Decision:** The claim-detail screen (Screen 2 in
+[cockpit.md](./architecture/cockpit.md)) ships as a mobile-first single
+column with three tabs — **Overview / Workflow / Sources** — not the
+earlier left-rail-tabs + main-pane + right-rail console.
+
+- **Overview** — the claim brief (citation-chipped) + a "New
+  information / since you last looked" log.
+- **Workflow** — a lifecycle accordion stacking all five stages
+  (Coverage → Closure). Each stage renders its own structured body
+  (coverage accident→provision map + outcome distribution; reserve
+  findings + component band ranges + pre-booking checks + editable
+  amount; liability allocation bar + evidence; recovery status +
+  checklist + net-economics; closure readiness + decision recap) and
+  commits **inline** via one contextual CTA per stage.
+- **Sources** — one searchable / type-filterable table of every
+  document read (merges the old "Documents" tab and the "pinned
+  citations" list). Rows and inline `[n]` chips open the citation
+  detail sheet.
+
+This **revises cockpit.md Screen 2 and folds in Screen 3**: there is no
+separate Decision Drawer — commit is the per-stage CTA. Screen 4
+(Document Inspector) ships as the lightweight citation detail sheet.
+Screen 5 (standalone Audit Ledger) and the right-rail AgentAction
+timeline are not in the demo surface; "what changed" is carried by the
+Overview new-info log and the closure recap. Priority is a **single
+status** (the triage band chip — Now / Today / Later), not a band plus
+a separate Eisenhower descriptor.
+
+**Why:** The prior single-recommendation detail page overloaded one
+pane. The new IA chunks the claim into scan-able sections with
+progressive disclosure (accordion), so an adjuster sees stage status at
+a glance and drills into only the active one; inline per-stage commit
+removes a modal hop; merging documents + citations into one searchable
+table matches how adjusters look for "the receipt." Selected as Variant
+C after a human-gated design loop. Design tokens unchanged (light
+deep-tech console, muted indigo) — layout-only.
+
+**Out of scope:** The backend endpoints in cockpit.md's Reads table are
+unchanged targets — the shipped surface is fixture-backed
+(`web/lib/api.ts`) and several sub-surfaces are tagged `proposed`
+(reserve breakdown, pre-booking checks, new-info log, recovery
+checklist, coverage distribution) because the workflow result objects
+don't emit them yet. No eval-locked surface touched (band strings, the
+7-bucket structure, ranking metrics all unchanged). Standalone Audit
+Ledger (Screen 5) remains deferred.
+
+**Code touched:** `web/components/App.tsx` (ClaimDetailScreen rewritten
+to tabs + accordion + per-stage bodies + searchable Sources; old
+`PendingRecPanel` / `WorkflowChainView` / `DecisionLog` /
+`CitationsList` removed), `web/lib/types.ts` (+`ClaimDossier` structured
+types), `web/lib/api.ts` (+fixture dossier), `web/app/globals.css` (+v3
+component styles on the existing tokens). `tsc --noEmit` clean; verified
+live at `localhost:3007` across all three tabs + citation sheet.
+
+**Palantir mapping:** None — UI-only; no ontology, Action Type, or OSDK
+change.
+
+---
+
+## 2026-06-06 — `argos-ontology` consolidated: no standing local clone; re-host via one-shot push
+
+**Decision:** There is no longer a maintained `~/Projects/argos-ontology` working
+copy. The single source of truth for the ontology spec is **here** in argos:
+`foundry/ontology/object-types.yaml` → `scripts/generate_foundry_ontology_spec.py`
+→ `foundry/ontology/ai-fde-spec.json`. The Foundry-side code repo (Stemma git,
+RID `ri.stemma.main.repository.addcda60-…/Argos`) stays **parked on the stack**
+purely to give AI FDE a code-repo RID to read a spec by — it is not a dev surface.
+
+**Why:** Keeping a second local repo produced exactly the drift it invites — the
+`argos-ontology/specs/ai-fde-spec.json` snapshot had already diverged from the
+canonical generated artifact (stale 3-value closure enum vs. the corrected
+11-value Pydantic Literal). The spec is a generated file, not source; the dead
+`src/agent/` Code Agent template (see 2026-06-03 entry) carried no live role.
+One home avoids the mess.
+
+**Re-host workflow when a future ontology batch needs AI FDE:**
+1. Edit `foundry/ontology/object-types.yaml` (source of truth) in argos.
+2. Run `scripts/generate_foundry_ontology_spec.py` → fresh `ai-fde-spec.json`.
+3. One-shot clone the Foundry repo, drop the generated spec into `specs/ai-fde-spec.json`, push, then discard the clone. (`git clone <stemma-RID-url>` — remote is on the Foundry stack, always recoverable.)
+4. Point AI FDE chat at the code-repo RID; it executes the worklist via mounted MCP.
+
+**Palantir mapping:** No change to the ontology RID or the AI FDE execution
+surface. Only the *local* artifact-hosting habit changed.
+
+---
+
 ## 2026-06-04 — AgentAction bridge shipped and live-verified; Foundry bridge arc fully closed (6/6 green)
 
 **Decision:** The 6th and final Foundry bridge — [`agent_action_bridge.py`](../src/argos/services/foundry/agent_action_bridge.py) — is shipped, wired into [`audit_log.py::append_agent_action`](../src/argos/services/orchestrator/audit_log.py), and **live-verified against the Argos ontology**. Every local `AgentAction` row written to the per-claim JSONL log now also propagates to the Argos ontology via `emit-agent-action` (RID `ri.actions.main.action-type.388fb5af-6111-4c27-8861-dd0aab8d007e`).
@@ -133,7 +326,7 @@ Foundry hard limits discovered: **60 one-to-many link types per ontology** (plat
 - **Raising the 60-link cap via Palantir support** — declined. The 8 dropped links are audit-attribution and version-walk edges that can be derived via SQL joins on demand. Not worth a support ticket.
 - **External REST client for ontology schema ops** — would technically work (`@osdk/foundry.admin` may expose them, or browser-DevTools-traced internal endpoints). Rejected because endpoints vary by stack version and require reverse-engineering for each operation. AI FDE is faster, reproducible via the versioned spec file, and the right tool for one-shot ontology scale-out.
 - **Wiring the Action Types to real write-back logic in Foundry** — Action Types in Foundry serve as named schema contracts; actual write-back uses Python bridges (`src/argos/services/foundry/*_bridge.py`) per the asymmetric-commit pattern. AI FDE applied placeholder `modifyObject` rules setting `lifecycle-status` as scaffolding; replace if/when function-backed actions are introduced.
-- **Foundry-side Code Agent retained as historical reference** — `argos-ontology/src/agent/` stays in place; the repo is now repurposed as the AI FDE spec host (README updated to explain).
+- **Foundry-side Code Agent retained as historical reference** — `argos-ontology/src/agent/` stays in place; the repo is now repurposed as the AI FDE spec host (README updated to explain). _(Superseded 2026-06-06: no standing local clone; re-host via one-shot push — see that entry.)_
 
 **Code touched:**
 
