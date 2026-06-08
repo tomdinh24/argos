@@ -34,9 +34,14 @@ HTTPS. This is the runbook for the hosted half of the "live end-to-end" path
 - **CORS** already allows `https://project-argos.vercel.app`
   (`src/argos/api/app.py`). For any other domain, set `ARGOS_CORS_EXTRA`
   (comma-separated) rather than editing code.
-- **Pre-run dossiers ship in the build.** `data/workflow-results/CLM-001` and
-  `CLM-004` (full 5-stage results) are committed, so the two hero claims render
-  rich dossiers immediately on a fresh deploy — no cold LLM run required.
+- **Pre-run dossiers ship in the build.** The five always-top (red-band) rows have
+  full 5-stage results committed under `data/workflow-results/` — `CLM-001`,
+  `CLM-004`, `CLM-007`, `CLM-008`, `CLM-009` — so they render rich dossiers
+  immediately on a fresh deploy, no cold LLM run required. Each is a distinct
+  policy-engine archetype (escalate / barred / pay / coverage-ROR / subrogation);
+  see `docs/DECISIONS.md` 2026-06-08 "Cockpit demo data strategy." Regenerate or
+  extend them with `scripts/prerun_cockpit_chains.py` (needs `ANTHROPIC_API_KEY`).
+  Non-pre-run claims show an intentional "Workflow chain queued" empty state.
 
 ## One-time setup
 

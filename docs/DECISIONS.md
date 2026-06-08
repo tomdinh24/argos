@@ -44,6 +44,61 @@ and surface the conflict.
 
 ---
 
+## 2026-06-08 — Cockpit demo data strategy: the five top rows are five policy-engine archetypes
+
+**Decision:** The cockpit's demo caseload is curated so the always-top (red-band)
+rows each pre-bake a **distinct point in the policy engine's range**, and scrolling
+the top of the desk walks the claim lifecycle. The locked triage fixture pins *which*
+claims sit on top (severity → band); we pre-run + commit full 5-stage chains for the
+ones that were empty and author scenario document bundles so the verdicts land:
+
+| Row (locked) | Archetype | Headline outcome |
+|---|---|---|
+| **CLM-007** Vanguard (cat) | escalate | reserve **$255,360**, authority=client, 3 notices; coverage ROR 0.65 |
+| **CLM-001** Northbridge | no — liability | comparative-fault bar, reserve **$0** |
+| **CLM-004** Calloway | pay | reserve **$159,600**, authority=manager |
+| **CLM-008** Cedar Ridge | coverage dispute | **ROR 0.55** on a tiny **$2,430** reserve (coverage, not money, is the story) |
+| **CLM-009** Pinnacle | pursue (subrogation) | recovery **senior_review_required** on the **§627.7405 PIP-commercial lane** — the only live (non-abstain) recovery |
+
+The new bundles live in the eval-safe wrapper `ontology/cockpit_caseload.py`:
+CLM-007 moved into the payable set (catastrophic + insured-at-fault → high reserve);
+CLM-008 got a mild-injury + open-coverage-question bundle (unlisted driver / business
+use → ROR, small reserve); CLM-009 got an insured-victim BI bundle (insured's driver
+hit by an identified commercial truck, PIP paid → §627.7405 subrogation). A new
+harness `scripts/prerun_cockpit_chains.py` runs the real chain via `WORKFLOW_REGISTRY`
+and writes `data/workflow-results/<claim>/` (committed → ships in the Railway image).
+
+**Why:** Clicking the #1 row showed *"No detail available for this claim"* — only the
+two hand-built heroes (CLM-001/004) had dossiers; `to_dossier` returns None without a
+committed `coverage.json`. A single outcome reads like a toy; the demo needs the engine
+to visibly say yes / no / escalate / pursue. Pre-running is deterministic to commit and
+survives Railway's ephemeral disk.
+
+**Known limits (accepted):** (1) Closure is `blocked_by_defects` on **all** claims —
+the closure gates always find defects in synthetic data; no "ready to close" state is
+reachable, so the lifecycle is shown across the other four stages. (2) The recovery
+calculator prices BI/medical recoverable basis off the upstream *reserve*'s economic
+loss, which models what the insured **owes a claimant** — so an insured-victim
+subrogation has a structurally **$0** basis; CLM-009's recovery stays alive via
+senior-review (unverifiable AF-signatory → escalate the forum decision) rather than a
+priced "pursue $X". (3) The liability extractor is LLM-nondeterministic on the
+insured-victim party split (insured fault oscillates 0–20% across runs). (4) The
+caseload-row one-liner shows the last stage (`Closure: blocked_by_defects`) on every
+pre-run row; the reserve column + insured name differentiate them. The long tail keeps
+an improved empty-state ("Workflow chain queued — runs on first open"), not stubs.
+
+**Out of scope:** Did **not** touch the eval-locked fixtures (`synthetic_caseload.py`,
+`caseload_with_realistic_docs.py`) or the `PolicyCoverage` type (auto/flood-only — why
+CLM-009 is framed as auto-BI, not commercial property). No change to the closure gate
+strictness or the recovery basis model. 591 deterministic tests stay green.
+
+**Code touched:** `ontology/cockpit_caseload.py` (new `_ror_documents` +
+`_subro_documents`, CLM-007 payable, `_COVERAGE_OVERRIDE[9]=auto-BI`),
+`scripts/prerun_cockpit_chains.py` (new), `data/workflow-results/CLM-007|008|009/*`
+(new, committed), `web/components/App.tsx` (empty-state copy).
+
+---
+
 ## 2026-06-08 — Canonical hosted demo URL = `argos-claims.vercel.app` (Vercel project `argos`)
 
 **Decision:** The public cockpit demo lives at **`https://argos-claims.vercel.app`**.

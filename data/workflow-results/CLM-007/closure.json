@@ -1,0 +1,645 @@
+{
+  "request_id": "CLO-REQ-007",
+  "reviewed_as_of": "2026-06-08T20:37:09.928570Z",
+  "recommendation": "blocked_by_defects",
+  "ready_probability": 0.05,
+  "blocking_defects": [
+    {
+      "gate_id": "boston_old_colony_diligence_incomplete",
+      "tier": "A",
+      "description": "At least one Boston Old Colony precondition unmet (insured-notified / excess-warning / investigation / fair-consideration / reasonable-prudent-person).",
+      "statute_or_case_cite": "Boston Old Colony Ins. Co. v. Gutierrez, 386 So.2d 783, 785 (Fla. 1980)",
+      "evidence_ref": "notified=False, warned=False, investigated=True, fair_consideration=False, prudent_person=False",
+      "remediation_action": "Document all five Boston Old Colony preconditions before close: insured notice + excess warning + investigation + fair consideration + prudent-person decision rationale."
+    },
+    {
+      "gate_id": "coverage_decision_uncommitted",
+      "tier": "A",
+      "description": "Coverage decision not committed by adjuster.",
+      "statute_or_case_cite": "Fla. Stat. \u00a7626.9541(1)(i)3",
+      "evidence_ref": "coverage.decision=uncommitted",
+      "remediation_action": "Adjuster must commit coverage decision (grant/deny/ROR-final)."
+    },
+    {
+      "gate_id": "harvey_communication_delay",
+      "tier": "A",
+      "description": "Claimant communication received pre-close not answered AND/OR not relayed to insured.",
+      "statute_or_case_cite": "Harvey v. GEICO Gen. Ins. Co., 259 So.3d 1, 7 (Fla. 2018)",
+      "evidence_ref": "received=1, answered=0, relayed_to_insured=0",
+      "remediation_action": "Answer every claimant communication pre-close; relay every settlement-relevant communication to the insured."
+    },
+    {
+      "gate_id": "open_exposure_at_any_coverage_section",
+      "tier": "A",
+      "description": "Any individual exposure (BI/PD/MP/PIP/UM) not closed/denied/paid.",
+      "statute_or_case_cite": "Guidewire ClaimCenter Cloud API \u2014 exposure-level closure validation",
+      "evidence_ref": "bi=False, pd=True, mp=True, pip=True, um=True",
+      "remediation_action": "Close/deny/pay every exposure before claim-level close."
+    },
+    {
+      "gate_id": "third_party_safe_harbor_window_expiring_unotendered",
+      "tier": "A",
+      "description": "Third-party BI past 90-day actual-notice clock with evidence supporting demand and no policy-limits tender on file.",
+      "statute_or_case_cite": "Fla. Stat. \u00a7624.155(4) (HB 837, 2023)",
+      "evidence_ref": "days_since_actual_notice=130, tender_made=False",
+      "remediation_action": "Tender policy limits OR document why \u00a7624.155(4) safe harbor does not apply before closing."
+    },
+    {
+      "gate_id": "record_classification_missing",
+      "tier": "D",
+      "description": "Closure not classified into closed_with_payment / closed_without_payment / reopened.",
+      "statute_or_case_cite": "FL OIR market-conduct examination frame; NAIC Model Reg. 902 \u00a75",
+      "evidence_ref": "oir_classification=not_yet_classifiable",
+      "remediation_action": "Adjuster must declare closure intent (with_payment or without_payment)."
+    }
+  ],
+  "indemnity_status": "open",
+  "defense_status": "n_a",
+  "oir_classification": "not_yet_classifiable",
+  "doctrinal_gates": [
+    {
+      "gate_id": "coverage_decision_uncommitted",
+      "tier": "A",
+      "result": "fail",
+      "statute_or_case_cite": "Fla. Stat. \u00a7626.9541(1)(i)3",
+      "evidence_ref": "coverage.decision=uncommitted",
+      "defect_emitted": true,
+      "remediation_action": "Adjuster must commit coverage decision (grant/deny/ROR-final)."
+    },
+    {
+      "gate_id": "liability_apportionment_uncommitted",
+      "tier": "A",
+      "result": "pass",
+      "statute_or_case_cite": "Berges v. Infinity Ins. Co., 896 So.2d 665 (Fla. 2004)",
+      "evidence_ref": "liability.apportionment_committed=True",
+      "defect_emitted": false,
+      "remediation_action": "Adjuster must pick fault percentages from Liability distribution."
+    },
+    {
+      "gate_id": "denial_letter_deficient",
+      "tier": "A",
+      "result": "n_a",
+      "statute_or_case_cite": "Fla. Stat. \u00a7626.9541(1)(i)3.f",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "open_crn_within_cure_window",
+      "tier": "A",
+      "result": "pass",
+      "statute_or_case_cite": "Fla. Stat. \u00a7624.155(3); Allstate Indemnity Co. v. Ruiz, 899 So.2d 1121",
+      "evidence_ref": "open_crns=0, none within active cure window",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "third_party_safe_harbor_window_expiring_unotendered",
+      "tier": "A",
+      "result": "fail",
+      "statute_or_case_cite": "Fla. Stat. \u00a7624.155(4) (HB 837, 2023)",
+      "evidence_ref": "days_since_actual_notice=130, tender_made=False",
+      "defect_emitted": true,
+      "remediation_action": "Tender policy limits OR document why \u00a7624.155(4) safe harbor does not apply before closing."
+    },
+    {
+      "gate_id": "multi_claimant_safe_harbor_not_invoked",
+      "tier": "A",
+      "result": "n_a",
+      "statute_or_case_cite": "Fla. Stat. \u00a7624.155(6) (HB 837, 2023); Farinas v. Fla. Farm Bureau Gen. Ins. Co., 850 So.2d 555 (Fla. 4th DCA 2003); Shuster v. South Broward Hosp. Dist., 591 So.2d 174 (Fla. 1992)",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "section_627_4137_affidavit_missing_or_stale",
+      "tier": "A",
+      "result": "n_a",
+      "statute_or_case_cite": "Fla. Stat. \u00a7627.4137(1)-(2)",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "pip_exposure_not_drained",
+      "tier": "A",
+      "result": "n_a",
+      "statute_or_case_cite": "Fla. Stat. \u00a7627.736(4)(b)",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "section_627_4265_tender_window_violated",
+      "tier": "A",
+      "result": "n_a",
+      "statute_or_case_cite": "Fla. Stat. \u00a7627.4265",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "open_exposure_at_any_coverage_section",
+      "tier": "A",
+      "result": "fail",
+      "statute_or_case_cite": "Guidewire ClaimCenter Cloud API \u2014 exposure-level closure validation",
+      "evidence_ref": "bi=False, pd=True, mp=True, pip=True, um=True",
+      "defect_emitted": true,
+      "remediation_action": "Close/deny/pay every exposure before claim-level close."
+    },
+    {
+      "gate_id": "boston_old_colony_diligence_incomplete",
+      "tier": "A",
+      "result": "fail",
+      "statute_or_case_cite": "Boston Old Colony Ins. Co. v. Gutierrez, 386 So.2d 783, 785 (Fla. 1980)",
+      "evidence_ref": "notified=False, warned=False, investigated=True, fair_consideration=False, prudent_person=False",
+      "defect_emitted": true,
+      "remediation_action": "Document all five Boston Old Colony preconditions before close: insured notice + excess warning + investigation + fair consideration + prudent-person decision rationale."
+    },
+    {
+      "gate_id": "powell_duty_unfulfilled",
+      "tier": "A",
+      "result": "n_a",
+      "statute_or_case_cite": "Powell v. Prudential Property & Cas. Ins. Co., 584 So.2d 12, 14 (Fla. 3d DCA 1991)",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "harvey_communication_delay",
+      "tier": "A",
+      "result": "fail",
+      "statute_or_case_cite": "Harvey v. GEICO Gen. Ins. Co., 259 So.3d 1, 7 (Fla. 2018)",
+      "evidence_ref": "received=1, answered=0, relayed_to_insured=0",
+      "defect_emitted": true,
+      "remediation_action": "Answer every claimant communication pre-close; relay every settlement-relevant communication to the insured."
+    },
+    {
+      "gate_id": "macola_settlement_after_excess_trajectory",
+      "tier": "A",
+      "result": "n_a",
+      "statute_or_case_cite": "Macola v. Gov't Employees Ins. Co., 953 So.2d 451 (Fla. 2006)",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "medicare_msp_unresolved",
+      "tier": "B",
+      "result": "n_a",
+      "statute_or_case_cite": "42 U.S.C. \u00a71395y(b)(2)(B)(iii) + (b)(3)(A); 42 C.F.R. \u00a7411.24(g)+(i)",
+      "evidence_ref": "medicare_beneficiary_identified=False",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "section_111_tpoc_unreported",
+      "tier": "B",
+      "result": "n_a",
+      "statute_or_case_cite": "42 U.S.C. \u00a71395y(b)(8); 42 C.F.R. \u00a7402.1(c)",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "florida_medicaid_lien_unresolved",
+      "tier": "B",
+      "result": "n_a",
+      "statute_or_case_cite": "Fla. Stat. \u00a7409.910(11)(f); Gallardo v. Marstiller, 596 U.S. 420 (2022)",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "workers_comp_lien_unsatisfied",
+      "tier": "B",
+      "result": "n_a",
+      "statute_or_case_cite": "Fla. Stat. \u00a7440.39(3)(a); Aetna Ins. Co. v. Norman, 468 So.2d 226 (Fla. 1985)",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "erisa_self_funded_lien_unresolved",
+      "tier": "B",
+      "result": "n_a",
+      "statute_or_case_cite": "US Airways v. McCutchen, 569 U.S. 88 (2013); Sereboff v. Mid Atl. Med. Servs., 547 U.S. 356 (2006); 29 U.S.C. \u00a71132(a)(3); \u00a71144(b)(2)(B)",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "hospital_lien_unresolved",
+      "tier": "B",
+      "result": "n_a",
+      "statute_or_case_cite": "Shands Teaching Hosp. v. Mercury Ins. Co. of Fla., 97 So.3d 204 (Fla. 2012)",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "va_tricare_recovery_pending",
+      "tier": "B",
+      "result": "n_a",
+      "statute_or_case_cite": "38 U.S.C. \u00a71729; 10 U.S.C. \u00a71095; 32 C.F.R. \u00a7199.12",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "missing_signed_release",
+      "tier": "C",
+      "result": "n_a",
+      "statute_or_case_cite": "WQBA (general FL release doctrine); Fla. Stat. \u00a7627.4265 tender clock",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "release_does_not_address_known_liens",
+      "tier": "C",
+      "result": "n_a",
+      "statute_or_case_cite": "Sereboff v. Mid Atl. Med. Servs., 547 U.S. 356 (2006)",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "section_768_76_window_open",
+      "tier": "C",
+      "result": "n_a",
+      "statute_or_case_cite": "Fla. Stat. \u00a7768.76(6)+(7); Mercury Ins. v. Emergency Physicians of Cent. Fla., 182 So.3d 661 (Fla. 5th DCA 2015)",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "outstanding_obr_with_legal_weight",
+      "tier": "C",
+      "result": "pass",
+      "statute_or_case_cite": "Fla. Stat. \u00a7627.4137; Fla. Stat. \u00a7627.736",
+      "evidence_ref": "informational only: 0 open",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "agent_action_ledger_incomplete",
+      "tier": "D",
+      "result": "pass",
+      "statute_or_case_cite": "Allstate Indemnity Co. v. Ruiz, 899 So.2d 1121 (Fla. 2005)",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "settlement_authority_exceeded",
+      "tier": "D",
+      "result": "n_a",
+      "statute_or_case_cite": "TPA practice \u2014 examiner authority tied to reserve",
+      "evidence_ref": "settlement=$0 within examiner authority",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "record_classification_missing",
+      "tier": "D",
+      "result": "fail",
+      "statute_or_case_cite": "FL OIR market-conduct examination frame; NAIC Model Reg. 902 \u00a75",
+      "evidence_ref": "oir_classification=not_yet_classifiable",
+      "defect_emitted": true,
+      "remediation_action": "Adjuster must declare closure intent (with_payment or without_payment)."
+    },
+    {
+      "gate_id": "open_defense_track_post_interpleader",
+      "tier": "E",
+      "result": "n_a",
+      "statute_or_case_cite": "Fla. Stat. \u00a7624.155(6)(a) (HB 837, 2023)",
+      "evidence_ref": "",
+      "defect_emitted": false,
+      "remediation_action": ""
+    },
+    {
+      "gate_id": "spoliation_preservation_hold_pre_sol_expiry",
+      "tier": "F",
+      "result": "pass",
+      "statute_or_case_cite": "Pub. Health Trust of Dade Cnty. v. Valcin, 507 So.2d 596 (Fla. 1987); Martino v. Wal-Mart Stores, 908 So.2d 342 (Fla. 2005); Fla. Stat. \u00a7626.884; 45 C.F.R. \u00a7164.530(j)(2)",
+      "evidence_ref": "preservation_until=2029-06-07",
+      "defect_emitted": false,
+      "remediation_action": "Hold all evidence + recorded statements + adjuster notes until preservation_until."
+    }
+  ],
+  "preservation_plan": {
+    "preservation_until_date": "2029-06-07",
+    "floor_components": {
+      "sol_post_hb837": "2028-01-28",
+      "fl_admin_code_regulatory_floor": "2029-06-07"
+    },
+    "data_sources_held": [
+      "claim_file_complete",
+      "recorded_statements",
+      "adjuster_notes",
+      "diligence_ledger"
+    ]
+  },
+  "diligence_ledger": {
+    "gates_evaluated": [
+      {
+        "gate_id": "coverage_decision_uncommitted",
+        "tier": "A",
+        "result": "fail",
+        "statute_or_case_cite": "Fla. Stat. \u00a7626.9541(1)(i)3",
+        "evidence_ref": "coverage.decision=uncommitted",
+        "defect_emitted": true,
+        "remediation_action": "Adjuster must commit coverage decision (grant/deny/ROR-final)."
+      },
+      {
+        "gate_id": "liability_apportionment_uncommitted",
+        "tier": "A",
+        "result": "pass",
+        "statute_or_case_cite": "Berges v. Infinity Ins. Co., 896 So.2d 665 (Fla. 2004)",
+        "evidence_ref": "liability.apportionment_committed=True",
+        "defect_emitted": false,
+        "remediation_action": "Adjuster must pick fault percentages from Liability distribution."
+      },
+      {
+        "gate_id": "denial_letter_deficient",
+        "tier": "A",
+        "result": "n_a",
+        "statute_or_case_cite": "Fla. Stat. \u00a7626.9541(1)(i)3.f",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "open_crn_within_cure_window",
+        "tier": "A",
+        "result": "pass",
+        "statute_or_case_cite": "Fla. Stat. \u00a7624.155(3); Allstate Indemnity Co. v. Ruiz, 899 So.2d 1121",
+        "evidence_ref": "open_crns=0, none within active cure window",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "third_party_safe_harbor_window_expiring_unotendered",
+        "tier": "A",
+        "result": "fail",
+        "statute_or_case_cite": "Fla. Stat. \u00a7624.155(4) (HB 837, 2023)",
+        "evidence_ref": "days_since_actual_notice=130, tender_made=False",
+        "defect_emitted": true,
+        "remediation_action": "Tender policy limits OR document why \u00a7624.155(4) safe harbor does not apply before closing."
+      },
+      {
+        "gate_id": "multi_claimant_safe_harbor_not_invoked",
+        "tier": "A",
+        "result": "n_a",
+        "statute_or_case_cite": "Fla. Stat. \u00a7624.155(6) (HB 837, 2023); Farinas v. Fla. Farm Bureau Gen. Ins. Co., 850 So.2d 555 (Fla. 4th DCA 2003); Shuster v. South Broward Hosp. Dist., 591 So.2d 174 (Fla. 1992)",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "section_627_4137_affidavit_missing_or_stale",
+        "tier": "A",
+        "result": "n_a",
+        "statute_or_case_cite": "Fla. Stat. \u00a7627.4137(1)-(2)",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "pip_exposure_not_drained",
+        "tier": "A",
+        "result": "n_a",
+        "statute_or_case_cite": "Fla. Stat. \u00a7627.736(4)(b)",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "section_627_4265_tender_window_violated",
+        "tier": "A",
+        "result": "n_a",
+        "statute_or_case_cite": "Fla. Stat. \u00a7627.4265",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "open_exposure_at_any_coverage_section",
+        "tier": "A",
+        "result": "fail",
+        "statute_or_case_cite": "Guidewire ClaimCenter Cloud API \u2014 exposure-level closure validation",
+        "evidence_ref": "bi=False, pd=True, mp=True, pip=True, um=True",
+        "defect_emitted": true,
+        "remediation_action": "Close/deny/pay every exposure before claim-level close."
+      },
+      {
+        "gate_id": "boston_old_colony_diligence_incomplete",
+        "tier": "A",
+        "result": "fail",
+        "statute_or_case_cite": "Boston Old Colony Ins. Co. v. Gutierrez, 386 So.2d 783, 785 (Fla. 1980)",
+        "evidence_ref": "notified=False, warned=False, investigated=True, fair_consideration=False, prudent_person=False",
+        "defect_emitted": true,
+        "remediation_action": "Document all five Boston Old Colony preconditions before close: insured notice + excess warning + investigation + fair consideration + prudent-person decision rationale."
+      },
+      {
+        "gate_id": "powell_duty_unfulfilled",
+        "tier": "A",
+        "result": "n_a",
+        "statute_or_case_cite": "Powell v. Prudential Property & Cas. Ins. Co., 584 So.2d 12, 14 (Fla. 3d DCA 1991)",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "harvey_communication_delay",
+        "tier": "A",
+        "result": "fail",
+        "statute_or_case_cite": "Harvey v. GEICO Gen. Ins. Co., 259 So.3d 1, 7 (Fla. 2018)",
+        "evidence_ref": "received=1, answered=0, relayed_to_insured=0",
+        "defect_emitted": true,
+        "remediation_action": "Answer every claimant communication pre-close; relay every settlement-relevant communication to the insured."
+      },
+      {
+        "gate_id": "macola_settlement_after_excess_trajectory",
+        "tier": "A",
+        "result": "n_a",
+        "statute_or_case_cite": "Macola v. Gov't Employees Ins. Co., 953 So.2d 451 (Fla. 2006)",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "medicare_msp_unresolved",
+        "tier": "B",
+        "result": "n_a",
+        "statute_or_case_cite": "42 U.S.C. \u00a71395y(b)(2)(B)(iii) + (b)(3)(A); 42 C.F.R. \u00a7411.24(g)+(i)",
+        "evidence_ref": "medicare_beneficiary_identified=False",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "section_111_tpoc_unreported",
+        "tier": "B",
+        "result": "n_a",
+        "statute_or_case_cite": "42 U.S.C. \u00a71395y(b)(8); 42 C.F.R. \u00a7402.1(c)",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "florida_medicaid_lien_unresolved",
+        "tier": "B",
+        "result": "n_a",
+        "statute_or_case_cite": "Fla. Stat. \u00a7409.910(11)(f); Gallardo v. Marstiller, 596 U.S. 420 (2022)",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "workers_comp_lien_unsatisfied",
+        "tier": "B",
+        "result": "n_a",
+        "statute_or_case_cite": "Fla. Stat. \u00a7440.39(3)(a); Aetna Ins. Co. v. Norman, 468 So.2d 226 (Fla. 1985)",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "erisa_self_funded_lien_unresolved",
+        "tier": "B",
+        "result": "n_a",
+        "statute_or_case_cite": "US Airways v. McCutchen, 569 U.S. 88 (2013); Sereboff v. Mid Atl. Med. Servs., 547 U.S. 356 (2006); 29 U.S.C. \u00a71132(a)(3); \u00a71144(b)(2)(B)",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "hospital_lien_unresolved",
+        "tier": "B",
+        "result": "n_a",
+        "statute_or_case_cite": "Shands Teaching Hosp. v. Mercury Ins. Co. of Fla., 97 So.3d 204 (Fla. 2012)",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "va_tricare_recovery_pending",
+        "tier": "B",
+        "result": "n_a",
+        "statute_or_case_cite": "38 U.S.C. \u00a71729; 10 U.S.C. \u00a71095; 32 C.F.R. \u00a7199.12",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "missing_signed_release",
+        "tier": "C",
+        "result": "n_a",
+        "statute_or_case_cite": "WQBA (general FL release doctrine); Fla. Stat. \u00a7627.4265 tender clock",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "release_does_not_address_known_liens",
+        "tier": "C",
+        "result": "n_a",
+        "statute_or_case_cite": "Sereboff v. Mid Atl. Med. Servs., 547 U.S. 356 (2006)",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "section_768_76_window_open",
+        "tier": "C",
+        "result": "n_a",
+        "statute_or_case_cite": "Fla. Stat. \u00a7768.76(6)+(7); Mercury Ins. v. Emergency Physicians of Cent. Fla., 182 So.3d 661 (Fla. 5th DCA 2015)",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "outstanding_obr_with_legal_weight",
+        "tier": "C",
+        "result": "pass",
+        "statute_or_case_cite": "Fla. Stat. \u00a7627.4137; Fla. Stat. \u00a7627.736",
+        "evidence_ref": "informational only: 0 open",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "agent_action_ledger_incomplete",
+        "tier": "D",
+        "result": "pass",
+        "statute_or_case_cite": "Allstate Indemnity Co. v. Ruiz, 899 So.2d 1121 (Fla. 2005)",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "settlement_authority_exceeded",
+        "tier": "D",
+        "result": "n_a",
+        "statute_or_case_cite": "TPA practice \u2014 examiner authority tied to reserve",
+        "evidence_ref": "settlement=$0 within examiner authority",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "record_classification_missing",
+        "tier": "D",
+        "result": "fail",
+        "statute_or_case_cite": "FL OIR market-conduct examination frame; NAIC Model Reg. 902 \u00a75",
+        "evidence_ref": "oir_classification=not_yet_classifiable",
+        "defect_emitted": true,
+        "remediation_action": "Adjuster must declare closure intent (with_payment or without_payment)."
+      },
+      {
+        "gate_id": "open_defense_track_post_interpleader",
+        "tier": "E",
+        "result": "n_a",
+        "statute_or_case_cite": "Fla. Stat. \u00a7624.155(6)(a) (HB 837, 2023)",
+        "evidence_ref": "",
+        "defect_emitted": false,
+        "remediation_action": ""
+      },
+      {
+        "gate_id": "spoliation_preservation_hold_pre_sol_expiry",
+        "tier": "F",
+        "result": "pass",
+        "statute_or_case_cite": "Pub. Health Trust of Dade Cnty. v. Valcin, 507 So.2d 596 (Fla. 1987); Martino v. Wal-Mart Stores, 908 So.2d 342 (Fla. 2005); Fla. Stat. \u00a7626.884; 45 C.F.R. \u00a7164.530(j)(2)",
+        "evidence_ref": "preservation_until=2029-06-07",
+        "defect_emitted": false,
+        "remediation_action": "Hold all evidence + recorded statements + adjuster notes until preservation_until."
+      }
+    ],
+    "lien_resolution_records": [],
+    "crn_state": null,
+    "notice_delivery_audit": [],
+    "multi_claimant_artifacts": null,
+    "preservation_plan": {
+      "preservation_until_date": "2029-06-07",
+      "floor_components": {
+        "sol_post_hb837": "2028-01-28",
+        "fl_admin_code_regulatory_floor": "2029-06-07"
+      },
+      "data_sources_held": [
+        "claim_file_complete",
+        "recorded_statements",
+        "adjuster_notes",
+        "diligence_ledger"
+      ]
+    },
+    "record_classification": "not_yet_classifiable",
+    "decision_rationale": "[Closure diligence \u2014 constants v1.2026-06-02]\nRecommendation: blocked_by_defects.\nGates evaluated: 30.\n  pass=5, fail=6, n_a=19.\nPreservation until 2029-06-07. Components: sol_post_hb837=2028-01-28, fl_admin_code_regulatory_floor=2029-06-07"
+  },
+  "rationale_text": "[constants v1.2026-06-02] Cannot close \u2014 blocking defects must be cured.\nReady-to-close probability: 0.05.\nOIR classification: not_yet_classifiable. Indemnity status: open. Defense status: n_a.\nBlocking defects (6, ranked A\u2192F):\n  \u2022 [A] boston_old_colony_diligence_incomplete \u2014 Boston Old Colony Ins. Co. v. Gutierrez, 386 So.2d 783, 785 (Fla. 1980). Remediation: Document all five Boston Old Colony preconditions before close: insured notice + excess warning + investigation + fair consideration + prudent-person decision rationale.\n  \u2022 [A] coverage_decision_uncommitted \u2014 Fla. Stat. \u00a7626.9541(1)(i)3. Remediation: Adjuster must commit coverage decision (grant/deny/ROR-final).\n  \u2022 [A] harvey_communication_delay \u2014 Harvey v. GEICO Gen. Ins. Co., 259 So.3d 1, 7 (Fla. 2018). Remediation: Answer every claimant communication pre-close; relay every settlement-relevant communication to the insured.\n  \u2022 [A] open_exposure_at_any_coverage_section \u2014 Guidewire ClaimCenter Cloud API \u2014 exposure-level closure validation. Remediation: Close/deny/pay every exposure before claim-level close.\n  \u2022 [A] third_party_safe_harbor_window_expiring_unotendered \u2014 Fla. Stat. \u00a7624.155(4) (HB 837, 2023). Remediation: Tender policy limits OR document why \u00a7624.155(4) safe harbor does not apply before closing.\n  \u2022 [D] record_classification_missing \u2014 FL OIR market-conduct examination frame; NAIC Model Reg. 902 \u00a75. Remediation: Adjuster must declare closure intent (with_payment or without_payment).\nPreservation hold through 2029-06-07.\nAuthority required: examiner (settlement=$0).",
+  "variance_flags": [],
+  "authority_tier_required": {
+    "committable_at_examiner": true,
+    "required_tier": "examiner",
+    "settlement_amount": "0",
+    "basis_for_tier": "settlement_amount=$0 routed against examiner=$25000, senior=$75000, supervisor=$250000, manager=$1000000"
+  }
+}

@@ -1,0 +1,376 @@
+{
+  "request_id": "REQ-007",
+  "reviewed_as_of": "2026-05-29T23:59:00Z",
+  "evidence_found": [
+    {
+      "document_id": "DOC-007-ED",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Assessment/Plan paragraph",
+      "text_excerpt": "Pt. presented with cervical pain 8/10; MRI ordered; admitted overnight. Observation and pain control initiated.",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-007-ORTHO",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Impression / Recommendation",
+      "text_excerpt": "C4-C5 disc herniation; surgical consult pending; conservative tx exhausted. Refer to spine surgery for operative evaluation; continue activity modification in the interim.",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-007-CHP",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Narrative line 12 / Primary collision factor",
+      "text_excerpt": "Vehicle 1 (insured) driver admits inattention and failure to stop; Vehicle 2 (claimant) was stopped at a red signal when struck from behind. Primary collision factor: Vehicle 1 (insured) \u2014 failure to maintain a safe following distance. No contributing factors attributed to Vehicle 2.",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-007-ENDORSE",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Terms paragraph",
+      "text_excerpt": "Specialty BI sublimit raised to $100k; defense within limits. All other terms, conditions, and exclusions of the policy remain unchanged.",
+      "relation": "contextual"
+    },
+    {
+      "document_id": "DOC-007-DEMAND",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Body paragraph 1",
+      "text_excerpt": "Our client demands $175,000.00 to fully resolve all claims against your insured. Specials to date total $84,000, including documented surgical recommendation. This demand is open for thirty (30) days, after which our client reserves the right to proceed with litigation.",
+      "relation": "contextual"
+    }
+  ],
+  "assessments": [
+    {
+      "claim_text": "The loss date of 2026-01-28 falls within the policy period (2026-01-01 to 2026-12-31), satisfying the in-force requirement.",
+      "probability": 0.99,
+      "reasoning": "The policy period record reflects effective_from 2026-01-01 and effective_to 2026-12-31 with status in_force. The loss date of 2026-01-28 is within that window. No lapse, cancellation, or mid-term coverage change is documented that would affect this date.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-007-ENDORSE",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Header / Effective date",
+          "text_excerpt": "POLICY POL-2026-0093 \u2014 ENDORSEMENT 3 Effective 2026-01-01",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "Coverage CP-AUTO-BI-STANDARD (auto Bodily Injury) is the targeted coverage, and the underlying claim involves bodily injury arising from an automobile collision, satisfying the insuring agreement trigger.",
+      "probability": 0.97,
+      "reasoning": "The ED note establishes a bodily injury (cervical pain, overnight admission) arising from a motor-vehicle collision. The police report confirms the collision involved the insured's vehicle. The coverage type is auto_BI. No exclusions documented in the file appear to be implicated.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-007-ED",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "History / Chief complaint",
+          "text_excerpt": "Chief complaint: Neck pain following motor-vehicle collision.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-007-CHP",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Parties / Narrative",
+          "text_excerpt": "Vehicle 1 (insured), Vehicle 2 (claimant).",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "Liability against the insured is strongly supported by the police report, which attributes 100% fault to the insured vehicle.",
+      "probability": 0.95,
+      "reasoning": "The CHP report states the insured driver admitted inattention and failure to stop, designates 'failure to maintain a safe following distance' as the primary collision factor, and attributes no contributing factors to the claimant. No counter-narrative is present in the file.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-007-CHP",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Narrative line 12 / Primary collision factor",
+          "text_excerpt": "Vehicle 1 (insured) driver admits inattention and failure to stop; Vehicle 2 (claimant) was stopped at a red signal when struck from behind. Primary collision factor: Vehicle 1 (insured) \u2014 failure to maintain a safe following distance. No contributing factors attributed to Vehicle 2.",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "The medical evidence supports a catastrophic-severity BI claim: C4-C5 disc herniation with surgical recommendation and specials of $84,000.",
+      "probability": 0.93,
+      "reasoning": "The ED note documents overnight admission and cervical pain rated 8/10. The orthopedic consultation documents a C4-C5 disc herniation, exhaustion of conservative treatment, and a surgical referral. The demand letter reports specials of $84,000. Together these are consistent with the 'catastrophic' severity tier assigned at intake.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-007-ORTHO",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Impression",
+          "text_excerpt": "C4-C5 disc herniation; surgical consult pending; conservative tx exhausted.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-007-DEMAND",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Body paragraph 1",
+          "text_excerpt": "Specials to date total $84,000, including documented surgical recommendation.",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "Endorsement 3 raises a Specialty BI sublimit to $100,000 with defense within limits, which may be the operative limit rather than the $300,000 per-person limit on CP-AUTO-BI-STANDARD, creating a material ambiguity as to which limit governs.",
+      "probability": 0.72,
+      "reasoning": "The endorsement amends 'the Specialty Bodily Injury coverage part' and sets a $100k sublimit with defense-within-limits. The coverage request targets CP-AUTO-BI-STANDARD (auto_BI) with a $300,000 per-person limit. It is unclear from the documents whether CP-AUTO-BI-STANDARD and the 'Specialty Bodily Injury coverage part' referenced in the endorsement are the same coverage part, different layers of the same part, or separate parts. If the endorsement applies, the effective per-person limit for this claim is $100,000 \u2014 well below the $175,000 demand \u2014 and defense costs erode that limit. This ambiguity requires adjuster and coverage counsel review.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-007-ENDORSE",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Terms paragraph",
+          "text_excerpt": "Specialty BI sublimit raised to $100k; defense within limits. All other terms, conditions, and exclusions of the policy remain unchanged.",
+          "relation": "contextual"
+        }
+      ]
+    },
+    {
+      "claim_text": "The $175,000 demand exceeds the $100,000 Endorsement 3 sublimit (if operative) and is within the $300,000 per-person limit on CP-AUTO-BI-STANDARD. A duty-to-settle analysis may be implicated if the sublimit governs and the demand cannot be resolved within limits.",
+      "probability": 0.7,
+      "reasoning": "The demand is $175,000 with a 30-day expiry. If the $100k sublimit from Endorsement 3 is the operative cap, the demand exceeds limits. If the $300,000 per-person limit governs, the demand is within limits. Given strong liability, catastrophic injuries, and $84,000 in specials already documented, a within-limits resolution is possible under the higher limit but not under the sublimit. Florida law regarding the duty to settle within limits (and potential bad faith exposure) is a live concern if the sublimit applies and the demand expires.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-007-DEMAND",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Body paragraph 1",
+          "text_excerpt": "Our client demands $175,000.00 to fully resolve all claims against your insured. This demand is open for thirty (30) days, after which our client reserves the right to proceed with litigation.",
+          "relation": "contextual"
+        },
+        {
+          "document_id": "DOC-007-ENDORSE",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Terms paragraph",
+          "text_excerpt": "Specialty BI sublimit raised to $100k; defense within limits.",
+          "relation": "contextual"
+        }
+      ]
+    },
+    {
+      "claim_text": "The loss date in the coverage request (2026-01-28) does not match the date of service in the medical records and police report (2026-05-22), raising a date-of-loss discrepancy that requires reconciliation.",
+      "probability": 0.9,
+      "reasoning": "The coverage request and intake summary state the loss date as 2026-01-28. The ED note, orthopedic note, and CHP report all reference the motor-vehicle collision as occurring on 2026-05-22 \u2014 nearly four months later. Both dates fall within the 2026 policy year, so if the true loss date is 2026-05-22 the claim remains in-force, but the discrepancy must be reconciled in the claim record.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-007-ED",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Date of service",
+          "text_excerpt": "Date of service 2026-05-22",
+          "relation": "contextual"
+        },
+        {
+          "document_id": "DOC-007-CHP",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Header",
+          "text_excerpt": "CALIFORNIA HIGHWAY PATROL \u2014 TRAFFIC COLLISION REPORT Report CHP-2026-0931 \u00b7 Date 2026-05-22",
+          "relation": "contextual"
+        }
+      ]
+    },
+    {
+      "claim_text": "The policy is written on form CA00 with jurisdiction Florida; the CHP report is a California Highway Patrol report, suggesting the loss occurred in California \u2014 a potential conflict with the jurisdiction state recorded on the policy.",
+      "probability": 0.85,
+      "reasoning": "The policy record identifies jurisdiction_state as FL. The CHP report is issued by the California Highway Patrol, strongly suggesting the collision occurred in California. Florida and California have different BI, bad faith, and demand-response statutory frameworks. The governing law question may affect duty-to-settle analysis and applicable statutes.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-007-CHP",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Header",
+          "text_excerpt": "CALIFORNIA HIGHWAY PATROL \u2014 TRAFFIC COLLISION REPORT Report CHP-2026-0931 \u00b7 Date 2026-05-22",
+          "relation": "contextual"
+        }
+      ]
+    }
+  ],
+  "synthesis": {
+    "outcomes": [
+      {
+        "claim_text": "Clean coverage \u2014 coverage confirmed under CP-AUTO-BI-STANDARD without reservation; applicable limit is $300,000 per-person / $1,000,000 per-occurrence.",
+        "probability": 0.2,
+        "reasoning": "Coverage is triggered: in-force policy, auto BI claim, clear insured-vehicle liability per CHP report. However, clean coverage at the full limit is unlikely without first resolving the Endorsement 3 sublimit ambiguity, the date-of-loss discrepancy, and the state-of-loss / jurisdiction question. Clean coverage at the higher limit is only appropriate if all three issues resolve in favor of the broader coverage.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-007-CHP",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Primary collision factor",
+            "text_excerpt": "Primary collision factor: Vehicle 1 (insured) \u2014 failure to maintain a safe following distance. No contributing factors attributed to Vehicle 2.",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-007-ED",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Assessment/Plan",
+            "text_excerpt": "Pt. presented with cervical pain 8/10; MRI ordered; admitted overnight.",
+            "relation": "supports"
+          }
+        ]
+      },
+      {
+        "claim_text": "Reservation of Rights \u2014 coverage is acknowledged but subject to one or more open coverage questions warranting a ROR: (1) applicability of the Endorsement 3 $100k Specialty BI sublimit vs. the $300k per-person limit; (2) date-of-loss discrepancy (recorded 2026-01-28 vs. documented 2026-05-22); (3) state-of-loss (California loss on a Florida-jurisdiction policy) and its effect on applicable law and duty-to-settle obligations.",
+        "probability": 0.65,
+        "reasoning": "The three unresolved issues each independently could affect the scope of coverage or the carrier's obligations. The Endorsement 3 sublimit question is the most material: if it applies, the effective limit is $100k and defense erodes that limit, which has significant bad faith implications given the $175k demand. A ROR preserves the carrier's rights while defense or investigation continues.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-007-ENDORSE",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Terms paragraph",
+            "text_excerpt": "Specialty BI sublimit raised to $100k; defense within limits. All other terms, conditions, and exclusions of the policy remain unchanged.",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-007-DEMAND",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Body paragraph 1",
+            "text_excerpt": "Our client demands $175,000.00 to fully resolve all claims against your insured. This demand is open for thirty (30) days, after which our client reserves the right to proceed with litigation.",
+            "relation": "supports"
+          }
+        ]
+      },
+      {
+        "claim_text": "Denial \u2014 coverage is declined in whole.",
+        "probability": 0.15,
+        "reasoning": "No exclusion, policy condition breach, or other coverage-defeating ground is currently documented in the file. A denial at this stage would rest entirely on the date-of-loss discrepancy (both dates remain within the policy year) or an argument that the Endorsement 3 language eliminates rather than caps BI coverage \u2014 neither of which is supported by the current documents. Denial probability is low but non-trivial pending full file review.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-007-ENDORSE",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Terms paragraph",
+            "text_excerpt": "All other terms, conditions, and exclusions of the policy remain unchanged.",
+            "relation": "contextual"
+          }
+        ]
+      }
+    ],
+    "would_shift_distribution": [
+      "Confirmation that the Endorsement 3 'Specialty Bodily Injury coverage part' is the same coverage part as CP-AUTO-BI-STANDARD would increase ROR/denial probability and reduce clean-coverage probability.",
+      "Reconciliation of the date-of-loss discrepancy (2026-01-28 vs. 2026-05-22) in either direction would reduce uncertainty; if the true loss predates the policy effective date, denial probability rises sharply.",
+      "Determination of the state where the loss occurred (California vs. Florida) and applicable governing law would affect the duty-to-settle and bad faith analysis.",
+      "Receipt of operative declarations page and full policy form confirming whether the $100k sublimit or $300k per-person limit is the operative cap for this claim.",
+      "Medical records confirming or refuting causation continuity between loss date and surgical recommendation would affect severity and damages quantum.",
+      "Claimant's retention of counsel or filing of suit before demand expiry would elevate the urgency of the limit-ambiguity resolution."
+    ]
+  },
+  "coverage_analysis_memo": {
+    "body": "COVERAGE ANALYSIS MEMORANDUM\n\nTo: Claim File REQ-007 / CLM-007\nFrom: Coverage Specialist \u2014 Argos\nDate: 2026-05-29\nRe: Auto Bodily Injury \u2014 POL-PLACEHOLDER-2026 / CP-AUTO-BI-STANDARD\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nI. CLAIM OVERVIEW\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThis is an auto bodily injury claim classified at intake as catastrophic severity. The recorded loss date is 2026-01-28. All medical and law enforcement documents bear a date of 2026-05-22 \u2014 a discrepancy that must be reconciled. The claimant is unrepresented per intake, but a demand letter signed by counsel (M. Reyes, Esq.) was received 2026-05-29 demanding $175,000 with a 30-day expiry.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nII. POLICY PERIOD / IN-FORCE STATUS\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThe policy period runs 2026-01-01 through 2026-12-31 and is in_force. Both the recorded loss date (2026-01-28) and the documented collision date (2026-05-22) fall within the policy period, so in-force status is not in jeopardy on either date. However, the discrepancy must be corrected in the claim record.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIII. COVERAGE TRIGGER\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThe coverage targeted is CP-AUTO-BI-STANDARD (auto_BI). The medical records and CHP report establish that the claimant sustained bodily injury \u2014 specifically cervical pain, overnight hospital admission, and a C4-C5 disc herniation with a surgical recommendation \u2014 arising from a motor-vehicle collision in which the insured vehicle struck the claimant's vehicle from behind. The insuring agreement trigger for auto bodily injury appears satisfied on the current record.\n\nCitation: ED note \u2014 'Chief complaint: Neck pain following motor-vehicle collision.'\nCitation: Orthopedic note \u2014 'C4-C5 disc herniation; surgical consult pending; conservative tx exhausted.'\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIV. LIABILITY\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThe CHP report is unequivocal: the insured driver admitted inattention and failure to stop; the primary collision factor is attributed solely to the insured; no contributing factors are attributed to the claimant. Liability exposure for the insured appears clear on this record.\n\nCitation: CHP report \u2014 'Vehicle 1 (insured) driver admits inattention and failure to stop; Vehicle 2 (claimant) was stopped at a red signal when struck from behind. Primary collision factor: Vehicle 1 (insured) \u2014 failure to maintain a safe following distance. No contributing factors attributed to Vehicle 2.'\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nV. OPEN COVERAGE QUESTIONS\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nQUESTION 1 \u2014 ENDORSEMENT 3 SUBLIMIT APPLICABILITY\nEndorsement 3 (DOC-007-ENDORSE), effective 2026-01-01, amends 'the Specialty Bodily Injury coverage part' and raises a Specialty BI sublimit to $100,000 with defense within limits. The coverage record reflects a $300,000 per-person limit on CP-AUTO-BI-STANDARD. It is not determinable from the documents provided whether the 'Specialty Bodily Injury coverage part' referenced in Endorsement 3 is the same as, a sublimit within, or a separate coverage from CP-AUTO-BI-STANDARD.\n\n  \u2014 If Endorsement 3 applies to CP-AUTO-BI-STANDARD: the effective per-person limit is $100,000 and defense costs erode that limit. The $175,000 demand exceeds this limit.\n  \u2014 If Endorsement 3 does not apply to CP-AUTO-BI-STANDARD: the $300,000 per-person limit governs and the $175,000 demand is within limits.\n\nThe declarations page and full policy form are required to resolve this question. This is the single most material coverage question in the file given the 30-day demand clock.\n\nCitation: Endorsement 3 \u2014 'Specialty BI sublimit raised to $100k; defense within limits. All other terms, conditions, and exclusions of the policy remain unchanged.'\n\nQUESTION 2 \u2014 DATE-OF-LOSS DISCREPANCY\nThe coverage request records the loss date as 2026-01-28. Every third-party document in the file (ED note, orthopedic consultation, CHP report) identifies the collision date as 2026-05-22. As both dates are within the policy year, the discrepancy does not currently affect coverage. However, the claim record should be corrected and the source of the discrepancy documented.\n\nCitation: ED note \u2014 'Date of service 2026-05-22'\nCitation: CHP report \u2014 'Date 2026-05-22'\n\nQUESTION 3 \u2014 STATE OF LOSS / GOVERNING LAW\nThe policy identifies jurisdiction_state as Florida. The CHP report is issued by the California Highway Patrol, strongly suggesting the collision occurred in California. Florida and California have materially different frameworks governing insurers' duty to respond to time-limited demands and potential bad faith liability. Governing law should be confirmed by coverage counsel before the 30-day demand deadline.\n\nCitation: CHP report \u2014 'CALIFORNIA HIGHWAY PATROL \u2014 TRAFFIC COLLISION REPORT Report CHP-2026-0931 \u00b7 Date 2026-05-22'\n\nQUESTION 4 \u2014 CLAIMANT REPRESENTATION\nIntake reflects the claimant as unrepresented. The demand letter received 2026-05-29 is signed by counsel (M. Reyes, Esq.). The represented flag should be updated in the claim record.\n\nCitation: Demand letter \u2014 'Our client demands $175,000.00 to fully resolve all claims against your insured. [...] /s/ M. Reyes, Esq.'\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nVI. LIMITS ANALYSIS\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThe demand of $175,000 must be evaluated against two possible operative limits:\n\n  (A) $100,000 sublimit (Endorsement 3, if applicable) \u2014 demand exceeds limits by $75,000; defense costs further erode available coverage.\n  (B) $300,000 per-person limit (CP-AUTO-BI-STANDARD, if Endorsement 3 does not apply or applies to a separate coverage part) \u2014 demand is within limits.\n\nSpecials are documented at $84,000 with surgery pending. Total damages exposure has not peaked. A duty-to-investigate the limits question is heightened by the 30-day demand expiry.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nVII. SYNTHESIS \u2014 PROBABILITY DISTRIBUTION\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nClean coverage (full $300k limit, no reservation): 20%\nReservation of Rights (coverage acknowledged, open limit / law questions reserved): 65%\nDenial: 15%\n\nThe ROR path carries the highest probability weight given three unresolved coverage questions and the material ambiguity in Endorsement 3. Denial probability is low on current documents; no exclusion or coverage-defeating condition has been identified.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nVIII. URGENT ACTION ITEMS\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n1. Obtain declarations page and full policy form to resolve Endorsement 3 applicability \u2014 URGENT (30-day demand clock running).\n2. Confirm governing law (Florida vs. California) with coverage counsel \u2014 URGENT.\n3. Reconcile and correct the date-of-loss discrepancy in the claim record.\n4. Update represented flag for claimant (M. Reyes, Esq.).\n5. Evaluate duty-to-respond obligations under applicable state law given the time-limited demand.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThis memorandum is prepared for claim file purposes and reflects coverage analysis only. It does not constitute legal advice and does not advocate a coverage position.",
+    "citations": [
+      {
+        "document_id": "DOC-007-ED",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Chief complaint / Date of service",
+        "text_excerpt": "Chief complaint: Neck pain following motor-vehicle collision. [...] Date of service 2026-05-22",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-007-ORTHO",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Impression / Recommendation",
+        "text_excerpt": "C4-C5 disc herniation; surgical consult pending; conservative tx exhausted. Refer to spine surgery for operative evaluation; continue activity modification in the interim.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-007-CHP",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Narrative line 12 / Primary collision factor / Header",
+        "text_excerpt": "CALIFORNIA HIGHWAY PATROL \u2014 TRAFFIC COLLISION REPORT Report CHP-2026-0931 \u00b7 Date 2026-05-22 [...] Vehicle 1 (insured) driver admits inattention and failure to stop; Vehicle 2 (claimant) was stopped at a red signal when struck from behind. Primary collision factor: Vehicle 1 (insured) \u2014 failure to maintain a safe following distance. No contributing factors attributed to Vehicle 2.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-007-ENDORSE",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Terms paragraph",
+        "text_excerpt": "Specialty BI sublimit raised to $100k; defense within limits. All other terms, conditions, and exclusions of the policy remain unchanged.",
+        "relation": "contextual"
+      },
+      {
+        "document_id": "DOC-007-DEMAND",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Body paragraph 1 / Signature",
+        "text_excerpt": "Our client demands $175,000.00 to fully resolve all claims against your insured. Specials to date total $84,000, including documented surgical recommendation. This demand is open for thirty (30) days, after which our client reserves the right to proceed with litigation. [...] /s/ M. Reyes, Esq.",
+        "relation": "contextual"
+      }
+    ]
+  },
+  "ror_letter": {
+    "body": "RESERVATION OF RIGHTS LETTER\n\n[DATE]\n\n[Named Insured Name and Address]\n[Claimant / Claimant Counsel Address as applicable]\n\nRe: Policy No. PLACEHOLDER-001\n    Claim No. CLM-007 / Request No. REQ-007\n    Date of Loss: [To Be Confirmed \u2014 see below]\n    Claimant: PTY-CLM-007\n\nDear [Named Insured / Counsel]:\n\nThis letter is written on behalf of [Carrier Name] ('the Company') in connection with the above-referenced claim. The Company has received notice of a bodily injury claim arising from a motor-vehicle collision and is conducting a prompt and thorough investigation. The Company wishes to advise you of certain coverage questions that have arisen and to reserve all rights under the policy.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nI. THE CLAIM\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThe claimant alleges bodily injury \u2014 including cervical injury, overnight hospitalization, and a herniated disc at C4-C5 requiring surgical evaluation \u2014 arising from a motor-vehicle collision in which the insured's vehicle struck the claimant's vehicle from behind. A settlement demand of $175,000 has been received, with documented specials of $84,000.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nII. THE POLICY\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThe Company issued policy number PLACEHOLDER-001 to [Named Insured] for the period 2026-01-01 through 2026-12-31, which includes auto Bodily Injury coverage (CP-AUTO-BI-STANDARD). Policy Endorsement 3, effective 2026-01-01, provides in relevant part: 'Specialty BI sublimit raised to $100k; defense within limits. All other terms, conditions, and exclusions of the policy remain unchanged.'\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIII. COVERAGE QUESTIONS RESERVED\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n1. ENDORSEMENT 3 \u2014 SUBLIMIT APPLICABILITY\nThe Company is investigating whether Endorsement 3's Specialty BI sublimit of $100,000 (with defense within limits) applies to this claim. If the sublimit governs, the maximum available coverage for this claim is $100,000, and all defense and indemnity costs reduce that amount. The Company reserves all rights with respect to the applicable limit pending completion of its investigation and receipt of the full policy file.\n\n2. DATE-OF-LOSS DISCREPANCY\nThe claim record reflects a reported loss date of 2026-01-28; all medical and law enforcement documents provided to date reflect a collision date of 2026-05-22. Both dates fall within the policy period and coverage is not currently denied on this basis. However, the Company reserves all rights pending reconciliation of the correct date of loss.\n\n3. STATE OF LOSS AND GOVERNING LAW\nThe policy identifies Florida as the jurisdiction. The traffic collision report is issued by the California Highway Patrol, suggesting the loss may have occurred in California. The applicable state law may affect the Company's obligations, including any duty to respond to time-limited demands and any potential extra-contractual exposure. The Company reserves all rights pending determination of the applicable governing law.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIV. DEFENSE AND INVESTIGATION\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nNotwithstanding the reservations stated above, the Company will continue to investigate this claim and, where applicable, to provide a defense to the insured, subject to the terms, conditions, limits, and exclusions of the policy. Any defense provided while the above questions are open is not a waiver of any rights, and the Company expressly reserves all such rights.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nV. COOPERATION\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThe Company requests the insured's full cooperation as required under the policy, including providing any additional information relevant to the coverage questions identified above.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nVI. NO WAIVER\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nNothing in this letter \u2014 and no act, statement, or communication by the Company \u2014 shall constitute a waiver of any right, defense, or coverage position available to the Company under the policy or applicable law. The Company expressly reserves all rights and defenses.\n\nPlease contact the undersigned with any questions.\n\nSincerely,\n\n[Adjuster Name]\n[Title]\n[Company Name]\n[Address]\n[Phone / Email]\n\ncc: [Coverage Counsel]",
+    "citations": [
+      {
+        "document_id": "DOC-007-ENDORSE",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Terms paragraph",
+        "text_excerpt": "Specialty BI sublimit raised to $100k; defense within limits. All other terms, conditions, and exclusions of the policy remain unchanged.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-007-DEMAND",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Body paragraph 1",
+        "text_excerpt": "Our client demands $175,000.00 to fully resolve all claims against your insured. Specials to date total $84,000, including documented surgical recommendation. This demand is open for thirty (30) days, after which our client reserves the right to proceed with litigation.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-007-ED",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Date of service",
+        "text_excerpt": "Date of service 2026-05-22",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-007-CHP",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Header",
+        "text_excerpt": "CALIFORNIA HIGHWAY PATROL \u2014 TRAFFIC COLLISION REPORT Report CHP-2026-0931 \u00b7 Date 2026-05-22",
+        "relation": "supports"
+      }
+    ]
+  },
+  "denial_letter": {
+    "body": "COVERAGE POSITION LETTER \u2014 POTENTIAL DENIAL [DRAFT FOR ADJUSTER REVIEW]\n\nNOTE TO ADJUSTER: This draft denial is prepared because denial carries non-trivial probability (15%) on the current record. It should not be issued without further investigation and coverage counsel review. No exclusion or coverage-defeating condition has been affirmatively established on the current file; this draft is a placeholder to preserve the path. The most likely basis for denial, if one materializes, is described below.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\n[DATE]\n\n[Named Insured Name and Address]\n[Claimant / Claimant Counsel Address as applicable]\n\nRe: Policy No. PLACEHOLDER-001\n    Claim No. CLM-007 / Request No. REQ-007\n    Date of Loss: [To Be Confirmed]\n    Claimant: PTY-CLM-007\n\nDear [Named Insured / Counsel]:\n\nThis letter is written on behalf of [Carrier Name] ('the Company') in connection with the above-referenced claim. The Company has completed its coverage review and has identified the following coverage position.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nI. THE CLAIM\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThe claimant alleges bodily injury arising from a motor-vehicle collision and has submitted a settlement demand of $175,000 with documented specials of $84,000.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nII. THE POLICY\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThe Company issued policy number PLACEHOLDER-001 to [Named Insured] for the period 2026-01-01 through 2026-12-31, which includes auto Bodily Injury coverage (CP-AUTO-BI-STANDARD). Policy Endorsement 3, effective 2026-01-01, amends the policy and provides in relevant part: 'Specialty BI sublimit raised to $100k; defense within limits. All other terms, conditions, and exclusions of the policy remain unchanged.'\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIII. BASIS FOR DENIAL [PLACEHOLDER \u2014 TO BE COMPLETED ONLY IF GROUNDS ARE ESTABLISHED]\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n[This section to be completed by coverage counsel if and when a denial basis is confirmed. Current file does not affirmatively establish grounds for outright denial. Potential grounds, if confirmed by further investigation, could include:\n\n  (a) Determination that the collision date is outside the policy period (not currently supported \u2014 both recorded dates are within the 2026 policy year);\n  (b) Identification of an applicable exclusion in the full policy form not yet reviewed;\n  (c) Material misrepresentation in the application or claim submission;\n  (d) Policy condition breach (e.g., failure to cooperate, late notice) \u2014 not currently documented.]\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIV. RIGHTS\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThe insured has the right to review this position and to consult with an attorney. The insured may also have the right to invoke any applicable arbitration, appraisal, or regulatory complaint process. This letter does not waive any additional rights or defenses that may exist.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nV. NO WAIVER\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nNothing in this letter shall be construed as a waiver of any rights, defenses, or coverage positions available to the Company under the policy or applicable law.\n\nPlease contact the undersigned with any questions.\n\nSincerely,\n\n[Adjuster Name]\n[Title]\n[Company Name]\n[Address]\n[Phone / Email]\n\ncc: [Coverage Counsel]",
+    "citations": [
+      {
+        "document_id": "DOC-007-ENDORSE",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Terms paragraph",
+        "text_excerpt": "All other terms, conditions, and exclusions of the policy remain unchanged.",
+        "relation": "contextual"
+      },
+      {
+        "document_id": "DOC-007-DEMAND",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Body paragraph 1",
+        "text_excerpt": "Our client demands $175,000.00 to fully resolve all claims against your insured. Specials to date total $84,000, including documented surgical recommendation.",
+        "relation": "contextual"
+      }
+    ]
+  }
+}

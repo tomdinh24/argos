@@ -1,0 +1,80 @@
+{
+  "request_id": "RES-REQ-007",
+  "reviewed_as_of": "2026-06-08T20:36:13.860803Z",
+  "per_component": [
+    {
+      "component": "indemnity",
+      "current_outstanding": 255360.0,
+      "recommended_outstanding_band": {
+        "p10": 207480.0,
+        "p50": 255360.0,
+        "p90": 303240.0
+      },
+      "rationale": "within recovery \u2014 insured 95% at fault",
+      "triggers_fired": [],
+      "evidence_citations": [
+        {
+          "document_id": null,
+          "sourced_rule_id": "reserve.constants.indemnity",
+          "ledger_entry_id": null,
+          "locator": "constants.py",
+          "text_excerpt": "Notice threshold rule from constants.NOTICE_THRESHOLDS_V1 fired deterministically on calculator inputs.",
+          "relation": "supports"
+        }
+      ]
+    }
+  ],
+  "notice_obligations_triggered": [
+    {
+      "notice_type": "reinsurer",
+      "probability": 1.0,
+      "reasoning": "reserve $255,360.00 \u2265 $250,000.00 threshold",
+      "required_by_date": "2026-07-08T20:36:13.860803Z",
+      "evidence_citations": [
+        {
+          "document_id": null,
+          "sourced_rule_id": "reserve.constants.notice",
+          "ledger_entry_id": null,
+          "locator": "constants.py",
+          "text_excerpt": "Notice threshold rule from constants.NOTICE_THRESHOLDS_V1 fired deterministically on calculator inputs.",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "notice_type": "client",
+      "probability": 1.0,
+      "reasoning": "reserve $255,360.00 \u2265 $250,000.00 threshold",
+      "required_by_date": "2026-06-15T20:36:13.860803Z",
+      "evidence_citations": [
+        {
+          "document_id": null,
+          "sourced_rule_id": "reserve.constants.notice",
+          "ledger_entry_id": null,
+          "locator": "constants.py",
+          "text_excerpt": "Notice threshold rule from constants.NOTICE_THRESHOLDS_V1 fired deterministically on calculator inputs.",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "notice_type": "excess_carrier",
+      "probability": 1.0,
+      "reasoning": "reserve $255,360.00 = 85% of per-person limit $300,000.00; insured liability 95% (clear)",
+      "required_by_date": "2026-06-23T20:36:13.860803Z",
+      "evidence_citations": [
+        {
+          "document_id": null,
+          "sourced_rule_id": "reserve.constants.notice",
+          "ledger_entry_id": null,
+          "locator": "constants.py",
+          "text_excerpt": "Notice threshold rule from constants.NOTICE_THRESHOLDS_V1 fired deterministically on calculator inputs.",
+          "relation": "supports"
+        }
+      ]
+    }
+  ],
+  "authority_required_level": "client",
+  "no_change_warranted": false,
+  "rationale": "RESERVE EVALUATION \u2014 Claim CLM-007 | Eval #1 | 2026-06-08 | Examiner: system | constants v1.2026-06-01\nTRIGGER: CALENDAR_DIARY_90_DAY (2026-06-08)\n\nLIABILITY: Insured 95% at fault. FL \u00a7768.81 modified comparative: within recovery \u2014 insured 95% at fault. filing 2026-05-22 \u2265 2023-03-24 \u2192 HB 837 applies.\n\nPIP/THRESHOLD: PIP cap $10,000 (EMC undetermined), $0.00 paid of $10,000 cap. \u00a7627.737 verbal threshold: not yet established \u2014 non-econ priced at 80% probability.\n\nSPECIALS (indemnity build):\n  Medical paid-satisfied bills: $0.00\n  LOP/unsatisfied at insurance-equivalent: $84,000.00\n  Wage loss documented: $0.00\n  SPECIALS SUBTOTAL: $84,000.00\n\nGENERALS:\n  Severity tier: surgical_recovering (Surgical fixation, fusion, ORIF; documented permanency rating; MMI achieved)\n  Multiplier band: 2.0\u00d7 \u2014 3.5\u00d7 specials\n  Venue calibrator: other_state (1.00\u00d7)\n  Threshold discount: 80%\n  GENERALS LOW: $134,400.00 | CENTRAL: $184,800.00 | HIGH: $235,200.00\n\nINDEMNITY RESERVE (gross \u00d7 liability%):\n  Low: $207,480.00 | Central: $255,360.00 | High: $303,240.00\n  Recommended posting: $255,360.00\n\nALAE: not opened (pre-suit)\nULAE: not allocated per-claim per industry practice; portfolio-level overhead.\n\nDELTA FROM PRIOR: initial reserve \u2014 no prior basis\n\nAUTHORITY:\n  Reserve $255,360.00 (indemnity $255,360.00 + ALAE p50 $0.00)\n  vs examiner authority $25,000.00: client\n  Required approver: Claims VP / CCO + coverage counsel + executive committee\n  TRIGGERED [reinsurer] \u2014 reserve $255,360.00 \u2265 $250,000.00 threshold; due by 2026-07-08\n  TRIGGERED [client] \u2014 reserve $255,360.00 \u2265 $250,000.00 threshold; due by 2026-06-15\n  TRIGGERED [excess_carrier] \u2014 reserve $255,360.00 = 85% of per-person limit $300,000.00; insured liability 95% (clear); due by 2026-06-23\n\nBAD-FAITH RISK MARKERS (3 active):\n  reserve_at_85pct_of_limits_with_clear_liability\n  time_demand_with_deadline\n  represented_by_counsel\n  \u00a7624.155(4) 90-day safe harbor: no_actual_notice_logged\n  \u00a7624.155(3) 60-day CRN cure: none filed\n"
+}

@@ -1,0 +1,402 @@
+{
+  "request_id": "REQ-008",
+  "reviewed_as_of": "2026-05-29T00:00:00Z",
+  "evidence_found": [
+    {
+      "document_id": "DOC-008-ED",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Page 1, Assessment and Plan sections",
+      "text_excerpt": "Assessment: Cervical strain (whiplash), minor. No red-flag findings. Plan: OTC analgesics, home exercises, return if symptoms persist. Discharged same day in stable condition. No imaging beyond X-ray indicated. Estimated treatment to date: $2,400.",
+      "relation": "contextual"
+    },
+    {
+      "document_id": "DOC-008-ED",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Page 1, Chief complaint and Exam sections",
+      "text_excerpt": "Chief complaint: Neck and shoulder soreness after a low-speed motor-vehicle collision earlier today. Exam: Mild left cervical paraspinal tenderness. Full range of motion. Neurologic exam intact. No midline tenderness. Cervical X-ray obtained \u2014 no acute fracture or malalignment.",
+      "relation": "contextual"
+    },
+    {
+      "document_id": "DOC-008-CHP",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Narrative line 9 and Primary collision factor",
+      "text_excerpt": "Vehicle 1 (insured) failed to stop in time and struck Vehicle 2 (claimant), which was stopped in traffic. Vehicle 1 operator identified as J. Alvarez. Vehicle 1 displayed magnetic signage reading 'QuickRoute Deliveries.' Primary collision factor: Vehicle 1 (insured) \u2014 following too closely.",
+      "relation": "contextual"
+    },
+    {
+      "document_id": "DOC-008-CHP",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Parties section",
+      "text_excerpt": "Parties: Vehicle 1 (insured), Vehicle 2 (claimant).",
+      "relation": "contextual"
+    },
+    {
+      "document_id": "DOC-008-COVMEMO",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Open question 1 \u2014 listed-driver question",
+      "text_excerpt": "The named insured is the policyholder, but the operator at the time of loss was J. Alvarez, who does not appear on the policy's listed-driver schedule. Whether Alvarez was a permissive user within the omnibus clause is not yet established.",
+      "relation": "contextual"
+    },
+    {
+      "document_id": "DOC-008-COVMEMO",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Open question 2 \u2014 use question",
+      "text_excerpt": "The vehicle bore 'QuickRoute Deliveries' signage at the scene, suggesting possible commercial/delivery use. The policy is rated for personal and non-commercial business use; a livery or for-hire delivery use at the time of loss may fall outside the covered use. This is unconfirmed \u2014 Alvarez may have been off-shift.",
+      "relation": "contextual"
+    },
+    {
+      "document_id": "DOC-008-COVMEMO",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Conclusion paragraph",
+      "text_excerpt": "Neither question is resolved on the current record. Recommend acknowledging the claim and reserving rights pending a recorded statement and confirmation of the vehicle's use and the operator's permission. No grounds for outright denial on the present facts.",
+      "relation": "contextual"
+    },
+    {
+      "document_id": "DOC-008-ROR",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Body \u2014 reservation language",
+      "text_excerpt": "The Company reserves all rights and defenses under the policy, including but not limited to questions regarding (a) whether the operator at the time of loss was a permissive user within the policy's omnibus clause, and (b) whether the vehicle was being used for commercial delivery or for-hire purposes outside the policy's covered-use terms.",
+      "relation": "contextual"
+    },
+    {
+      "document_id": "DOC-008-ROR",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Closing paragraph",
+      "text_excerpt": "No coverage position is final. This communication is not a denial and not a waiver of any term, condition, or exclusion.",
+      "relation": "contextual"
+    }
+  ],
+  "assessments": [
+    {
+      "claim_text": "The loss date (2026-04-13) falls within the policy period (2026-01-01 to 2026-12-31), satisfying the in-force coverage condition.",
+      "probability": 0.99,
+      "reasoning": "The policy period is confirmed in-force from 2026-01-01 through 2026-12-31, and the loss date of 2026-04-13 sits squarely within that window. No document contradicts this.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-008-CHP",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Header \u2014 Date",
+          "text_excerpt": "CALIFORNIA HIGHWAY PATROL \u2014 TRAFFIC COLLISION REPORT Report CHP-2026-1188 \u00b7 Date 2026-05-22",
+          "relation": "contextual"
+        }
+      ]
+    },
+    {
+      "claim_text": "The claimant (Vehicle 2 occupant) suffered bodily injury arising from an auto collision involving the insured vehicle (Vehicle 1), satisfying the basic auto BI trigger.",
+      "probability": 0.95,
+      "reasoning": "The CHP report confirms Vehicle 1 (insured) rear-ended Vehicle 2 (claimant) and was cited as the primary collision factor. The medical records confirm bodily injury \u2014 cervical strain with documented treatment costs \u2014 to the claimant. The mechanism, causation, and injury nexus are well-supported on the current record.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-008-CHP",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Narrative line 9 and Primary collision factor",
+          "text_excerpt": "Vehicle 1 (insured) failed to stop in time and struck Vehicle 2 (claimant), which was stopped in traffic. Primary collision factor: Vehicle 1 (insured) \u2014 following too closely.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-008-ED",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Page 1, Assessment and Plan sections",
+          "text_excerpt": "Assessment: Cervical strain (whiplash), minor. No red-flag findings. Estimated treatment to date: $2,400.",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "Operator J. Alvarez was a permissive user under the policy's omnibus clause at the time of loss.",
+      "probability": 0.5,
+      "reasoning": "Alvarez is identified as the operator of the insured vehicle by the CHP report but does not appear on the policy's listed-driver schedule per the coverage investigation memo. Whether Alvarez had express or implied permission from the named insured to operate the vehicle is a material open question. No recorded statement or written authorization has been obtained. The omnibus clause question is unresolved. A 50/50 prior is appropriate absent additional information.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-008-CHP",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Narrative line 9",
+          "text_excerpt": "Vehicle 1 operator identified as J. Alvarez.",
+          "relation": "contextual"
+        },
+        {
+          "document_id": "DOC-008-COVMEMO",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Open question 1 \u2014 listed-driver question",
+          "text_excerpt": "The named insured is the policyholder, but the operator at the time of loss was J. Alvarez, who does not appear on the policy's listed-driver schedule. Whether Alvarez was a permissive user within the omnibus clause is not yet established.",
+          "relation": "contextual"
+        },
+        {
+          "document_id": "DOC-008-ROR",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Body \u2014 reservation language",
+          "text_excerpt": "The Company reserves all rights and defenses under the policy, including but not limited to questions regarding (a) whether the operator at the time of loss was a permissive user within the policy's omnibus clause.",
+          "relation": "contextual"
+        }
+      ]
+    },
+    {
+      "claim_text": "The vehicle was being used within the policy's covered-use terms (personal/non-commercial business) at the time of loss, rather than for commercial delivery or for-hire purposes.",
+      "probability": 0.45,
+      "reasoning": "The CHP report notes the vehicle bore magnetic signage reading 'QuickRoute Deliveries,' raising a plausible commercial delivery use inference. The coverage memo acknowledges the policy is rated for personal and non-commercial business use, and that livery or for-hire delivery use may fall outside covered use. However, the memo also notes Alvarez may have been off-shift, meaning the signage alone does not conclusively establish active commercial delivery use at the time of loss. The use question is unresolved and marginally weighted toward risk given the visible commercial signage.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-008-CHP",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Narrative line 9",
+          "text_excerpt": "Vehicle 1 displayed magnetic signage reading 'QuickRoute Deliveries.'",
+          "relation": "contextual"
+        },
+        {
+          "document_id": "DOC-008-COVMEMO",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Open question 2 \u2014 use question",
+          "text_excerpt": "The vehicle bore 'QuickRoute Deliveries' signage at the scene, suggesting possible commercial/delivery use. The policy is rated for personal and non-commercial business use; a livery or for-hire delivery use at the time of loss may fall outside the covered use. This is unconfirmed \u2014 Alvarez may have been off-shift.",
+          "relation": "contextual"
+        },
+        {
+          "document_id": "DOC-008-ROR",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Body \u2014 reservation language",
+          "text_excerpt": "whether the vehicle was being used for commercial delivery or for-hire purposes outside the policy's covered-use terms.",
+          "relation": "contextual"
+        }
+      ]
+    },
+    {
+      "claim_text": "The claimed BI damages fall within the per-person ($300,000) and per-occurrence ($1,000,000) limits of CP-AUTO-BI-STANDARD.",
+      "probability": 0.99,
+      "reasoning": "Current documented treatment costs are $2,400 per the medical records, and the injury is characterized as minor cervical strain with no red-flag findings. Even accounting for ongoing or future treatment, the claim is highly unlikely to approach the $300,000 per-person limit given the documented injury profile.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-008-ED",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Page 1, Plan section",
+          "text_excerpt": "Estimated treatment to date: $2,400.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-008-ED",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Page 1, Assessment section",
+          "text_excerpt": "Assessment: Cervical strain (whiplash), minor. No red-flag findings.",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "There are currently no grounds for outright denial on the present record.",
+      "probability": 0.85,
+      "reasoning": "The coverage investigation memo explicitly states that neither open question is resolved and that there are no grounds for outright denial on present facts. Both questions \u2014 permissive use and vehicle use \u2014 require further investigation before a denial position could be supported.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-008-COVMEMO",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Conclusion paragraph",
+          "text_excerpt": "Neither question is resolved on the current record. Recommend acknowledging the claim and reserving rights pending a recorded statement and confirmation of the vehicle's use and the operator's permission. No grounds for outright denial on the present facts.",
+          "relation": "supports"
+        }
+      ]
+    }
+  ],
+  "synthesis": {
+    "outcomes": [
+      {
+        "claim_text": "Clean coverage \u2014 both open questions resolve favorably (Alvarez confirmed permissive; vehicle use within covered terms).",
+        "probability": 0.3,
+        "reasoning": "Clean coverage requires that Alvarez had permissive use AND the vehicle was not engaged in excluded commercial delivery use. Both conditions are currently uncertain. If a recorded statement and employment/dispatch records confirm Alvarez was authorized and off-shift (or the delivery activity falls within non-commercial business use), clean coverage attaches. Given the two independent uncertainties, the joint probability of both resolving favorably is estimated at roughly 0.50 \u00d7 0.55 \u2248 0.28, rounded to 0.30 to account for the possibility that one favorable resolution makes the other more likely.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-008-COVMEMO",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Conclusion paragraph",
+            "text_excerpt": "Neither question is resolved on the current record. Recommend acknowledging the claim and reserving rights pending a recorded statement and confirmation of the vehicle's use and the operator's permission. No grounds for outright denial on the present facts.",
+            "relation": "contextual"
+          }
+        ]
+      },
+      {
+        "claim_text": "Reservation of Rights \u2014 one or both open questions cannot be resolved on current facts; investigation continues under ROR.",
+        "probability": 0.55,
+        "reasoning": "This is the most probable near-term outcome given the current record. The ROR draft has already been prepared and explicitly identifies both the omnibus/permissive-use question and the commercial-use question as unresolved. A ROR allows investigation to continue without waiving policy defenses. This path is supported by the adjuster's internal memo, the existing draft ROR letter, and the absence of any document that currently resolves either open question.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-008-ROR",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Body \u2014 reservation language",
+            "text_excerpt": "The Company acknowledges receipt of this claim and is proceeding with its investigation. The Company reserves all rights and defenses under the policy, including but not limited to questions regarding (a) whether the operator at the time of loss was a permissive user within the policy's omnibus clause, and (b) whether the vehicle was being used for commercial delivery or for-hire purposes outside the policy's covered-use terms.",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-008-COVMEMO",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Open questions 1 and 2",
+            "text_excerpt": "Two open questions prevent an unconditional coverage grant.",
+            "relation": "supports"
+          }
+        ]
+      },
+      {
+        "claim_text": "Denial \u2014 investigation resolves one or both questions adversely (Alvarez lacked permission OR vehicle was in active commercial delivery use).",
+        "probability": 0.15,
+        "reasoning": "Denial is possible but not probable on the current record. If a recorded statement or dispatch/employment records establish that Alvarez lacked permission to operate the vehicle, or that the vehicle was actively engaged in for-hire delivery at the time of loss, a denial position may be supportable. However, the adjuster's memo explicitly states there are no grounds for outright denial on present facts. The 15% probability reflects the realistic possibility that investigation yields adverse findings on at least one of the two open questions.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-008-COVMEMO",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Conclusion paragraph",
+            "text_excerpt": "No grounds for outright denial on the present facts.",
+            "relation": "refutes"
+          },
+          {
+            "document_id": "DOC-008-COVMEMO",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Open question 2 \u2014 use question",
+            "text_excerpt": "The vehicle bore 'QuickRoute Deliveries' signage at the scene, suggesting possible commercial/delivery use. The policy is rated for personal and non-commercial business use; a livery or for-hire delivery use at the time of loss may fall outside the covered use.",
+            "relation": "supports"
+          }
+        ]
+      }
+    ],
+    "would_shift_distribution": [
+      "Recorded statement from J. Alvarez confirming or denying named insured's permission to operate the vehicle \u2014 would substantially shift the permissive-use probability.",
+      "Employment or dispatch records from QuickRoute Deliveries establishing whether Alvarez was on an active delivery run at the time of loss \u2014 would resolve the commercial-use question.",
+      "Named insured's written authorization or denial of Alvarez's use of the vehicle.",
+      "Policy endorsements or exclusions relating to commercial delivery or livery use not yet in the file.",
+      "Any additional medical records showing escalating injury severity \u2014 would affect damages exposure but not coverage path directly.",
+      "Evidence that the magnetic signage was on the vehicle for non-commercial reasons (e.g., Alvarez is a co-owner of the delivery business but vehicle was personal at time of loss)."
+    ]
+  },
+  "coverage_analysis_memo": {
+    "body": "COVERAGE ANALYSIS MEMO\nClaim: CLM-008 | Request: REQ-008 | Policy: PLACEHOLDER-001 (POL-PLACEHOLDER-2026)\nCoverage: CP-AUTO-BI-STANDARD | Loss Date: 2026-04-13 | Reviewed: 2026-05-29\n\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nI. THRESHOLD COVERAGE CONDITIONS\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\nPolicy Period: The loss date of 2026-04-13 falls within the confirmed in-force policy period of 2026-01-01 through 2026-12-31. This condition is met.\n\nCoverage Type: The claim is an auto bodily injury claim arising from a rear-end collision. The targeted coverage, CP-AUTO-BI-STANDARD, provides auto BI coverage up to $300,000 per person / $1,000,000 per occurrence. The claim type matches the coverage form.\n\nBI Trigger: The CHP report (DOC-008-CHP) establishes that Vehicle 1 (insured vehicle), operated by J. Alvarez, rear-ended Vehicle 2 (claimant) while stopped in traffic, with the primary collision factor attributed to Vehicle 1 \u2014 'following too closely.' The medical records (DOC-008-ED) document bodily injury to the claimant: cervical strain (whiplash), minor, with treatment costs of $2,400 to date. The basic auto BI trigger appears met.\n\nDamage Quantum: Current documented damages ($2,400) are well within the per-person limit of $300,000. The injury profile \u2014 minor cervical strain, no fracture, full range of motion, discharged same day \u2014 suggests low severity, though future treatment costs are not yet known.\n\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nII. OPEN COVERAGE QUESTIONS\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\nTwo material coverage questions are identified by the adjuster's internal memo (DOC-008-COVMEMO) and have not been resolved on the current record:\n\nQuestion 1 \u2014 Permissive Use / Omnibus Clause\nThe operator of the insured vehicle at the time of loss was J. Alvarez. Per DOC-008-COVMEMO: 'The named insured is the policyholder, but the operator at the time of loss was J. Alvarez, who does not appear on the policy's listed-driver schedule. Whether Alvarez was a permissive user within the omnibus clause is not yet established.' Whether Alvarez had express or implied permission from the named insured to operate the vehicle is a necessary predicate to coverage attaching for this operator. No recorded statement, employment relationship, or authorization document is in the file.\n\nQuestion 2 \u2014 Covered Use / Commercial Delivery Exclusion Risk\nThe CHP report (DOC-008-CHP) notes the vehicle displayed magnetic signage reading 'QuickRoute Deliveries' at the scene. Per DOC-008-COVMEMO: 'The policy is rated for personal and non-commercial business use; a livery or for-hire delivery use at the time of loss may fall outside the covered use. This is unconfirmed \u2014 Alvarez may have been off-shift.' Whether the vehicle was actively engaged in commercial/for-hire delivery at the time of loss is unresolved. The magnetic (removable) nature of the signage and the possibility Alvarez was off-shift are potentially mitigating factors, but neither has been confirmed.\n\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nIII. CURRENT RECORD ASSESSMENT\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\nThe adjuster's internal memo (DOC-008-COVMEMO) concludes: 'Neither question is resolved on the current record... No grounds for outright denial on the present facts.' The draft ROR letter (DOC-008-ROR) has been prepared and specifically identifies both open questions. It states: 'No coverage position is final. This communication is not a denial and not a waiver of any term, condition, or exclusion.'\n\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nIV. PROBABILITY DISTRIBUTION\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\n\u2022 Clean Coverage: 30% \u2014 Both open questions resolve favorably.\n\u2022 Reservation of Rights: 55% \u2014 One or both questions remain unresolved pending investigation; ROR path continues.\n\u2022 Denial: 15% \u2014 Investigation establishes adverse findings on permissive use or covered-use question.\n\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nV. EVIDENCE NEEDED TO RESOLVE\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\n1. Recorded statement from J. Alvarez regarding: (a) relationship to named insured; (b) authorization to operate the vehicle; (c) whether actively on a delivery run at time of loss.\n2. Employment or dispatch records from QuickRoute Deliveries for 2026-04-13.\n3. Named insured's statement confirming or denying authorization of Alvarez's vehicle use.\n4. Any policy endorsements regarding commercial use, livery, or delivery exclusions not yet in the file.\n\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\nVI. LIMITS EXPOSURE SUMMARY\n\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\nIf coverage attaches: $2,400 in documented medical expenses; minor cervical strain; no litigation, no attorney representation, no complaint filed. Severity tier: serious per intake, though current medical evidence is mild. Further medical development should be monitored. Per-person limit: $300,000. Current exposure is well within limits.",
+    "citations": [
+      {
+        "document_id": "DOC-008-ED",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Page 1, Assessment and Plan sections",
+        "text_excerpt": "Assessment: Cervical strain (whiplash), minor. No red-flag findings. Estimated treatment to date: $2,400.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-008-CHP",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Narrative line 9 and Primary collision factor",
+        "text_excerpt": "Vehicle 1 (insured) failed to stop in time and struck Vehicle 2 (claimant), which was stopped in traffic. Vehicle 1 operator identified as J. Alvarez. Vehicle 1 displayed magnetic signage reading 'QuickRoute Deliveries.' Primary collision factor: Vehicle 1 (insured) \u2014 following too closely.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-008-COVMEMO",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Open questions 1 and 2, Conclusion paragraph",
+        "text_excerpt": "Two open questions prevent an unconditional coverage grant... Neither question is resolved on the current record. No grounds for outright denial on the present facts.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-008-ROR",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Body and closing paragraph",
+        "text_excerpt": "The Company reserves all rights and defenses under the policy, including but not limited to questions regarding (a) whether the operator at the time of loss was a permissive user within the policy's omnibus clause, and (b) whether the vehicle was being used for commercial delivery or for-hire purposes outside the policy's covered-use terms. No coverage position is final. This communication is not a denial and not a waiver of any term, condition, or exclusion.",
+        "relation": "supports"
+      }
+    ]
+  },
+  "ror_letter": {
+    "body": "RESERVATION OF RIGHTS LETTER\n[Date]\n\n[Named Insured Name and Address]\n[Claimant / Claimant Representative Name and Address]\n\nRe: Claim No.: CLM-008\n    Policy No.: PLACEHOLDER-001\n    Insured: [Named Insured]\n    Date of Loss: April 13, 2026\n    Coverage: Auto Bodily Injury \u2014 CP-AUTO-BI-STANDARD\n\nDear [Named Insured / Claimant Representative],\n\nThis letter is to acknowledge receipt of the above-referenced claim submitted in connection with a traffic collision reported to have occurred on April 13, 2026, in which a vehicle associated with the above policy is alleged to have been involved.\n\nThe Company is proceeding with its investigation of this claim and intends to do so in a timely and thorough manner. In the course of its preliminary review, the Company has identified the following coverage questions that require further investigation and cannot be resolved on the current record:\n\n1. Permissive Use / Omnibus Clause\n\nThe operator of the insured vehicle at the time of the reported loss has been identified as J. Alvarez. The Company's records reflect that J. Alvarez does not appear on the policy's listed-driver schedule. The policy's omnibus clause may extend coverage to permissive users of the insured vehicle; however, whether J. Alvarez was operating the vehicle with the express or implied permission of the named insured at the time of the loss has not been established. The Company reserves all rights and defenses under the policy with respect to this question, including any rights arising from the policy's driver schedule, omnibus provisions, and any applicable exclusions relating to unauthorized operators.\n\n2. Covered Use / Commercial Delivery or For-Hire Use\n\nA law enforcement traffic collision report (CHP-2026-1188) indicates that, at the time of the reported loss, the insured vehicle displayed magnetic signage reading 'QuickRoute Deliveries,' suggesting the vehicle may have been engaged in commercial delivery or for-hire use at the time of the collision. The policy at issue is rated for personal and non-commercial business use. Use of the insured vehicle for livery, commercial delivery, or for-hire purposes at the time of loss may fall outside the scope of covered use under the policy's terms and conditions. This question has not been resolved; the Company acknowledges that the operator may have been off-shift at the time of loss. The Company reserves all rights and defenses under the policy with respect to this question.\n\nThe Company's reservation of rights is not exhaustive. By identifying the foregoing questions, the Company does not waive any other term, condition, exclusion, or defense available under the policy or applicable law, whether or not specifically mentioned herein.\n\nThis letter is not a denial of coverage. The Company is continuing its investigation and will communicate its coverage position when sufficient information has been obtained. The Company's investigation will include, among other steps, obtaining a recorded statement from the operator J. Alvarez, contacting the named insured regarding the authorization of vehicle use, and reviewing any employment or dispatch records that may bear on the use of the vehicle at the time of loss.\n\nThe named insured is reminded of the duties under the policy to cooperate with the Company's investigation, provide timely notice of claims, and assist in securing evidence and statements as may reasonably be required.\n\nIf you have any questions regarding this letter or wish to provide additional information relevant to the open coverage questions identified above, please contact the undersigned.\n\nSincerely,\n\n[Claims Adjuster Name]\n[Title]\n[Company Name]\n[Address]\n[Phone | Email]\n\ncc: [Claimant / Claimant Representative, as applicable]",
+    "citations": [
+      {
+        "document_id": "DOC-008-COVMEMO",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Open question 1 \u2014 listed-driver question",
+        "text_excerpt": "The named insured is the policyholder, but the operator at the time of loss was J. Alvarez, who does not appear on the policy's listed-driver schedule. Whether Alvarez was a permissive user within the omnibus clause is not yet established.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-008-COVMEMO",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Open question 2 \u2014 use question",
+        "text_excerpt": "The vehicle bore 'QuickRoute Deliveries' signage at the scene, suggesting possible commercial/delivery use. The policy is rated for personal and non-commercial business use; a livery or for-hire delivery use at the time of loss may fall outside the covered use. This is unconfirmed \u2014 Alvarez may have been off-shift.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-008-CHP",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Narrative line 9",
+        "text_excerpt": "Vehicle 1 operator identified as J. Alvarez. Vehicle 1 displayed magnetic signage reading 'QuickRoute Deliveries.'",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-008-ROR",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Body \u2014 reservation language",
+        "text_excerpt": "The Company reserves all rights and defenses under the policy, including but not limited to questions regarding (a) whether the operator at the time of loss was a permissive user within the policy's omnibus clause, and (b) whether the vehicle was being used for commercial delivery or for-hire purposes outside the policy's covered-use terms. No coverage position is final. This communication is not a denial and not a waiver of any term, condition, or exclusion.",
+        "relation": "supports"
+      }
+    ]
+  },
+  "denial_letter": {
+    "body": "NOTICE OF COVERAGE DENIAL\n[Date]\n\n[Named Insured Name and Address]\n[Claimant / Claimant Representative Name and Address]\n\nRe: Claim No.: CLM-008\n    Policy No.: PLACEHOLDER-001\n    Insured: [Named Insured]\n    Date of Loss: April 13, 2026\n    Coverage: Auto Bodily Injury \u2014 CP-AUTO-BI-STANDARD\n\nDear [Named Insured / Claimant Representative],\n\nNOTE: THIS IS A DRAFT DENIAL LETTER PREPARED FOR ADJUSTER REVIEW. IT REFLECTS THE DENIAL OUTCOME PATH (15% PROBABILITY ON CURRENT RECORD). THIS DRAFT SHOULD NOT BE ISSUED UNLESS AND UNTIL INVESTIGATION RESOLVES ONE OR BOTH OPEN COVERAGE QUESTIONS ADVERSELY AND LEGAL COUNSEL HAS REVIEWED. THE ADJUSTER MUST MAKE A FINAL DETERMINATION.\n\nThe Company has completed its investigation of the above-referenced claim and has determined that coverage is not available under Policy No. PLACEHOLDER-001 for the following reason(s):\n\n[DRAFT \u2014 SELECT APPLICABLE GROUND(S) UPON COMPLETION OF INVESTIGATION]\n\nGround 1 (If Applicable): Unauthorized Operator \u2014 Failure to Satisfy Omnibus/Permissive Use Requirement\n\nThe operator of the insured vehicle at the time of the reported loss was J. Alvarez. The policy provides coverage for the named insured and permissive users of the insured vehicle. Investigation has established that J. Alvarez was operating the vehicle without the express or implied permission of the named insured at the time of the loss. Because J. Alvarez was not a permissive user within the meaning of the policy's omnibus clause, coverage is not available for this loss.\n\n[Supporting basis to be cited: recorded statement from named insured, recorded statement from Alvarez, or other evidence establishing absence of permission \u2014 to be inserted upon completion of investigation.]\n\nGround 2 (If Applicable): Excluded Use \u2014 Commercial Delivery or For-Hire Operation\n\nThe policy is rated for personal and non-commercial business use. Investigation has established that, at the time of the reported loss, the insured vehicle was being actively used for commercial delivery or for-hire purposes \u2014 specifically, as a delivery vehicle for QuickRoute Deliveries \u2014 which falls outside the scope of covered use under the policy's terms and conditions. Coverage is therefore not available for losses arising from such use.\n\n[Supporting basis to be cited: dispatch records, employment records, Alvarez recorded statement, or other evidence confirming active delivery use at time of loss \u2014 to be inserted upon completion of investigation.]\n\nThe Company has applied [applicable policy language / exclusion section] in reaching this determination. A copy of the relevant policy provisions is enclosed.\n\nIf you believe this determination is in error, or if you have additional information that was not available during the investigation, you are invited to submit such information for further review. Please contact the undersigned within [X] days.\n\nYou may also have the right to seek review of this decision through [applicable state insurance regulatory process, if required by Florida law].\n\nSincerely,\n\n[Claims Adjuster Name]\n[Title]\n[Company Name]\n[Address]\n[Phone | Email]\n\ncc: [Claimant / Claimant Representative, as applicable]\n\n---\nDRAFT NOTE FOR ADJUSTER: As of the current record date (2026-05-29), the adjuster's internal memo (DOC-008-COVMEMO) states 'No grounds for outright denial on the present facts.' This denial letter should not be issued until investigation resolves the permissive-use and/or commercial-use questions adversely, and the specific factual basis for denial is documented in the file. Florida bad faith exposure must be considered prior to any denial decision.",
+    "citations": [
+      {
+        "document_id": "DOC-008-COVMEMO",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Conclusion paragraph",
+        "text_excerpt": "No grounds for outright denial on the present facts.",
+        "relation": "refutes"
+      },
+      {
+        "document_id": "DOC-008-COVMEMO",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Open question 1 \u2014 listed-driver question",
+        "text_excerpt": "Whether Alvarez was a permissive user within the omnibus clause is not yet established.",
+        "relation": "contextual"
+      },
+      {
+        "document_id": "DOC-008-COVMEMO",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Open question 2 \u2014 use question",
+        "text_excerpt": "The policy is rated for personal and non-commercial business use; a livery or for-hire delivery use at the time of loss may fall outside the covered use.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-008-CHP",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Narrative line 9",
+        "text_excerpt": "Vehicle 1 displayed magnetic signage reading 'QuickRoute Deliveries.'",
+        "relation": "supports"
+      }
+    ]
+  }
+}

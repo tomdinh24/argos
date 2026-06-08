@@ -1,0 +1,211 @@
+{
+  "request_id": "LIA-REQ-009",
+  "reviewed_as_of": "2026-06-08T21:09:33.571437Z",
+  "apportionment": {
+    "vehicle_1_driver_insured": {
+      "fault_pct": "20.00",
+      "fault_pct_band_low": "15.00",
+      "fault_pct_band_high": "25.00",
+      "confidence": 0.95
+    },
+    "pinnacle_steel_works_owner": {
+      "fault_pct": "1.67",
+      "fault_pct_band_low": "0.00",
+      "fault_pct_band_high": "6.67",
+      "confidence": 0.95
+    },
+    "vehicle_2_driver_brightway": {
+      "fault_pct": "76.67",
+      "fault_pct_band_low": "71.67",
+      "fault_pct_band_high": "81.67",
+      "confidence": 0.95
+    },
+    "brightway_freight_carriers": {
+      "fault_pct": "1.67",
+      "fault_pct_band_low": "0.00",
+      "fault_pct_band_high": "6.67",
+      "confidence": 0.95
+    }
+  },
+  "applicable_regime": {
+    "statute": "modified_51_bar_hb837",
+    "recovery_bar_triggered": true,
+    "bar_basis": "hb837_51_pct",
+    "date_of_loss_governing": "2026-04-13",
+    "explanation": "Accrual date 2026-04-13 \u2265 2023-03-24 \u2192 HB 837 modified-comparative 51% bar applies (\u00a7768.81(6))."
+  },
+  "exposure_ceiling": {
+    "vicarious_cap_applies": false,
+    "vicarious_cap_value": null,
+    "conditional_econ_layer": null,
+    "negligent_entrustment_uncapped_path_available": false,
+    "graves_lessor_removed": false,
+    "fabre_defendants": [
+      "brightway_freight_carriers"
+    ]
+  },
+  "rationale": {
+    "fact_pattern_anchor": {
+      "pattern": "rear_end",
+      "anchor_pct": "95",
+      "anchor_party_role": "rear_driver",
+      "controlling_authority": "Birge v. Charron, 107 So. 3d 350 (Fla. 2012); Pierce v. Progressive Am. Ins. Co.; Eppler v. Tarmac"
+    },
+    "evidence_adjustments": [
+      {
+        "evidence_item_idx": 0,
+        "direction": "claimant_more_fault",
+        "magnitude_points": "22.5",
+        "basis": "police_report_narrative (hard_data) \u2014 DOC-009-INCIDENT"
+      },
+      {
+        "evidence_item_idx": 1,
+        "direction": "claimant_more_fault",
+        "magnitude_points": "22.5",
+        "basis": "police_report_field (hard_data) \u2014 DOC-009-INCIDENT"
+      },
+      {
+        "evidence_item_idx": 2,
+        "direction": "claimant_more_fault",
+        "magnitude_points": "22.5",
+        "basis": "citation_issued (hard_data) \u2014 DOC-009-INCIDENT"
+      },
+      {
+        "evidence_item_idx": 3,
+        "direction": "neutral",
+        "magnitude_points": "12.5",
+        "basis": "er_record_mechanism (independent) \u2014 DOC-009-ED"
+      },
+      {
+        "evidence_item_idx": 4,
+        "direction": "neutral",
+        "magnitude_points": "22.5",
+        "basis": "damage_appraisal (hard_data) \u2014 DOC-009-ED"
+      },
+      {
+        "evidence_item_idx": 5,
+        "direction": "claimant_more_fault",
+        "magnitude_points": "7.5",
+        "basis": "party_admission (rebuttable_signal) \u2014 DOC-009-SUBRO"
+      }
+    ],
+    "doctrine_gates_applied": [
+      {
+        "doctrine_id": "hb_837_51_bar",
+        "effect": "Modified-comparative 51% bar for non-medical-negligence accruing after 2023-03-24.",
+        "statute_or_case_cite": "\u00a7768.81(6); HB 837 (eff. 2023-03-24)"
+      },
+      {
+        "doctrine_id": "fabre_apportionment",
+        "effect": "Non-party fault apportioned if factually supported AND pled per Rule 1.110(d).",
+        "statute_or_case_cite": "Fabre v. Marin, 623 So. 2d 1182 (Fla. 1993); Nash v. Wells Fargo"
+      },
+      {
+        "doctrine_id": "rear_end_rebuttable_presumption",
+        "effect": "Rear driver presumed at fault unless four named rebuttals evidenced.",
+        "statute_or_case_cite": "Birge v. Charron; Pierce; Eppler; Douglas-Seibert"
+      },
+      {
+        "doctrine_id": "joint_several_abolished",
+        "effect": "Joint-and-several liability abolished for negligence.",
+        "statute_or_case_cite": "\u00a7768.81(3)"
+      }
+    ],
+    "net_apportionment_walk": "Start: rear_end anchor = 95% (rear_driver \u2192 vehicle_1_driver_insured).\n  claimant_more_fault: 22.5 pts (police_report_narrative (hard_data) \u2014 DOC-009-INCIDENT)\n  claimant_more_fault: 22.5 pts (police_report_field (hard_data) \u2014 DOC-009-INCIDENT)\n  claimant_more_fault: 22.5 pts (citation_issued (hard_data) \u2014 DOC-009-INCIDENT)\n  claimant_more_fault: 7.5 pts (party_admission (rebuttable_signal) \u2014 DOC-009-SUBRO)\n  doctrine: hb_837_51_bar \u2014 \u00a7768.81(6); HB 837 (eff. 2023-03-24)\n  doctrine: fabre_apportionment \u2014 Fabre v. Marin, 623 So. 2d 1182 (Fla. 1993); Nash v. Wells Fargo\n  doctrine: rear_end_rebuttable_presumption \u2014 Birge v. Charron; Pierce; Eppler; Douglas-Seibert\n  doctrine: joint_several_abolished \u2014 \u00a7768.81(3)\nNet per party: vehicle_1_driver_insured=20.00%, pinnacle_steel_works_owner=1.67%, vehicle_2_driver_brightway=76.67%, brightway_freight_carriers=1.67%"
+  },
+  "diligence_ledger": {
+    "posture_percent_by_party": {
+      "vehicle_1_driver_insured": "20.00",
+      "pinnacle_steel_works_owner": "1.67",
+      "vehicle_2_driver_brightway": "76.67",
+      "brightway_freight_carriers": "1.67"
+    },
+    "basis_evidence": [
+      {
+        "source_doc_id": "DOC-009-INCIDENT",
+        "quoted_span": "Vehicle 1 (insured) was fully stopped, waiting to enter the yard, when Vehicle 2 struck it from the rear. Vehicle 1 took no evasive action because none was available; it was stationary and lawfully stopped.",
+        "weight_class": "hard_data"
+      },
+      {
+        "source_doc_id": "DOC-009-INCIDENT",
+        "quoted_span": "Primary collision factor: Vehicle 2 \u2014 failure to maintain a safe following distance. No contributing factor attributed to Vehicle 1.",
+        "weight_class": "hard_data"
+      },
+      {
+        "source_doc_id": "DOC-009-INCIDENT",
+        "quoted_span": "Citation: the Vehicle 2 driver was cited.",
+        "weight_class": "hard_data"
+      },
+      {
+        "source_doc_id": "DOC-009-ED",
+        "quoted_span": "Belted driver of a box truck struck on the driver side by a tractor-trailer while stopped. Significant intrusion to the cab.",
+        "weight_class": "independent"
+      },
+      {
+        "source_doc_id": "DOC-009-ED",
+        "quoted_span": "Left shoulder deformity, cervical tenderness, seatbelt bruising. Imaging: left clavicle fracture confirmed on X-ray; cervical MRI shows C5-C6 disc protrusion. Displaced clavicle fracture \u2014 orthopedic fixation scheduled; cervical injury managed conservatively with PT. Medical specials to date: $38,500 (ED, imaging, orthopedic surgery estimate, physical therapy). Permanent impairment likely given operative fracture.",
+        "weight_class": "hard_data"
+      }
+    ],
+    "change_conditions": [
+      "If Birge-category rebuttal evidence lands (mechanical failure / sudden stop / lane-change-by-lead / illegal-stop), rear-driver anchor shifts down materially.",
+      "Demand on file \u2014 sufficient-evidence assessment is the gating next decision; new evidence may flip the \u00a7624.155(4) call."
+    ],
+    "next_review_date": "2026-07-08",
+    "next_review_trigger": "VARIANCE_REVIEW",
+    "prior_posture_delta": {
+      "prior_pct_by_party": {
+        "vehicle_2_driver_brightway": "100",
+        "vehicle_1_driver_insured": "0"
+      },
+      "prior_date": "2026-06-01",
+      "what_changed_evidence_idx": 0
+    },
+    "open_requests": [
+      {
+        "request_type": "recorded_statement_insured",
+        "requested_date": "2026-06-08",
+        "age_days": 0,
+        "target_party": "insured"
+      }
+    ],
+    "evidence_not_obtained": [],
+    "supervisor_disagreement_record": []
+  },
+  "rationale_text": "LIABILITY EVALUATION \u2014 Claim CLM-009 | Eval #1 | 2026-06-08 | Examiner: system | constants v1.2026-06-01\nTRIGGER: INITIAL_APPORTIONMENT (2026-06-08)\n\nPARTIES (N=4):\n  vehicle_1_driver_insured | role=insured_driver | identity_cite=DOC-009-ED: 'Patient: insured's commercial driver (Pinnacle Steel Works fleet).'\n  pinnacle_steel_works_owner | role=insured_owner | identity_cite=DOC-009-INCIDENT: 'Vehicle 1 (insured)' operated for Pinnacle Steel Works; DOC-009-SUBRO: 'Re: Pinnacle Steel Works injured-driver loss of 2026-05-22'\n  vehicle_2_driver_brightway | role=claimant_driver | identity_cite=DOC-009-INCIDENT: 'Vehicle 2 is a commercial tractor-trailer (a commercial motor carrier, not a private-passenger vehicle), operated for Brightway Freight Carriers, Inc.'\n  brightway_freight_carriers | role=fabre_non_party | identity_cite=DOC-009-INCIDENT: 'Vehicle 2 is a commercial tractor-trailer (a commercial motor carrier, not a private-passenger vehicle), operated for Brightway Freight Carriers, Inc. Liability insurer identified at scene as Continental Freight Indemnity Co.'\n\nFACT PATTERN: rear_end (anchor: 95% rear_driver; controlling: Birge v. Charron, 107 So. 3d 350 (Fla. 2012); Pierce v. Progressive Am. Ins. Co.; Eppler v. Tarmac)\n\nAPPLICABLE REGIME:\n  Statute: modified_51_bar_hb837\n  Accrual date 2026-04-13 \u2192 Accrual date 2026-04-13 \u2265 2023-03-24 \u2192 HB 837 modified-comparative 51% bar applies (\u00a7768.81(6)).\n  Recovery bar triggered: hb837_51_pct (triggered=True)\n\nEXPOSURE CEILING:\n  Vicarious cap: none\n  Negligent entrustment path: not_evidenced\n  Fabre defendants: brightway_freight_carriers\n\nAPPORTIONMENT WALK (anchor \u2192 evidence \u2192 doctrine \u2192 net):\n  Start: rear_end anchor = 95% (rear_driver \u2192 vehicle_1_driver_insured).\n    claimant_more_fault: 22.5 pts (police_report_narrative (hard_data) \u2014 DOC-009-INCIDENT)\n    claimant_more_fault: 22.5 pts (police_report_field (hard_data) \u2014 DOC-009-INCIDENT)\n    claimant_more_fault: 22.5 pts (citation_issued (hard_data) \u2014 DOC-009-INCIDENT)\n    claimant_more_fault: 7.5 pts (party_admission (rebuttable_signal) \u2014 DOC-009-SUBRO)\n    doctrine: hb_837_51_bar \u2014 \u00a7768.81(6); HB 837 (eff. 2023-03-24)\n    doctrine: fabre_apportionment \u2014 Fabre v. Marin, 623 So. 2d 1182 (Fla. 1993); Nash v. Wells Fargo\n    doctrine: rear_end_rebuttable_presumption \u2014 Birge v. Charron; Pierce; Eppler; Douglas-Seibert\n    doctrine: joint_several_abolished \u2014 \u00a7768.81(3)\n  Net per party: vehicle_1_driver_insured=20.00%, pinnacle_steel_works_owner=1.67%, vehicle_2_driver_brightway=76.67%, brightway_freight_carriers=1.67%\n\nCONFIDENCE BAND: 15.00% \u2014 25.00% (confidence: 0.95)\n\nVARIANCE FLAGS (4 active):\n  - multi_party_matrix_required\n  - fabre_non_party_unpled\n  - apportionment_delta_exceeds_examiner_band\n  - roundtable_recommended\n\nPRIOR POSTURE DELTA: 2026-06-01 \u2192 current (vehicle_1_driver_insured=0%, vehicle_2_driver_brightway=100% \u2192 brightway_freight_carriers=1.67%, pinnacle_steel_works_owner=1.67%, vehicle_1_driver_insured=20.00%, vehicle_2_driver_brightway=76.67%)\n  Basis: Police report PD-2026-3071 and subrogation referral memo both reflect 100% fault attributed to Vehicle 2 (Brightway Freight Carriers driver) for failure to maintain safe following distance; citation issued to Vehicle 2 driver; no contributing factor attributed to Vehicle 1. Adjuster-internal subrogation referral confirms clear liability posture.\n\n\u00a7316.066(4) EVIDENCE PACK CLASSIFICATION:\n  Trial-admissible: 6 items\n  Privileged statements (reserve-only): 0 items\n  Physical-evidence carveout: 0 items\n  Chemical-test carveout: 0 items\n\nDILIGENCE LEDGER:\n  Posture by party:\n    brightway_freight_carriers: 1.67%\n    pinnacle_steel_works_owner: 1.67%\n    vehicle_1_driver_insured: 20.00%\n    vehicle_2_driver_brightway: 76.67%\n  Basis evidence (5 items):\n    [hard_data] DOC-009-INCIDENT: \"Vehicle 1 (insured) was fully stopped, waiting to enter the yard, when Vehicle 2 struck it from the rear. Vehicle 1 took\"\n    [hard_data] DOC-009-INCIDENT: \"Primary collision factor: Vehicle 2 \u2014 failure to maintain a safe following distance. No contributing factor attributed t\"\n    [hard_data] DOC-009-INCIDENT: \"Citation: the Vehicle 2 driver was cited.\"\n    [independent] DOC-009-ED: \"Belted driver of a box truck struck on the driver side by a tractor-trailer while stopped. Significant intrusion to the \"\n    [hard_data] DOC-009-ED: \"Left shoulder deformity, cervical tenderness, seatbelt bruising. Imaging: left clavicle fracture confirmed on X-ray; cer\"\n  Change conditions:\n    - If Birge-category rebuttal evidence lands (mechanical failure / sudden stop / lane-change-by-lead / illegal-stop), rear-driver anchor shifts down materially.\n    - Demand on file \u2014 sufficient-evidence assessment is the gating next decision; new evidence may flip the \u00a7624.155(4) call.\n  Next review: 2026-07-08 (trigger: VARIANCE_REVIEW)\n  Prior posture (2026-06-01): vehicle_1_driver_insured=0%, vehicle_2_driver_brightway=100%\n    What changed: evidence_items[0]\n  Open requests:\n    - recorded_statement_insured \u2192 insured (age 0d, requested 2026-06-08)\n\nAUTHORITY:\n  Gross exposure: $0.00\n  Net apportioned exposure: $0.00\n  Required tier: roundtable\n  Committable at examiner: False\n  Basis: Mandatory-escalation variance flag active (apportionment_delta_exceeds_examiner_band)\n\nDOWNSTREAM HANDOFFS:\n  Reserve: insured_liability_pct=20.00, band=[15.00, 25.00], regime=modified_51_bar_hb837, ceiling=vicarious_cap_applies=False\n  Brief: rationale + diligence ledger + 6 trial-admissible items\n  Authority/Tender: tier=roundtable, committable_at_examiner=False\n  Coverage: owner_type=self_insured_fleet, permissive_use=evidenced, line_of_business=commercial_auto",
+  "variance_flags": [
+    "multi_party_matrix_required",
+    "fabre_non_party_unpled",
+    "apportionment_delta_exceeds_examiner_band",
+    "roundtable_recommended"
+  ],
+  "authority_tier_required": {
+    "committable_at_examiner": false,
+    "required_tier": "roundtable",
+    "gross_exposure": "0.00",
+    "net_apportioned_exposure": "0.00",
+    "basis_for_tier": "Mandatory-escalation variance flag active (apportionment_delta_exceeds_examiner_band)"
+  },
+  "evidence_pack_classification": {
+    "reserve_only_evidence_idx": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "trial_admissible_evidence_idx": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "privileged_316_066_excluded_idx": [],
+    "physical_evidence_carveout_admissible_idx": [],
+    "chemical_test_carveout_admissible_idx": []
+  },
+  "subro_referral": null
+}

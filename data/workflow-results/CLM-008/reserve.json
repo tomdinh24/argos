@@ -1,0 +1,31 @@
+{
+  "request_id": "RES-REQ-008",
+  "reviewed_as_of": "2026-06-08T20:44:21.133458Z",
+  "per_component": [
+    {
+      "component": "indemnity",
+      "current_outstanding": 2430.0,
+      "recommended_outstanding_band": {
+        "p10": 2250.0,
+        "p50": 2430.0,
+        "p90": 2610.0
+      },
+      "rationale": "within recovery \u2014 insured 75% at fault",
+      "triggers_fired": [],
+      "evidence_citations": [
+        {
+          "document_id": null,
+          "sourced_rule_id": "reserve.constants.indemnity",
+          "ledger_entry_id": null,
+          "locator": "constants.py",
+          "text_excerpt": "Notice threshold rule from constants.NOTICE_THRESHOLDS_V1 fired deterministically on calculator inputs.",
+          "relation": "supports"
+        }
+      ]
+    }
+  ],
+  "notice_obligations_triggered": [],
+  "authority_required_level": "handler",
+  "no_change_warranted": false,
+  "rationale": "RESERVE EVALUATION \u2014 Claim CLM-008 | Eval #1 | 2026-06-08 | Examiner: system | constants v1.2026-06-01\nTRIGGER: CALENDAR_DIARY_90_DAY (2026-06-08)\n\nLIABILITY: Insured 75% at fault. FL \u00a7768.81 modified comparative: within recovery \u2014 insured 75% at fault. (no suit filed; pre-suit posture).\n\nPIP/THRESHOLD: PIP cap $2,500 (EMC undetermined), $0.00 paid of $2,500 cap. \u00a7627.737 verbal threshold: not yet established \u2014 non-econ priced at 25% probability.\n\nSPECIALS (indemnity build):\n  Medical paid-satisfied bills: $0.00\n  LOP/unsatisfied at insurance-equivalent: $2,400.00\n  Wage loss documented: $0.00\n  SPECIALS SUBTOTAL: $2,400.00\n\nGENERALS:\n  Severity tier: minor_soft_tissue (Strain/sprain/whiplash, conservative care only, no MRI findings, no permanency opinion, full clinical resolution)\n  Multiplier band: 1.0\u00d7 \u2014 1.8\u00d7 specials\n  Venue calibrator: other_state (1.00\u00d7)\n  Threshold discount: 25%\n  GENERALS LOW: $600.00 | CENTRAL: $840.00 | HIGH: $1,080.00\n\nINDEMNITY RESERVE (gross \u00d7 liability%):\n  Low: $2,250.00 | Central: $2,430.00 | High: $2,610.00\n  Recommended posting: $2,430.00\n\nALAE: not opened (pre-suit)\nULAE: not allocated per-claim per industry practice; portfolio-level overhead.\n\nDELTA FROM PRIOR: initial reserve \u2014 no prior basis\n\nAUTHORITY:\n  Reserve $2,430.00 (indemnity $2,430.00 + ALAE p50 $0.00)\n  vs examiner authority $25,000.00: handler\n  Required approver: Examiner \u2014 unilateral\n  Reinsurance/excess notice: not triggered\n\nBAD-FAITH RISK MARKERS (0 active): none\n  \u00a7624.155(4) 90-day safe harbor: no_actual_notice_logged\n  \u00a7624.155(3) 60-day CRN cure: none filed\n"
+}
