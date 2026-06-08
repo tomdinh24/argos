@@ -88,9 +88,16 @@ In the Vercel project (Settings → Environment Variables), set for Production:
 |---|---|
 | `NEXT_PUBLIC_API_BASE` | `https://<your-railway-domain>` |
 | `NEXT_PUBLIC_DEMO_TOKEN` | *(the same `ARGOS_DEMO_TOKEN` secret)* |
+| `NEXT_PUBLIC_ACCESS_CODE` | *(the in-app demo gate code)* — **required.** The gate fails **closed** when unset (no committed fallback since 2026-06-08), so an unconfigured deploy locks everyone out. `NEXT_PUBLIC_*` is client-visible, so treat this as a speed bump, not a real secret; rotate by re-setting it and redeploying. |
 
-Redeploy the cockpit. Then load `https://project-argos.vercel.app` → the caseload
-and the CLM-001 / CLM-004 dossiers should render from Railway, not fixtures.
+Redeploy the cockpit. Then load `https://argos-claims.vercel.app` → the caseload
+and the dossiers should render from Railway, not fixtures.
+
+> **Cockpit source is tracked** (since 2026-06-08): `web/` lives in this repo
+> (source + config only; artifacts and `.env*` gitignored). `vercel --prod` still
+> deploys from the local `web/` dir, and does **not** auto-move the
+> `argos-claims.vercel.app` alias — run `vercel alias set <new-deploy> argos-claims.vercel.app`
+> after a production deploy if the public URL still points at the old build.
 
 ## Caveats
 

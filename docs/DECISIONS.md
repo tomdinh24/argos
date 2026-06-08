@@ -44,6 +44,43 @@ and surface the conflict.
 
 ---
 
+## 2026-06-08 — `web/` cockpit lives in this repo (monorepo); access gate is env-only
+
+**Decision:** The Next.js cockpit (`web/`) is tracked **in this repository**, not split
+into a separate repo. It had been sitting untracked in the root checkout — deployed to
+`argos-claims.vercel.app` but with no history, no review gate, no diff. The backend
+dossier schema and the cockpit that renders it change together, so one repo = one diff =
+one review pass. Tracking is provably safe to the backend deploy: `.dockerignore` excludes
+`web/` and the Dockerfile only copies `src/` + `data/`, so the Railway image is unaffected;
+Vercel deploys `web/` directly via `vercel --prod` regardless.
+
+Only source + config is tracked (15 files). Build artifacts (`node_modules`, `.next`,
+`*.tsbuildinfo`, `next-env.d.ts`) and all `.env*` stay ignored via `web/.gitignore`.
+
+**Access gate hardening (same change):** `App.tsx` previously carried a hard-coded
+fallback access code (`process.env.NEXT_PUBLIC_ACCESS_CODE ?? "<literal>"`). Committing
+that would have put a live credential in git history (it was already public in the shipped
+client bundle). The code now reads the gate value **from env only** and **fails closed**
+when unset; the demo code was **rotated** and the new value set in Vercel
+(`NEXT_PUBLIC_ACCESS_CODE`, production). Verified live: correct code logs in, wrong code
+rejected.
+
+**Why:** Closes the worst gap surfaced while making the cockpit live end-to-end — the
+deployed front-end had zero version control. Codex review caught the committed-credential
+on the way in; scrub + rotate before the literal ever reached GitHub.
+
+**Out of scope (logged as follow-ups, not done here):**
+- The whole `NEXT_PUBLIC_*` auth model is client-visible by construction (the demo token
+  in `api.ts` is inlined into the bundle). A real session/proxy mechanism is separate
+  hardening, not a blocker for version control.
+- `CoverageBody` renders with no `onAccept` CTA for coverage-stage claims, so the active
+  stage can't be advanced from the UI (pre-existing product bug).
+
+**Code touched:** `web/**` (now tracked), `web/.gitignore`, `web/components/App.tsx`
+(env-only gate, fail-closed), `docs/DEPLOY_RAILWAY.md` (caveat removed).
+
+---
+
 ## 2026-06-08 — Cockpit demo data strategy: the five top rows are five policy-engine archetypes
 
 **Decision:** The cockpit's demo caseload is curated so the always-top (red-band)
