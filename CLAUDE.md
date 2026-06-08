@@ -1,5 +1,27 @@
 # Argos — Claude Code Instructions
 
+## Conductor worktree model
+
+This repo runs under Conductor: each agent works inside a git worktree at
+`~/conductor/workspaces/<repo>/<name>` — that worktree IS the repo and is your
+cwd (`$CONDUCTOR_WORKSPACE_PATH`). The matching `~/Projects/<repo>` is the
+shared **root checkout** (`$CONDUCTOR_ROOT_PATH`), normally on `main`.
+
+- **Never `cd ~/Projects/<repo>` to do feature work — edit, build, or test there.**
+  You're already in the repo — stay in your worktree. Feature work in the root
+  checkout lands on the wrong branch and leaves your workspace diff empty.
+- Use `$CONDUCTOR_ROOT_PATH` only as read-only reference for feature work. The
+  cockpit `web/` source is now **tracked**, so cockpit edits happen in your
+  worktree like any other source — not in the root.
+- **One named exception:** the root checkout is the cockpit's **deploy box**. Its
+  node_modules / `.next` / `.vercel/` build artifacts live only there (worktrees
+  don't share untracked files), so `vercel --prod` and the commit-to-`main` flow
+  Railway builds from must run in the root. The *only* writes allowed there are
+  those deploy / commit-to-main flows — never feature work. Before deploying,
+  fast-forward the root to the reviewed `main` and confirm it's clean
+  (`git -C "$CONDUCTOR_ROOT_PATH" switch main && git pull`); you deploy reviewed
+  state, never ad-hoc edits made in the root.
+
 ## Required reading
 
 Before architectural, naming, flow, or "what should we build next" work:
