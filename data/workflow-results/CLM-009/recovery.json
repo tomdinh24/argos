@@ -1,0 +1,445 @@
+{
+  "request_id": "REC-REQ-009",
+  "reviewed_as_of": "2026-06-08T21:10:13.078978Z",
+  "recommendation": "senior_review_required",
+  "subrogation_lane": {
+    "lane_id": "627_7405_pip_commercial",
+    "cite": "Fla. Stat. \u00a7627.7405 (PIP commercial carve-out)",
+    "defense_checklist_anchor": "step_into_shoes:627_7405_pip_commercial"
+  },
+  "doctrinal_gates": [
+    {
+      "gate_id": "hb837_negligence_sol",
+      "result": "pass",
+      "statute_or_case_cite": "Fla. Stat. \u00a795.11(4)(a) as amended by HB 837",
+      "effect_if_fired": "Statute-version selector: 2yr post-3/24/2023; 4yr pre. PD remains 4yr. Clock runs from loss date.",
+      "evidence_ref": "loss_date=2026-04-13; sol_deadline=2028-04-13",
+      "variance_flag_emitted": null
+    },
+    {
+      "gate_id": "hb837_modified_comparative_bar",
+      "result": "n_a",
+      "statute_or_case_cite": "Fla. Stat. \u00a7768.81(6) as amended by HB 837 (eff. 3/24/2023)",
+      "effect_if_fired": "Hard cliff: claimant >50% fault on post-3/24/2023 auto BI \u2192 abstain regardless of damages.",
+      "evidence_ref": "",
+      "variance_flag_emitted": null
+    },
+    {
+      "gate_id": "anti_subrogation_rule",
+      "result": "pass",
+      "statute_or_case_cite": "FL common-law anti-subrogation rule; policy omnibus / permissive-user construction",
+      "effect_if_fired": "Blocking gate, per coverage section: if tortfeasor target overlaps named / omnibus / resident-relative roster under SAME coverage section as paid loss, abstain and route to Coverage.",
+      "evidence_ref": "",
+      "variance_flag_emitted": null
+    },
+    {
+      "gate_id": "made_whole_doctrine",
+      "result": "pass",
+      "statute_or_case_cite": "Schonau v. GEICO Gen. Ins. Co., 903 So. 2d 285 (Fla. 4th DCA 2005)",
+      "effect_if_fired": "Conditional gate: limited-fund + insured not made whole + no contractual waiver \u2192 cannot subrogate OUT of insured's recovery. Freestanding direct claim against tortfeasor NOT blocked.",
+      "evidence_ref": "shortfall=$0; freestanding direct claim path",
+      "variance_flag_emitted": null
+    },
+    {
+      "gate_id": "pip_subrogability_627_7405",
+      "result": "pass",
+      "statute_or_case_cite": "Fla. Stat. \u00a7627.7405; \u00a7627.732(3); Amerisure v. State Farm, 897 So. 2d 1287 (Fla. 2005)",
+      "effect_if_fired": "PIP subro barred EXCEPT against commercial-motor-vehicle owners (taxicabs excluded). Classification per \u00a7627.732(3) body-type + primary-use, NOT weight.",
+      "evidence_ref": "tortfeasor commercial \u2014 \u00a7627.7405 carve-out applies",
+      "variance_flag_emitted": null
+    },
+    {
+      "gate_id": "um_preservation_627_727_6",
+      "result": "n_a",
+      "statute_or_case_cite": "Fla. Stat. \u00a7627.727(6)",
+      "effect_if_fired": "Hard 30-day gate when tortfeasor liability carrier tenders settlement: UM carrier consents OR advances offer within 30 days. Miss = extinguished.",
+      "evidence_ref": "no liability-carrier offer recorded",
+      "variance_flag_emitted": null
+    },
+    {
+      "gate_id": "collateral_source_768_76",
+      "result": "n_a",
+      "statute_or_case_cite": "Fla. Stat. \u00a7768.76(7)",
+      "effect_if_fired": "Hard 30-day gate on claimant's notice of tort action: collateral-source provider asserts reimbursement right in writing or waives. Medicare / Medicaid / WC statutorily excluded from 'collateral source'.",
+      "evidence_ref": "no \u00a7768.76 notice recorded",
+      "variance_flag_emitted": null
+    },
+    {
+      "gate_id": "vicarious_cap_324_021",
+      "result": "n_a",
+      "statute_or_case_cite": "Fla. Stat. \u00a7324.021(9)(b)3",
+      "effect_if_fired": "Cap: natural-person owner vicarious BI capped $100K/$300K + $50K PD; conditional $500K econ-only if operator <$500K combined. Cap does NOT apply to direct-negligence (negligent entrustment) \u2014 uncapped separate layer.",
+      "evidence_ref": "owner_type=business_not_in_leasing; \u00a7324.021 cap is natural-person-only",
+      "variance_flag_emitted": null
+    },
+    {
+      "gate_id": "joint_several_abolition_768_81_3",
+      "result": "pass",
+      "statute_or_case_cite": "Fla. Stat. \u00a7768.81(3) (2006); Fabre v. Marin, 623 So. 2d 1182 (Fla. 1993)",
+      "effect_if_fired": "Apportionment: recovery from each defendant capped at that defendant's percentage of fault; non-party Fabre defendants on verdict form.",
+      "evidence_ref": "fabre_candidates=0",
+      "variance_flag_emitted": null
+    },
+    {
+      "gate_id": "verbal_threshold_627_737",
+      "result": "pass",
+      "statute_or_case_cite": "Fla. Stat. \u00a7627.737",
+      "effect_if_fired": "BI tort right for non-economic damages: permanency / scarring / significant function loss. Economic damages above $10K PIP recoverable without threshold. Threshold does NOT apply if tortfeasor lacks PIP-compliant coverage.",
+      "evidence_ref": "permanency=True; scarring=False; function_loss=True; mri=True",
+      "variance_flag_emitted": null
+    },
+    {
+      "gate_id": "paid_not_billed_768_0427",
+      "result": "pass",
+      "statute_or_case_cite": "Fla. Stat. \u00a7768.0427 (HB 837)",
+      "effect_if_fired": "Damages-basis: past medicals capped at amounts actually paid (or LOP contracted, or 120% Medicare for uninsured). Strips billed-amount basis. Filing-date triggered.",
+      "evidence_ref": "loss_date=2026-04-13; filing_date=2026-04-14",
+      "variance_flag_emitted": null
+    },
+    {
+      "gate_id": "af_compulsory_jurisdiction",
+      "result": "ambiguous_routed_to_senior",
+      "statute_or_case_cite": "AF Reference Guide; AF Rule 1-2; AF Article Second",
+      "effect_if_fired": "Routing: both carriers signatory AND company-paid damages \u2264$100K \u2192 compulsory arbitration. Non-signatory or over-cap \u2192 litigation or Special Forum. 60-day post-dismissal refile window.",
+      "evidence_ref": "tortfeasor carrier NAIC missing",
+      "variance_flag_emitted": "af_signatory_unverifiable"
+    },
+    {
+      "gate_id": "spoliation_valcin_martino",
+      "result": "pass",
+      "statute_or_case_cite": "Public Health Trust v. Valcin, 507 So. 2d 596 (Fla. 1987); Martino v. Wal-Mart, 908 So. 2d 342 (Fla. 2005)",
+      "effect_if_fired": "Preservation duty: subrogating carrier owes Valcin duty on vehicle / EDR / parts / photos. First-party spoliation tort abolished (Martino) but Valcin presumption + sanctions apply.",
+      "evidence_ref": "vehicle_status=unknown; edr_pulled=False",
+      "variance_flag_emitted": null
+    },
+    {
+      "gate_id": "deny_subrogate_interlock",
+      "result": "pass",
+      "statute_or_case_cite": "Fla. Stat. \u00a7624.155 as amended by HB 837; Harvey v. GEICO, 259 So. 3d 1 (Fla. 2018)",
+      "effect_if_fired": "Cross-stream: Coverage denied + Recovery pursuing same loss \u2192 senior review with mandatory made-whole accounting + denial rationale. HB 837 \u00a7624.155(4) safe harbor covers third-party tender only \u2014 does NOT extend to Recovery conduct.",
+      "evidence_ref": "",
+      "variance_flag_emitted": null
+    },
+    {
+      "gate_id": "step_into_shoes_defenses",
+      "result": "pass",
+      "statute_or_case_cite": "Dade County School Bd. v. Radio Station WQBA, 731 So. 2d 638 (Fla. 1999)",
+      "effect_if_fired": "Subrogated carrier acquires no greater rights than insured. Pre-tender release / settlement / extinguishing act by insured against tortfeasor (with knowledge of perfected subro) defeats recovery.",
+      "evidence_ref": "no release / pre-tender settlement signals detected",
+      "variance_flag_emitted": null
+    }
+  ],
+  "sol_regime": {
+    "statute_version": "post_hb837_2yr",
+    "statute_cite": "Fla. Stat. \u00a795.11(4)(a) as amended by HB 837",
+    "sol_deadline": "2028-04-13",
+    "days_remaining": 675
+  },
+  "layered_targets": [],
+  "recoverable_basis": {
+    "section_768_0427_capped_damages": "0.00",
+    "pip_collateral_source_stripped": "10000.00",
+    "made_whole_shortfall": "0.00",
+    "basis": "0.00"
+  },
+  "net_economics": {
+    "gross_recoverable_total": "0.00",
+    "fee_drag": "640.00",
+    "fee_shifting_exposure": "0",
+    "net_total": "0.00",
+    "fee_model": "internal_blended"
+  },
+  "forum_routing": {
+    "recommendation": "tbd_signatory_check_pending",
+    "af_signatory_check": "unverifiable",
+    "company_paid_damages": "0.00",
+    "af_cap_dollars": "100000",
+    "within_af_cap": true,
+    "basis": "Signatory check unverifiable; block forum routing until resolved"
+  },
+  "deadline_calendar": {
+    "entries": [
+      {
+        "deadline_id": "sol_drop_dead",
+        "deadline_date": "2028-04-13",
+        "days_remaining": 675,
+        "statute_or_rule_cite": "Fla. Stat. \u00a795.11(4)(a) as amended by HB 837"
+      }
+    ]
+  },
+  "preservation_hold": {
+    "issued": true,
+    "hold_scope": [
+      "vehicle",
+      "edr_acm",
+      "scene_photos"
+    ],
+    "storage_yard_letter_text": "Storage Yard Preservation Notice: do not release, scrap, or otherwise dispose of the subject vehicle, its event data recorder (EDR/ACM), or any physical components without prior written authorization from the carrier. Failure to preserve may give rise to spoliation sanctions under Public Health Trust v. Valcin, 507 So. 2d 596 (Fla. 1987).",
+    "blocks_salvage_release": true,
+    "acknowledgment_status": "pending"
+  },
+  "diligence_ledger": {
+    "gates_evaluated": [
+      {
+        "gate_id": "hb837_negligence_sol",
+        "result": "pass",
+        "cite": "Fla. Stat. \u00a795.11(4)(a) as amended by HB 837",
+        "evidence_ref": "loss_date=2026-04-13; sol_deadline=2028-04-13",
+        "evaluated_at": "2026-06-08T21:10:13.078978Z"
+      },
+      {
+        "gate_id": "hb837_modified_comparative_bar",
+        "result": "n_a",
+        "cite": "Fla. Stat. \u00a7768.81(6) as amended by HB 837 (eff. 3/24/2023)",
+        "evidence_ref": "",
+        "evaluated_at": "2026-06-08T21:10:13.078978Z"
+      },
+      {
+        "gate_id": "anti_subrogation_rule",
+        "result": "pass",
+        "cite": "FL common-law anti-subrogation rule; policy omnibus / permissive-user construction",
+        "evidence_ref": "",
+        "evaluated_at": "2026-06-08T21:10:13.078978Z"
+      },
+      {
+        "gate_id": "made_whole_doctrine",
+        "result": "pass",
+        "cite": "Schonau v. GEICO Gen. Ins. Co., 903 So. 2d 285 (Fla. 4th DCA 2005)",
+        "evidence_ref": "shortfall=$0; freestanding direct claim path",
+        "evaluated_at": "2026-06-08T21:10:13.078978Z"
+      },
+      {
+        "gate_id": "pip_subrogability_627_7405",
+        "result": "pass",
+        "cite": "Fla. Stat. \u00a7627.7405; \u00a7627.732(3); Amerisure v. State Farm, 897 So. 2d 1287 (Fla. 2005)",
+        "evidence_ref": "tortfeasor commercial \u2014 \u00a7627.7405 carve-out applies",
+        "evaluated_at": "2026-06-08T21:10:13.078978Z"
+      },
+      {
+        "gate_id": "um_preservation_627_727_6",
+        "result": "n_a",
+        "cite": "Fla. Stat. \u00a7627.727(6)",
+        "evidence_ref": "no liability-carrier offer recorded",
+        "evaluated_at": "2026-06-08T21:10:13.078978Z"
+      },
+      {
+        "gate_id": "collateral_source_768_76",
+        "result": "n_a",
+        "cite": "Fla. Stat. \u00a7768.76(7)",
+        "evidence_ref": "no \u00a7768.76 notice recorded",
+        "evaluated_at": "2026-06-08T21:10:13.078978Z"
+      },
+      {
+        "gate_id": "vicarious_cap_324_021",
+        "result": "n_a",
+        "cite": "Fla. Stat. \u00a7324.021(9)(b)3",
+        "evidence_ref": "owner_type=business_not_in_leasing; \u00a7324.021 cap is natural-person-only",
+        "evaluated_at": "2026-06-08T21:10:13.078978Z"
+      },
+      {
+        "gate_id": "joint_several_abolition_768_81_3",
+        "result": "pass",
+        "cite": "Fla. Stat. \u00a7768.81(3) (2006); Fabre v. Marin, 623 So. 2d 1182 (Fla. 1993)",
+        "evidence_ref": "fabre_candidates=0",
+        "evaluated_at": "2026-06-08T21:10:13.078978Z"
+      },
+      {
+        "gate_id": "verbal_threshold_627_737",
+        "result": "pass",
+        "cite": "Fla. Stat. \u00a7627.737",
+        "evidence_ref": "permanency=True; scarring=False; function_loss=True; mri=True",
+        "evaluated_at": "2026-06-08T21:10:13.078978Z"
+      },
+      {
+        "gate_id": "paid_not_billed_768_0427",
+        "result": "pass",
+        "cite": "Fla. Stat. \u00a7768.0427 (HB 837)",
+        "evidence_ref": "loss_date=2026-04-13; filing_date=2026-04-14",
+        "evaluated_at": "2026-06-08T21:10:13.078978Z"
+      },
+      {
+        "gate_id": "af_compulsory_jurisdiction",
+        "result": "ambiguous_routed_to_senior",
+        "cite": "AF Reference Guide; AF Rule 1-2; AF Article Second",
+        "evidence_ref": "tortfeasor carrier NAIC missing",
+        "evaluated_at": "2026-06-08T21:10:13.078978Z"
+      },
+      {
+        "gate_id": "spoliation_valcin_martino",
+        "result": "pass",
+        "cite": "Public Health Trust v. Valcin, 507 So. 2d 596 (Fla. 1987); Martino v. Wal-Mart, 908 So. 2d 342 (Fla. 2005)",
+        "evidence_ref": "vehicle_status=unknown; edr_pulled=False",
+        "evaluated_at": "2026-06-08T21:10:13.078978Z"
+      },
+      {
+        "gate_id": "deny_subrogate_interlock",
+        "result": "pass",
+        "cite": "Fla. Stat. \u00a7624.155 as amended by HB 837; Harvey v. GEICO, 259 So. 3d 1 (Fla. 2018)",
+        "evidence_ref": "",
+        "evaluated_at": "2026-06-08T21:10:13.078978Z"
+      },
+      {
+        "gate_id": "step_into_shoes_defenses",
+        "result": "pass",
+        "cite": "Dade County School Bd. v. Radio Station WQBA, 731 So. 2d 638 (Fla. 1999)",
+        "evidence_ref": "no release / pre-tender settlement signals detected",
+        "evaluated_at": "2026-06-08T21:10:13.078978Z"
+      }
+    ],
+    "af_signatory_check": {
+      "naic": null,
+      "source": "AF_SIGNATORY_ROSTER_V1 (seed; production refresh per AF publication)",
+      "lookup_timestamp": "2026-06-08T21:10:13.078978Z",
+      "result": "unverifiable",
+      "fallback_action": "Tortfeasor carrier NAIC missing \u2014 extractor gap"
+    },
+    "anti_subrogation_cross_reference": {
+      "omnibus_roster_snapshot": [
+        {
+          "name": "Pinnacle Steel Works",
+          "role": "named",
+          "coverage_section_paid_under": "pip"
+        },
+        {
+          "name": "Pinnacle Steel Works",
+          "role": "named",
+          "coverage_section_paid_under": "medpay"
+        }
+      ],
+      "per_coverage_section_overlap": {}
+    },
+    "made_whole_computation": {
+      "paid_to_insured": "0",
+      "total_economic_loss": "0",
+      "shortfall": "0",
+      "waiver_status": "not_waived",
+      "rationale": "Carrier subrogation pursued direct against tortfeasor; shortfall surfaces but does not reduce recoverable basis under Schonau's freestanding-claim exception."
+    },
+    "decision_rationale": "Recommendation: senior_review_required; lane: 627_7405_pip_commercial; forum: tbd_signatory_check_pending; net=$0.00. Bar status: no bar triggered. Variance flags: af_signatory_unverifiable. Trigger: INITIAL_RECOVERY_EVALUATION.",
+    "preservation_hold_status": {
+      "issued": true,
+      "hold_scope": [
+        "vehicle",
+        "edr_acm",
+        "scene_photos"
+      ],
+      "storage_yard_letter_text": "Storage Yard Preservation Notice: do not release, scrap, or otherwise dispose of the subject vehicle, its event data recorder (EDR/ACM), or any physical components without prior written authorization from the carrier. Failure to preserve may give rise to spoliation sanctions under Public Health Trust v. Valcin, 507 So. 2d 596 (Fla. 1987).",
+      "blocks_salvage_release": true,
+      "acknowledgment_status": "pending"
+    },
+    "sources_cited": [
+      {
+        "statute_or_case": "Fla. Stat. \u00a795.11(4)(a) as amended by HB 837",
+        "claim_doc_id": null,
+        "quoted_span": "Statute-version selector: 2yr post-3/24/2023; 4yr pre. PD remains 4yr. Clock runs from loss date."
+      },
+      {
+        "statute_or_case": "Fla. Stat. \u00a7768.81(6) as amended by HB 837 (eff. 3/24/2023)",
+        "claim_doc_id": null,
+        "quoted_span": "Hard cliff: claimant >50% fault on post-3/24/2023 auto BI \u2192 abstain regardless of damages."
+      },
+      {
+        "statute_or_case": "FL common-law anti-subrogation rule; policy omnibus / permissive-user construction",
+        "claim_doc_id": null,
+        "quoted_span": "Blocking gate, per coverage section: if tortfeasor target overlaps named / omnibus / resident-relative roster under SAME coverage section as paid loss, abstain and route to Coverage."
+      },
+      {
+        "statute_or_case": "Schonau v. GEICO Gen. Ins. Co., 903 So. 2d 285 (Fla. 4th DCA 2005)",
+        "claim_doc_id": null,
+        "quoted_span": "Conditional gate: limited-fund + insured not made whole + no contractual waiver \u2192 cannot subrogate OUT of insured's recovery. Freestanding direct claim against tortfeasor NOT blocked."
+      },
+      {
+        "statute_or_case": "Fla. Stat. \u00a7627.7405; \u00a7627.732(3); Amerisure v. State Farm, 897 So. 2d 1287 (Fla. 2005)",
+        "claim_doc_id": null,
+        "quoted_span": "PIP subro barred EXCEPT against commercial-motor-vehicle owners (taxicabs excluded). Classification per \u00a7627.732(3) body-type + primary-use, NOT weight."
+      },
+      {
+        "statute_or_case": "Fla. Stat. \u00a7627.727(6)",
+        "claim_doc_id": null,
+        "quoted_span": "Hard 30-day gate when tortfeasor liability carrier tenders settlement: UM carrier consents OR advances offer within 30 days. Miss = extinguished."
+      },
+      {
+        "statute_or_case": "Fla. Stat. \u00a7768.76(7)",
+        "claim_doc_id": null,
+        "quoted_span": "Hard 30-day gate on claimant's notice of tort action: collateral-source provider asserts reimbursement right in writing or waives. Medicare / Medicaid / WC statutorily excluded from 'collateral source'."
+      },
+      {
+        "statute_or_case": "Fla. Stat. \u00a7324.021(9)(b)3",
+        "claim_doc_id": null,
+        "quoted_span": "Cap: natural-person owner vicarious BI capped $100K/$300K + $50K PD; conditional $500K econ-only if operator <$500K combined. Cap does NOT apply to direct-negligence (negligent entrustment) \u2014 uncapped separate layer."
+      },
+      {
+        "statute_or_case": "Fla. Stat. \u00a7768.81(3) (2006); Fabre v. Marin, 623 So. 2d 1182 (Fla. 1993)",
+        "claim_doc_id": null,
+        "quoted_span": "Apportionment: recovery from each defendant capped at that defendant's percentage of fault; non-party Fabre defendants on verdict form."
+      },
+      {
+        "statute_or_case": "Fla. Stat. \u00a7627.737",
+        "claim_doc_id": null,
+        "quoted_span": "BI tort right for non-economic damages: permanency / scarring / significant function loss. Economic damages above $10K PIP recoverable without threshold. Threshold does NOT apply if tortfeasor lacks PIP-compliant coverage."
+      },
+      {
+        "statute_or_case": "Fla. Stat. \u00a7768.0427 (HB 837)",
+        "claim_doc_id": null,
+        "quoted_span": "Damages-basis: past medicals capped at amounts actually paid (or LOP contracted, or 120% Medicare for uninsured). Strips billed-amount basis. Filing-date triggered."
+      },
+      {
+        "statute_or_case": "AF Reference Guide; AF Rule 1-2; AF Article Second",
+        "claim_doc_id": null,
+        "quoted_span": "Routing: both carriers signatory AND company-paid damages \u2264$100K \u2192 compulsory arbitration. Non-signatory or over-cap \u2192 litigation or Special Forum. 60-day post-dismissal refile window."
+      },
+      {
+        "statute_or_case": "Public Health Trust v. Valcin, 507 So. 2d 596 (Fla. 1987); Martino v. Wal-Mart, 908 So. 2d 342 (Fla. 2005)",
+        "claim_doc_id": null,
+        "quoted_span": "Preservation duty: subrogating carrier owes Valcin duty on vehicle / EDR / parts / photos. First-party spoliation tort abolished (Martino) but Valcin presumption + sanctions apply."
+      },
+      {
+        "statute_or_case": "Fla. Stat. \u00a7624.155 as amended by HB 837; Harvey v. GEICO, 259 So. 3d 1 (Fla. 2018)",
+        "claim_doc_id": null,
+        "quoted_span": "Cross-stream: Coverage denied + Recovery pursuing same loss \u2192 senior review with mandatory made-whole accounting + denial rationale. HB 837 \u00a7624.155(4) safe harbor covers third-party tender only \u2014 does NOT extend to Recovery conduct."
+      },
+      {
+        "statute_or_case": "Dade County School Bd. v. Radio Station WQBA, 731 So. 2d 638 (Fla. 1999)",
+        "claim_doc_id": null,
+        "quoted_span": "Subrogated carrier acquires no greater rights than insured. Pre-tender release / settlement / extinguishing act by insured against tortfeasor (with knowledge of perfected subro) defeats recovery."
+      }
+    ],
+    "open_requests": [
+      {
+        "request_type": "tortfeasor_carrier_naic_lookup",
+        "requested_date": "2026-06-08",
+        "age_days": 0,
+        "target_party": "claim_intake"
+      },
+      {
+        "request_type": "tortfeasor_vehicle_vin_nhtsa_recall_cross_reference",
+        "requested_date": "2026-06-08",
+        "age_days": 0,
+        "target_party": "evidence_team"
+      },
+      {
+        "request_type": "edr_acm_pull",
+        "requested_date": "2026-06-08",
+        "age_days": 0,
+        "target_party": "vendor_or_storage_yard"
+      }
+    ],
+    "evidence_not_obtained": [],
+    "supervisor_disagreement_record": []
+  },
+  "rationale_text": "RECOVERY EVALUATION \u2014 Claim CLM-009 | Eval #1 | 2026-06-08 | Examiner: system | constants v1.2026-06-02\nTRIGGER: INITIAL_RECOVERY_EVALUATION (2026-06-08)\n\nLOSS POSTURE:\n  loss_date: 2026-04-13 \u2192 SOL version: post_hb837_2yr\n  loss_state: FL\n  filing_date: 2026-04-14 \u2192 \u00a7768.0427 trigger: active\n  subrogation_lane: 627_7405_pip_commercial\n\nUPSTREAM CONSUMPTION:\n  Liability: insured_fault=None%, claimant_fault=None%, regime=modified_51_bar_hb837, bar_basis=hb837_51_pct\n  Reserve: paid_indemnity=$0, outstanding=$0.0, total_economic_loss=$0\n  Coverage: status=granted, omnibus_roster=[0 entries], cooperation_window_open=False\n\nDOCTRINAL GATES (evaluated in order):\n  [pass] hb837_negligence_sol \u2014 Fla. Stat. \u00a795.11(4)(a) as amended by HB 837 | evidence: loss_date=2026-04-13; sol_deadline=2028-04-13\n  [n_a] hb837_modified_comparative_bar \u2014 Fla. Stat. \u00a7768.81(6) as amended by HB 837 (eff. 3/24/2023)\n  [pass] anti_subrogation_rule \u2014 FL common-law anti-subrogation rule; policy omnibus / permissive-user construction\n  [pass] made_whole_doctrine \u2014 Schonau v. GEICO Gen. Ins. Co., 903 So. 2d 285 (Fla. 4th DCA 2005) | evidence: shortfall=$0; freestanding direct claim path\n  [pass] pip_subrogability_627_7405 \u2014 Fla. Stat. \u00a7627.7405; \u00a7627.732(3); Amerisure v. State Farm, 897 So. 2d 1287 (Fla. 2005) | evidence: tortfeasor commercial \u2014 \u00a7627.7405 carve-out applies\n  [n_a] um_preservation_627_727_6 \u2014 Fla. Stat. \u00a7627.727(6) | evidence: no liability-carrier offer recorded\n  [n_a] collateral_source_768_76 \u2014 Fla. Stat. \u00a7768.76(7) | evidence: no \u00a7768.76 notice recorded\n  [n_a] vicarious_cap_324_021 \u2014 Fla. Stat. \u00a7324.021(9)(b)3 | evidence: owner_type=business_not_in_leasing; \u00a7324.021 cap is natural-person-only\n  [pass] joint_several_abolition_768_81_3 \u2014 Fla. Stat. \u00a7768.81(3) (2006); Fabre v. Marin, 623 So. 2d 1182 (Fla. 1993) | evidence: fabre_candidates=0\n  [pass] verbal_threshold_627_737 \u2014 Fla. Stat. \u00a7627.737 | evidence: permanency=True; scarring=False; function_loss=True; mri=True\n  [pass] paid_not_billed_768_0427 \u2014 Fla. Stat. \u00a7768.0427 (HB 837) | evidence: loss_date=2026-04-13; filing_date=2026-04-14\n  [ambiguous_routed_to_senior] af_compulsory_jurisdiction \u2014 AF Reference Guide; AF Rule 1-2; AF Article Second | evidence: tortfeasor carrier NAIC missing | variance: af_signatory_unverifiable\n  [pass] spoliation_valcin_martino \u2014 Public Health Trust v. Valcin, 507 So. 2d 596 (Fla. 1987); Martino v. Wal-Mart, 908 So. 2d 342 (Fla. 2005) | evidence: vehicle_status=unknown; edr_pulled=False\n  [pass] deny_subrogate_interlock \u2014 Fla. Stat. \u00a7624.155 as amended by HB 837; Harvey v. GEICO, 259 So. 3d 1 (Fla. 2018)\n  [pass] step_into_shoes_defenses \u2014 Dade County School Bd. v. Radio Station WQBA, 731 So. 2d 638 (Fla. 1999) | evidence: no release / pre-tender settlement signals detected\n\nLAYERED TARGETS:\n  (no targets \u2014 upstream Liability snapshot absent or no parties identified)\n\nRECOVERABLE BASIS:\n  \u00a7768.0427-capped economic damages: $0.00\n  \u2212 PIP collateral source stripped: $10000.00\n  \u2212 Made-whole shortfall: $0.00\n  = Recoverable basis: $0.00\n\nNET ECONOMICS:\n  Gross recoverable (sum of layer EVs): $0.00\n  \u2212 Fee drag (internal_blended): $640.00\n  \u2212 Fee-shifting exposure: $0\n  = Net: $0.00\n\nFORUM ROUTING:\n  AF signatory check: naic=None \u2192 unverifiable\n  Company-paid damages: $0.00 vs AF $100K cap: within\n  Recommendation: tbd_signatory_check_pending \u2014 basis: Signatory check unverifiable; block forum routing until resolved\n\nDEADLINE CALENDAR:\n  sol_drop_dead: 2028-04-13 (T-675d) | Fla. Stat. \u00a795.11(4)(a) as amended by HB 837\n\nPRESERVATION HOLD:\n  issued=True; scope=['vehicle', 'edr_acm', 'scene_photos']; ack=pending; blocks_salvage_release=True\n  Letter: Storage Yard Preservation Notice: do not release, scrap, or otherwise dispose of the subject vehicle, its event data rec...\n\nVARIANCE FLAGS (1 active):\n  - af_signatory_unverifiable\n\nCROSS-STREAM CONFLICTS:\n  Coverage denial + Recovery pursuit interlock: no_conflict\n  Anti-subrogation omnibus overlap: none\n  \u00a7627.426(2) cooperation-defense window open: False\n\nDILIGENCE LEDGER:\n  Gates evaluated:\n    [pass] hb837_negligence_sol | Fla. Stat. \u00a795.11(4)(a) as amended by HB 837 | evidence: loss_date=2026-04-13; sol_deadline=2028-04-13\n    [n_a] hb837_modified_comparative_bar | Fla. Stat. \u00a7768.81(6) as amended by HB 837 (eff. 3/24/2023)\n    [pass] anti_subrogation_rule | FL common-law anti-subrogation rule; policy omnibus / permissive-user construction\n    [pass] made_whole_doctrine | Schonau v. GEICO Gen. Ins. Co., 903 So. 2d 285 (Fla. 4th DCA 2005) | evidence: shortfall=$0; freestanding direct claim path\n    [pass] pip_subrogability_627_7405 | Fla. Stat. \u00a7627.7405; \u00a7627.732(3); Amerisure v. State Farm, 897 So. 2d 1287 (Fla. 2005) | evidence: tortfeasor commercial \u2014 \u00a7627.7405 carve-out applies\n    [n_a] um_preservation_627_727_6 | Fla. Stat. \u00a7627.727(6) | evidence: no liability-carrier offer recorded\n    [n_a] collateral_source_768_76 | Fla. Stat. \u00a7768.76(7) | evidence: no \u00a7768.76 notice recorded\n    [n_a] vicarious_cap_324_021 | Fla. Stat. \u00a7324.021(9)(b)3 | evidence: owner_type=business_not_in_leasing; \u00a7324.021 cap is natural-person-only\n    [pass] joint_several_abolition_768_81_3 | Fla. Stat. \u00a7768.81(3) (2006); Fabre v. Marin, 623 So. 2d 1182 (Fla. 1993) | evidence: fabre_candidates=0\n    [pass] verbal_threshold_627_737 | Fla. Stat. \u00a7627.737 | evidence: permanency=True; scarring=False; function_loss=True; mri=True\n    [pass] paid_not_billed_768_0427 | Fla. Stat. \u00a7768.0427 (HB 837) | evidence: loss_date=2026-04-13; filing_date=2026-04-14\n    [ambiguous_routed_to_senior] af_compulsory_jurisdiction | AF Reference Guide; AF Rule 1-2; AF Article Second | evidence: tortfeasor carrier NAIC missing\n    [pass] spoliation_valcin_martino | Public Health Trust v. Valcin, 507 So. 2d 596 (Fla. 1987); Martino v. Wal-Mart, 908 So. 2d 342 (Fla. 2005) | evidence: vehicle_status=unknown; edr_pulled=False\n    [pass] deny_subrogate_interlock | Fla. Stat. \u00a7624.155 as amended by HB 837; Harvey v. GEICO, 259 So. 3d 1 (Fla. 2018)\n    [pass] step_into_shoes_defenses | Dade County School Bd. v. Radio Station WQBA, 731 So. 2d 638 (Fla. 1999) | evidence: no release / pre-tender settlement signals detected\n  AF signatory check: naic=None \u2192 unverifiable (source: AF_SIGNATORY_ROSTER_V1 (seed; production refresh per AF publication); ts: 2026-06-08T21:10:13.078978+00:00)\n    Fallback: Tortfeasor carrier NAIC missing \u2014 extractor gap\n  Anti-subrogation overlap: none\n  Made-whole: paid=$0 / loss=$0 / shortfall=$0 (waiver: not_waived)\n    Rationale: Carrier subrogation pursued direct against tortfeasor; shortfall surfaces but does not reduce recoverable basis under Schonau's freestanding-claim exception.\n  Preservation hold: issued=True; scope=['vehicle', 'edr_acm', 'scene_photos']; ack=pending; blocks_salvage=True\n  Open requests:\n    - tortfeasor_carrier_naic_lookup \u2192 claim_intake (age 0d, requested 2026-06-08)\n    - tortfeasor_vehicle_vin_nhtsa_recall_cross_reference \u2192 evidence_team (age 0d, requested 2026-06-08)\n    - edr_acm_pull \u2192 vendor_or_storage_yard (age 0d, requested 2026-06-08)\n  Decision rationale: Recommendation: senior_review_required; lane: 627_7405_pip_commercial; forum: tbd_signatory_check_pending; net=$0.00. Bar status: no bar triggered. Variance flags: af_signatory_unverifiable. Trigger: INITIAL_RECOVERY_EVALUATION.\n\nRECOMMENDATION: senior_review_required\n  Net apportioned recoverable: $0.00\n  Required tier: roundtable\n  Committable at examiner: False\n  Basis: Mandatory-escalation variance flag active: af_signatory_unverifiable\n\nDOWNSTREAM HANDOFFS:\n  Brief: full RecoveryAssessment + diligence ledger + 0 layered targets\n  Claim system: preservation_hold (issued=True; blocks_salvage_release=True)\n  Runner: deadline_calendar (1 entries) with T-90/T-60/T-30 trigger thresholds",
+  "variance_flags": [
+    "af_signatory_unverifiable"
+  ],
+  "authority_tier_required": {
+    "committable_at_examiner": false,
+    "required_tier": "roundtable",
+    "net_apportioned_recoverable": "0.00",
+    "basis_for_tier": "Mandatory-escalation variance flag active: af_signatory_unverifiable"
+  },
+  "cross_stream_conflicts": {
+    "coverage_denial_recovery_pursuit_interlock": "no_conflict",
+    "anti_subrogation_omnibus_overlap": [],
+    "section_627_426_2_cooperation_window_open": false
+  }
+}

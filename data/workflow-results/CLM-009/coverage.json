@@ -1,0 +1,480 @@
+{
+  "request_id": "REQ-009",
+  "reviewed_as_of": "2026-06-02T00:00:00Z",
+  "evidence_found": [
+    {
+      "document_id": "DOC-009-ED",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Assessment/Plan and Medical specials paragraph",
+      "text_excerpt": "Displaced clavicle fracture \u2014 orthopedic fixation scheduled; cervical injury managed conservatively with PT. Medical specials to date: $38,500 (ED, imaging, orthopedic surgery estimate, physical therapy). Permanent impairment likely given operative fracture.",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-009-ED",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "History paragraph",
+      "text_excerpt": "Belted driver of a box truck struck on the driver side by a tractor-trailer while stopped. Significant intrusion to the cab.",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-009-INCIDENT",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Narrative line 8",
+      "text_excerpt": "Vehicle 1 (insured) was fully stopped, waiting to enter the yard, when Vehicle 2 struck it from the rear. Vehicle 1 took no evasive action because none was available; it was stationary and lawfully stopped. The injured party is the insured's own driver.",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-009-INCIDENT",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Fault allocation paragraph",
+      "text_excerpt": "Fault allocation: Vehicle 2 \u2014 100%. Vehicle 1 (insured) \u2014 0%.",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-009-INCIDENT",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Citation paragraph",
+      "text_excerpt": "Vehicle 2 is a commercial tractor-trailer (a commercial motor carrier, not a private-passenger vehicle), operated for Brightway Freight Carriers, Inc. Liability insurer identified at scene as Continental Freight Indemnity Co.",
+      "relation": "contextual"
+    },
+    {
+      "document_id": "DOC-009-PIP",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "First-party benefits paragraph",
+      "text_excerpt": "The Company has paid Personal Injury Protection benefits on behalf of the injured insured driver: $10,000 PIP exhausted (80% of documented medical to the statutory cap), plus $5,000 med-pay. Total first-party benefits paid to date: $15,000.",
+      "relation": "contextual"
+    },
+    {
+      "document_id": "DOC-009-PIP",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Subrogation rights paragraph",
+      "text_excerpt": "The Company is subrogated to the insured's rights of recovery against the responsible third party to the extent of PIP/med-pay paid. No release has been given to the tortfeasor or its carrier; no settlement reached; the statute of limitations has not run.",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-009-SUBRO",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Tortfeasor identification paragraph",
+      "text_excerpt": "Tortfeasor: Brightway Freight Carriers, Inc. \u2014 a COMMERCIAL motor carrier (not a private-passenger vehicle), so the \u00a7627.7405 PIP commercial subrogation carve-out applies.",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-009-SUBRO",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Recoverable basis paragraph",
+      "text_excerpt": "Recoverable basis: $15,000 PIP/med-pay paid plus the insured driver's $38,500 medical specials and BI damages, pursued under the PIP-commercial lane. Liability is clear (police report assigns 100% to the carrier's driver; driver cited). No anti-subrogation overlap \u2014 the tortfeasor is not an insured under our policy.",
+      "relation": "supports"
+    },
+    {
+      "document_id": "DOC-009-SUBRO",
+      "sourced_rule_id": null,
+      "ledger_entry_id": null,
+      "locator": "Forum decision note",
+      "text_excerpt": "The carrier's NAIC code is not in the file, so its Arbitration Forums signatory status cannot be verified \u2014 the forum decision (compulsory arbitration vs. litigation vs. negotiated demand) needs senior signoff.",
+      "relation": "contextual"
+    }
+  ],
+  "assessments": [
+    {
+      "claim_text": "The loss date of 2026-04-13 falls within the active policy period (2026-01-01 to 2026-12-31), satisfying the policy-period requirement.",
+      "probability": 0.99,
+      "reasoning": "The policy period is in-force from 2026-01-01 to 2026-12-31. The loss date is 2026-04-13. However, the medical records note a date of service of 2026-05-22, which is the date of the ED encounter, not necessarily the collision date. The police report is dated 2026-05-23 and references the same collision. There is a minor discrepancy between the stated loss date of 2026-04-13 (intake) and the 2026-05-22 ED/police report date of service. Regardless of which date controls, both fall within the policy period, so coverage-period eligibility is not materially in doubt. The 1% residual accounts for an unexplained one-month gap between the intake loss date and the documented clinical encounter date that may warrant clarification.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-009-ED",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Header",
+          "text_excerpt": "Date of service 2026-05-22 \u00b7 Page 3",
+          "relation": "contextual"
+        },
+        {
+          "document_id": "DOC-009-INCIDENT",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Report header",
+          "text_excerpt": "Report PD-2026-3071 \u00b7 Date 2026-05-23",
+          "relation": "contextual"
+        }
+      ]
+    },
+    {
+      "claim_text": "The injured party is an insured driver under the named insured's commercial auto fleet policy, making them a qualifying claimant for first-party BI/PIP purposes.",
+      "probability": 0.97,
+      "reasoning": "The medical record identifies the injured person as 'insured's commercial driver (Pinnacle Steel Works fleet).' The police report confirms 'The injured party is the insured's own driver.' The policy is a CA00 commercial auto form on behalf of the named insured (Pinnacle Steel Works implied by DOC-009-SUBRO referencing 'Pinnacle Steel Works injured-driver loss'). The driver of the insured box truck is a covered person under a commercial auto policy. A small residual reflects the absence of a driver schedule or employment confirmation document in the file.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-009-ED",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Patient identification line",
+          "text_excerpt": "Patient: insured's commercial driver (Pinnacle Steel Works fleet).",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-009-INCIDENT",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Narrative line 8",
+          "text_excerpt": "The injured party is the insured's own driver.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-009-SUBRO",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Re: line",
+          "text_excerpt": "Re: Pinnacle Steel Works injured-driver loss of 2026-05-22",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "The covered vehicle (insured box truck) was involved in a covered auto accident, triggering the auto_BI coverage.",
+      "probability": 0.98,
+      "reasoning": "The police report and medical records both confirm an auto collision involving the insured's box truck. The covered cause is a third-party rear-end strike while the insured vehicle was stationary. No exclusions apparent in the file (e.g., intentional acts, vehicle not covered) are implicated by the facts documented.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-009-INCIDENT",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Narrative line 8",
+          "text_excerpt": "Vehicle 1 (insured) was fully stopped, waiting to enter the yard, when Vehicle 2 struck it from the rear.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-009-ED",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "History paragraph",
+          "text_excerpt": "Belted driver of a box truck struck on the driver side by a tractor-trailer while stopped. Significant intrusion to the cab.",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "Bodily injury damages are documented and appear serious, falling within the CP-AUTO-BI-STANDARD per-person limit of $300,000.",
+      "probability": 0.92,
+      "reasoning": "Medical specials to date are $38,500 with a note that permanent impairment is likely given operative fracture. The per-person limit is $300,000. Current medicals are well within limits; however, the note of 'permanent impairment likely' and a forthcoming orthopedic surgery suggests damages could grow. The per-occurrence limit is $1,000,000. There is no indication of multiple claimants in this incident. Probability of damages exceeding the per-person sublimit is low at this stage but cannot be fully ruled out given the permanent impairment notation.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-009-ED",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Assessment/Plan and Medical specials paragraph",
+          "text_excerpt": "Medical specials to date: $38,500 (ED, imaging, orthopedic surgery estimate, physical therapy). Permanent impairment likely given operative fracture.",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "The insured vehicle's driver bears 0% fault; the third-party commercial vehicle driver bears 100% fault, with a citation issued to the third-party driver.",
+      "probability": 0.95,
+      "reasoning": "The police report explicitly assigns 100% fault to Vehicle 2 and 0% to Vehicle 1. The Vehicle 2 driver was cited. No comparative negligence exposure appears on the current record. The 5% residual accounts for the possibility that additional investigation could surface a contributing factor not reflected in the initial police report.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-009-INCIDENT",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Fault allocation paragraph",
+          "text_excerpt": "Fault allocation: Vehicle 2 \u2014 100%. Vehicle 1 (insured) \u2014 0%.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-009-INCIDENT",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Citation paragraph",
+          "text_excerpt": "Citation: the Vehicle 2 driver was cited.",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "First-party PIP and med-pay benefits of $15,000 have already been paid; the company holds subrogation rights against the third-party tortfeasor and no release has been executed.",
+      "probability": 0.99,
+      "reasoning": "The PIP ledger document explicitly records $10,000 PIP exhausted and $5,000 med-pay paid, totaling $15,000. The subrogation document confirms recovery rights are preserved and no release or settlement has occurred. The \u00a7627.7405 commercial carve-out is noted as applicable because the tortfeasor is a commercial motor carrier.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-009-PIP",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "First-party benefits paragraph",
+          "text_excerpt": "The Company has paid Personal Injury Protection benefits on behalf of the injured insured driver: $10,000 PIP exhausted (80% of documented medical to the statutory cap), plus $5,000 med-pay. Total first-party benefits paid to date: $15,000.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-009-PIP",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Subrogation rights paragraph",
+          "text_excerpt": "The Company is subrogated to the insured's rights of recovery against the responsible third party to the extent of PIP/med-pay paid. No release has been given to the tortfeasor or its carrier; no settlement reached; the statute of limitations has not run.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-009-SUBRO",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Tortfeasor identification paragraph",
+          "text_excerpt": "Tortfeasor: Brightway Freight Carriers, Inc. \u2014 a COMMERCIAL motor carrier (not a private-passenger vehicle), so the \u00a7627.7405 PIP commercial subrogation carve-out applies.",
+          "relation": "supports"
+        }
+      ]
+    },
+    {
+      "claim_text": "A potential coverage concern exists regarding the discrepancy between the intake loss date (2026-04-13) and the clinical/police documentation date (2026-05-22/05-23), which may require clarification but does not appear to defeat coverage given both dates fall within the policy period.",
+      "probability": 0.85,
+      "reasoning": "The claim intake summary states loss date 2026-04-13, but the ED note shows date of service 2026-05-22 and the police report is dated 2026-05-23. A roughly 5-6 week gap is unusual. Possible explanations include a data entry error in the intake record, the insured delaying medical treatment, or a separate prior event. This discrepancy should be clarified but, as noted, both dates fall within the active policy period. A ROR addressing the need to confirm the actual loss date is prudent.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-009-ED",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Header",
+          "text_excerpt": "Date of service 2026-05-22 \u00b7 Page 3",
+          "relation": "contextual"
+        },
+        {
+          "document_id": "DOC-009-INCIDENT",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Report header",
+          "text_excerpt": "Report PD-2026-3071 \u00b7 Date 2026-05-23",
+          "relation": "contextual"
+        }
+      ]
+    },
+    {
+      "claim_text": "The tortfeasor's liability carrier (Continental Freight Indemnity Co.) has $1,000,000 per-occurrence limits, and the recovery forum (compulsory arbitration vs. litigation) cannot yet be determined because NAIC/signatory status is unconfirmed.",
+      "probability": 0.9,
+      "reasoning": "The subrogation referral document confirms Continental Freight Indemnity Co. as the liability carrier with $1,000,000 per-occurrence limits documented on the declarations page in file. However, the NAIC code is not in the file, so Arbitration Forums signatory status cannot be verified, leaving the recovery forum undetermined pending senior signoff.",
+      "evidence_citations": [
+        {
+          "document_id": "DOC-009-SUBRO",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Forum decision note",
+          "text_excerpt": "The carrier's NAIC code is not in the file, so its Arbitration Forums signatory status cannot be verified \u2014 the forum decision (compulsory arbitration vs. litigation vs. negotiated demand) needs senior signoff.",
+          "relation": "supports"
+        },
+        {
+          "document_id": "DOC-009-SUBRO",
+          "sourced_rule_id": null,
+          "ledger_entry_id": null,
+          "locator": "Tortfeasor identification paragraph",
+          "text_excerpt": "Liability carrier: Continental Freight Indemnity Co. Policy limits documented at $1,000,000 per occurrence on the carrier's declarations page in file.",
+          "relation": "supports"
+        }
+      ]
+    }
+  ],
+  "synthesis": {
+    "outcomes": [
+      {
+        "claim_text": "Clean coverage \u2014 CP-AUTO-BI-STANDARD applies without reservation; loss date, covered vehicle, covered driver, and covered cause all confirmed; no active exclusions identified; BI damages within limits; subrogation rights preserved.",
+        "probability": 0.72,
+        "reasoning": "All primary coverage elements are satisfied: the loss falls within the policy period, the injured party is the insured's own driver of a covered commercial vehicle, fault is entirely attributed to the third party, and documented damages ($38,500 in medicals with permanent impairment noted) are well within the $300,000 per-person sublimit. First-party PIP/med-pay has been paid and subrogation rights are intact. The primary reason clean coverage is not higher is the unexplained discrepancy between the 2026-04-13 intake loss date and the 2026-05-22 clinical/police report date, and the absence of a formal driver schedule or employment confirmation in file.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-009-INCIDENT",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Fault allocation paragraph",
+            "text_excerpt": "Fault allocation: Vehicle 2 \u2014 100%. Vehicle 1 (insured) \u2014 0%.",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-009-ED",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Assessment/Plan and Medical specials paragraph",
+            "text_excerpt": "Medical specials to date: $38,500 (ED, imaging, orthopedic surgery estimate, physical therapy). Permanent impairment likely given operative fracture.",
+            "relation": "supports"
+          },
+          {
+            "document_id": "DOC-009-PIP",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Subrogation rights paragraph",
+            "text_excerpt": "The Company is subrogated to the insured's rights of recovery against the responsible third party to the extent of PIP/med-pay paid. No release has been given to the tortfeasor or its carrier; no settlement reached; the statute of limitations has not run.",
+            "relation": "supports"
+          }
+        ]
+      },
+      {
+        "claim_text": "Reservation of Rights \u2014 coverage acknowledged but issued subject to resolution of: (1) the discrepancy between the 2026-04-13 intake loss date and the 2026-05-22 clinical/police documentation date; (2) confirmation that the injured driver is a covered person under the commercial auto policy (driver schedule / employment verification); (3) determination of the recovery forum for subrogation (Arbitration Forums signatory status of Continental Freight Indemnity Co.).",
+        "probability": 0.26,
+        "reasoning": "The date discrepancy (intake 2026-04-13 vs. clinical 2026-05-22) is a factual anomaly that, while both dates fall within the policy period, could indicate an unrelated prior incident or data error requiring formal clarification before unconditional acceptance. The lack of a driver schedule in file means the insured status of the driver has not been formally verified in documentation. These open questions are material enough to support a ROR posture without rising to a denial, given the strong coverage indicators otherwise present.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-009-ED",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Header",
+            "text_excerpt": "Date of service 2026-05-22 \u00b7 Page 3",
+            "relation": "contextual"
+          },
+          {
+            "document_id": "DOC-009-SUBRO",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Forum decision note",
+            "text_excerpt": "The carrier's NAIC code is not in the file, so its Arbitration Forums signatory status cannot be verified \u2014 the forum decision (compulsory arbitration vs. litigation vs. negotiated demand) needs senior signoff.",
+            "relation": "contextual"
+          }
+        ]
+      },
+      {
+        "claim_text": "Denial \u2014 no coverage under CP-AUTO-BI-STANDARD.",
+        "probability": 0.02,
+        "reasoning": "Denial probability is very low. All primary coverage prerequisites appear satisfied on the available record. The sole scenario supporting denial would be a finding that the 2026-04-13 loss date represents a different, uncovered incident entirely, or that the driver is definitively not a covered person \u2014 neither of which is affirmatively supported by any document in file. The residual 2% reflects only extreme tail risk.",
+        "evidence_citations": [
+          {
+            "document_id": "DOC-009-ED",
+            "sourced_rule_id": null,
+            "ledger_entry_id": null,
+            "locator": "Patient identification line",
+            "text_excerpt": "Patient: insured's commercial driver (Pinnacle Steel Works fleet).",
+            "relation": "contextual"
+          }
+        ]
+      }
+    ],
+    "would_shift_distribution": [
+      "Confirmation that the 2026-04-13 intake loss date is a data entry error and 2026-05-22 is the actual loss date would increase clean coverage probability.",
+      "Discovery that the 2026-04-13 and 2026-05-22 dates represent two separate incidents would materially increase ROR or denial probability for the earlier event.",
+      "Production of a driver schedule confirming the injured driver's covered status under POL-PLACEHOLDER-2026 would increase clean coverage probability.",
+      "Confirmation of Continental Freight Indemnity Co.'s Arbitration Forums signatory status would resolve the recovery forum question and reduce ROR probability.",
+      "Evidence of a policy exclusion applicable to this driver or vehicle class would shift mass toward denial.",
+      "Any indication that the insured gave a release to Brightway Freight or Continental Freight Indemnity would affect subrogation rights and shift the distribution."
+    ]
+  },
+  "coverage_analysis_memo": {
+    "body": "COVERAGE ANALYSIS MEMORANDUM\n\nFile / Request: REQ-009 | Claim: CLM-009\nCoverage Targeted: CP-AUTO-BI-STANDARD (Auto Bodily Injury)\nPolicy: PLACEHOLDER-001 (CA00 Form) | Period: 2026-01-01 \u2013 2026-12-31 | Jurisdiction: FL\nNamed Insured: Pinnacle Steel Works (per DOC-009-SUBRO)\nReviewed As Of: 2026-06-02\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nI. SUMMARY OF FACTS\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nOn or about 2026-05-22 (per clinical and law enforcement records), the named insured's commercial driver was operating a box truck for Pinnacle Steel Works when, while fully stopped awaiting yard entry, the vehicle was rear-ended by a commercial tractor-trailer operated by Brightway Freight Carriers, Inc. The driver sustained a displaced left clavicle fracture requiring orthopedic fixation and a C5-C6 disc protrusion managed with physical therapy. Medical specials to date are $38,500, with permanent impairment noted as likely.\n\nNOTE: The claim intake record states a loss date of 2026-04-13; however, the Emergency Department note (DOC-009-ED) reflects a date of service of 2026-05-22, and the police report (DOC-009-INCIDENT) is dated 2026-05-23. This approximately 5-6 week discrepancy requires clarification. Both dates fall within the active policy period.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nII. COVERAGE ELEMENTS ANALYZED\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nA. Policy Period\nBoth the intake loss date (2026-04-13) and the clinical/police documentation date (2026-05-22/23) fall within the 2026-01-01 \u2013 2026-12-31 policy period. Policy period is not a barrier to coverage under either date, but the discrepancy should be reconciled to confirm the correct loss date and ensure no separate unrelated incident is implicated.\n\nB. Covered Vehicle and Covered Person\nThe medical record identifies the claimant as the 'insured's commercial driver (Pinnacle Steel Works fleet)' and the police report confirms 'The injured party is the insured's own driver.' The insured vehicle is described as a box truck, consistent with a commercial fleet policy. No driver schedule or employment verification document is present in the file; formal confirmation of the driver's covered-person status is an open item.\n\nC. Covered Cause of Loss\nThe collision is a classic rear-end strike of a stationary insured vehicle by a third-party commercial vehicle. No exclusions apparent from the CA00 commercial auto form are implicated by these facts. The police report assigns 100% fault to the third-party driver and 0% to the insured vehicle; the third-party driver received a citation.\n\nD. Damages and Limits\nDocumented medical specials are $38,500, well within the $300,000 per-person sublimit under CP-AUTO-BI-STANDARD. The permanent impairment notation and upcoming orthopedic surgery indicate damages will increase; monitoring against the per-person sublimit is warranted. The per-occurrence limit is $1,000,000; no indication of multiple claimants in this event.\n\nE. First-Party Benefits Already Paid\nPIP benefits of $10,000 (statutory cap, exhausted) and med-pay of $5,000 have been paid under a separate first-party claim (POL-2026-0093), totaling $15,000. These are collateral source payments posted 2026-06-01.\n\nF. Subrogation\nThe company holds subrogation rights against Brightway Freight Carriers, Inc. (commercial motor carrier) and its liability insurer, Continental Freight Indemnity Co., for the $15,000 PIP/med-pay paid. The \u00a7627.7405 commercial carve-out is identified as applicable, enabling PIP subrogation against the commercial tortfeasor. No release has been executed; the statute of limitations has not run. However, the NAIC code for Continental Freight Indemnity Co. is not in file, preventing verification of Arbitration Forums signatory status \u2014 the recovery forum (compulsory arbitration, litigation, or negotiated demand) requires senior signoff before proceeding.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIII. OPEN ITEMS / INFORMATION GAPS\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n1. Loss date discrepancy: Reconcile 2026-04-13 (intake) vs. 2026-05-22 (clinical/police). Confirm whether these reflect the same event or two separate incidents.\n2. Driver verification: Obtain driver schedule or employment confirmation to formally document insured-driver status under the commercial auto policy.\n3. Recovery forum: Obtain NAIC code for Continental Freight Indemnity Co. to determine Arbitration Forums signatory status; obtain senior signoff on recovery forum selection.\n4. Subrogation demand: No demand has been issued to Continental Freight Indemnity Co. as of the review date; the subrogation referral is pending.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIV. PROBABILITY DISTRIBUTION\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\u2022 Clean Coverage: 72%\n\u2022 Reservation of Rights: 26%\n\u2022 Denial: 2%\n\nThe distribution reflects strong coverage indicators on the primary elements (period, covered vehicle, covered person, covered cause, damages within limits) offset by the unresolved loss-date discrepancy and missing driver-schedule documentation.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nV. WHAT WOULD SHIFT THE DISTRIBUTION\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\u2022 Confirmation that 2026-04-13 is a data entry error \u2192 increases clean coverage probability\n\u2022 Finding that 2026-04-13 and 2026-05-22 represent two separate events \u2192 increases ROR/denial probability for the earlier event\n\u2022 Production of driver schedule confirming covered-person status \u2192 increases clean coverage probability\n\u2022 Resolution of Continental Freight Indemnity Co. signatory status \u2192 reduces ROR probability\n\u2022 Any executed release or settlement with the tortfeasor \u2192 affects subrogation rights and may shift distribution\n\u2022 Discovery of an applicable policy exclusion \u2192 shifts mass toward denial",
+    "citations": [
+      {
+        "document_id": "DOC-009-ED",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Patient identification and History paragraph",
+        "text_excerpt": "Patient: insured's commercial driver (Pinnacle Steel Works fleet). History: Belted driver of a box truck struck on the driver side by a tractor-trailer while stopped.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-009-ED",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Assessment/Plan and Medical specials paragraph",
+        "text_excerpt": "Medical specials to date: $38,500 (ED, imaging, orthopedic surgery estimate, physical therapy). Permanent impairment likely given operative fracture.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-009-INCIDENT",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Narrative line 8 and Fault allocation",
+        "text_excerpt": "Vehicle 1 (insured) was fully stopped, waiting to enter the yard, when Vehicle 2 struck it from the rear. The injured party is the insured's own driver. Fault allocation: Vehicle 2 \u2014 100%. Vehicle 1 (insured) \u2014 0%.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-009-PIP",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "First-party benefits and Subrogation paragraph",
+        "text_excerpt": "Total first-party benefits paid to date: $15,000. The Company is subrogated to the insured's rights of recovery against the responsible third party to the extent of PIP/med-pay paid.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-009-SUBRO",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Tortfeasor identification and Forum decision paragraphs",
+        "text_excerpt": "Tortfeasor: Brightway Freight Carriers, Inc. \u2014 a COMMERCIAL motor carrier (not a private-passenger vehicle), so the \u00a7627.7405 PIP commercial subrogation carve-out applies. The carrier's NAIC code is not in the file, so its Arbitration Forums signatory status cannot be verified \u2014 the forum decision (compulsory arbitration vs. litigation vs. negotiated demand) needs senior signoff.",
+        "relation": "supports"
+      }
+    ]
+  },
+  "ror_letter": {
+    "body": "RESERVATION OF RIGHTS LETTER\n[DRAFT \u2014 FOR ADJUSTER REVIEW ONLY]\n\n[Date]\n\nPinnacle Steel Works\n[Named Insured Address]\n\nRe: Claim No.: CLM-009\n    Policy No.: PLACEHOLDER-001\n    Coverage: Commercial Auto \u2014 Bodily Injury (CP-AUTO-BI-STANDARD)\n    Date of Loss: Under Investigation (see below)\n    Claimant: Insured Driver / PTY-CLM-009\n\nDear Policyholder:\n\nThis letter is sent on behalf of [Carrier Name] ('the Company') in connection with the above-referenced claim. The Company is conducting an investigation of this matter and wishes to advise you that it is doing so under a reservation of rights as described below. Nothing in this letter should be construed as a denial of coverage or a waiver of any policy term, condition, or defense.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nI. CLAIM BACKGROUND\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThe Company has received notice of a bodily injury claim arising from a commercial vehicle collision in which the named insured's driver was injured while operating a box truck on behalf of Pinnacle Steel Works. According to law enforcement documentation (Report PD-2026-3071), the insured vehicle was 'fully stopped, waiting to enter the yard, when Vehicle 2 struck it from the rear.' The injured party sustained a displaced clavicle fracture and cervical disc protrusion, with medical specials documented at $38,500 to date and permanent impairment noted as likely.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nII. BASIS FOR RESERVATION\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThe Company reserves its rights with respect to the following open matters:\n\n1. LOSS DATE DISCREPANCY\nThe claim intake record reflects a loss date of 2026-04-13. However, the Emergency Department records from Valley General Hospital reflect a date of service of 2026-05-22, and the police report is dated 2026-05-23. The Company is investigating whether these dates reflect the same covered event, a data entry error, or two separate incidents. Both dates fall within the policy period, but the Company reserves all rights pending confirmation of the correct loss date and the nature of the incident giving rise to this claim.\n\n2. COVERED-PERSON STATUS OF INJURED DRIVER\nThe medical records identify the injured party as the 'insured's commercial driver (Pinnacle Steel Works fleet),' and the police report confirms 'The injured party is the insured's own driver.' The Company's policy extends coverage to covered drivers operating covered commercial vehicles. However, no driver schedule or formal employment/contractor documentation has been provided to the Company confirming the injured driver's status as a covered person under Policy No. PLACEHOLDER-001. The Company reserves its rights pending receipt and review of such documentation.\n\n3. SUBROGATION \u2014 RECOVERY FORUM DETERMINATION\nThe Company has paid $15,000 in first-party PIP and med-pay benefits and holds subrogation rights against Brightway Freight Carriers, Inc. and its liability insurer, Continental Freight Indemnity Co. As noted in the Company's internal file, the NAIC code for Continental Freight Indemnity Co. is not available, preventing verification of that carrier's Arbitration Forums signatory status. The appropriate recovery forum (compulsory arbitration, litigation, or negotiated demand) cannot be determined until this information is obtained. The Company reserves its rights to pursue all available recovery channels.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIII. INVESTIGATION ONGOING\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThe Company is continuing its investigation of this claim. The above reservation does not limit or waive any other rights, defenses, or conditions available to the Company under the policy or applicable law. The Company will supplement this letter as the investigation proceeds.\n\nThe Company requests your cooperation in providing the following:\n(a) Clarification of the actual date and circumstances of the collision giving rise to this claim;\n(b) Documentation confirming the injured driver's employment status and covered-person classification under the named insured's commercial auto program;\n(c) Any correspondence, demands, or settlements with Brightway Freight Carriers, Inc. or Continental Freight Indemnity Co.\n\nPlease direct inquiries and documentation to the assigned adjuster at [Adjuster Contact Information].\n\nSincerely,\n\n[Adjuster Name]\n[Title]\n[Company Name]\n[Address | Phone | Email]\n\n[DRAFT \u2014 FOR ADJUSTER REVIEW ONLY. This letter is an AI-generated draft and requires review and approval by a licensed claims professional before issuance.]",
+    "citations": [
+      {
+        "document_id": "DOC-009-INCIDENT",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Narrative line 8",
+        "text_excerpt": "Vehicle 1 (insured) was fully stopped, waiting to enter the yard, when Vehicle 2 struck it from the rear. The injured party is the insured's own driver.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-009-ED",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Header and Medical specials",
+        "text_excerpt": "Date of service 2026-05-22 \u00b7 Page 3",
+        "relation": "contextual"
+      },
+      {
+        "document_id": "DOC-009-ED",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Patient identification line",
+        "text_excerpt": "Patient: insured's commercial driver (Pinnacle Steel Works fleet).",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-009-PIP",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Subrogation rights paragraph",
+        "text_excerpt": "The Company is subrogated to the insured's rights of recovery against the responsible third party to the extent of PIP/med-pay paid. No release has been given to the tortfeasor or its carrier; no settlement reached; the statute of limitations has not run.",
+        "relation": "supports"
+      },
+      {
+        "document_id": "DOC-009-SUBRO",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Forum decision note",
+        "text_excerpt": "The carrier's NAIC code is not in the file, so its Arbitration Forums signatory status cannot be verified \u2014 the forum decision (compulsory arbitration vs. litigation vs. negotiated demand) needs senior signoff.",
+        "relation": "supports"
+      }
+    ]
+  },
+  "denial_letter": {
+    "body": "NOTICE REGARDING COVERAGE DETERMINATION\n[DRAFT \u2014 FOR ADJUSTER REVIEW ONLY \u2014 LOW PROBABILITY PATH (2%)]\n\n[Date]\n\nPinnacle Steel Works\n[Named Insured Address]\n\nRe: Claim No.: CLM-009\n    Policy No.: PLACEHOLDER-001\n    Coverage: Commercial Auto \u2014 Bodily Injury (CP-AUTO-BI-STANDARD)\n    Date of Loss: Under Investigation\n    Claimant: Insured Driver / PTY-CLM-009\n\nDear Policyholder:\n\nThis letter is provided on behalf of [Carrier Name] ('the Company') following investigation of the above-referenced claim. This draft denial letter is prepared as a contingency document reflecting a low-probability (approximately 2%) coverage outcome. It would apply only if investigation conclusively establishes either: (a) that the 2026-04-13 intake loss date reflects a separate incident that is not covered under the policy; or (b) that the injured driver is definitively not a covered person under Policy No. PLACEHOLDER-001.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nBASIS FOR POTENTIAL DENIAL (CONTINGENT)\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nIf investigation determines that the loss event described in the claim intake (loss date 2026-04-13) is a different and distinct occurrence from the collision documented in the Emergency Department records (date of service 2026-05-22, Valley General Hospital, MRN 88431) and police report (Report PD-2026-3071, dated 2026-05-23), and that the 2026-04-13 event does not independently satisfy the coverage requirements of CP-AUTO-BI-STANDARD, the Company may decline coverage for the 2026-04-13 event.\n\nAdditionally, if documentation establishes that the injured driver is not a covered person under the named insured's commercial auto program \u2014 notwithstanding the medical record identifying the claimant as the 'insured's commercial driver (Pinnacle Steel Works fleet)' \u2014 coverage under CP-AUTO-BI-STANDARD would not be available.\n\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nNOTE TO ADJUSTER\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nThis denial letter is drafted as a low-probability contingency artifact (2% synthesis probability). The current evidentiary record strongly supports coverage or, at most, a reservation of rights posture. This letter SHOULD NOT be issued unless and until the investigation conclusively establishes a specific coverage-defeating fact not currently supported by the file. Review by coverage counsel is strongly advisable before issuance of any denial.\n\nSincerely,\n\n[Adjuster Name]\n[Title]\n[Company Name]\n[Address | Phone | Email]\n\n[DRAFT \u2014 FOR ADJUSTER REVIEW ONLY. This letter is an AI-generated draft and requires review and approval by a licensed claims professional and, where appropriate, coverage counsel before issuance.]",
+    "citations": [
+      {
+        "document_id": "DOC-009-ED",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Header and Patient identification",
+        "text_excerpt": "Date of service 2026-05-22 \u00b7 Page 3",
+        "relation": "contextual"
+      },
+      {
+        "document_id": "DOC-009-ED",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Patient identification line",
+        "text_excerpt": "Patient: insured's commercial driver (Pinnacle Steel Works fleet).",
+        "relation": "contextual"
+      },
+      {
+        "document_id": "DOC-009-INCIDENT",
+        "sourced_rule_id": null,
+        "ledger_entry_id": null,
+        "locator": "Report header",
+        "text_excerpt": "Report PD-2026-3071 \u00b7 Date 2026-05-23",
+        "relation": "contextual"
+      }
+    ]
+  }
+}

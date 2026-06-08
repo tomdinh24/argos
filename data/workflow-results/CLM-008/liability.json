@@ -1,0 +1,201 @@
+{
+  "request_id": "LIA-REQ-008",
+  "reviewed_as_of": "2026-06-08T20:44:30.665204Z",
+  "apportionment": {
+    "insured_alvarez": {
+      "fault_pct": "90.00",
+      "fault_pct_band_low": "85.00",
+      "fault_pct_band_high": "95.00",
+      "confidence": 0.95
+    },
+    "insured_owner_cedar_ridge": {
+      "fault_pct": "2.50",
+      "fault_pct_band_low": "0.00",
+      "fault_pct_band_high": "7.50",
+      "confidence": 0.95
+    },
+    "claimant_marini": {
+      "fault_pct": "7.50",
+      "fault_pct_band_low": "2.50",
+      "fault_pct_band_high": "12.50",
+      "confidence": 0.95
+    }
+  },
+  "applicable_regime": {
+    "statute": "modified_51_bar_hb837",
+    "recovery_bar_triggered": false,
+    "bar_basis": "none",
+    "date_of_loss_governing": "2026-04-13",
+    "explanation": "Accrual date 2026-04-13 \u2265 2023-03-24 \u2192 HB 837 modified-comparative 51% bar applies (\u00a7768.81(6))."
+  },
+  "exposure_ceiling": {
+    "vicarious_cap_applies": false,
+    "vicarious_cap_value": null,
+    "conditional_econ_layer": null,
+    "negligent_entrustment_uncapped_path_available": false,
+    "graves_lessor_removed": false,
+    "fabre_defendants": []
+  },
+  "rationale": {
+    "fact_pattern_anchor": {
+      "pattern": "rear_end",
+      "anchor_pct": "95",
+      "anchor_party_role": "rear_driver",
+      "controlling_authority": "Birge v. Charron, 107 So. 3d 350 (Fla. 2012); Pierce v. Progressive Am. Ins. Co.; Eppler v. Tarmac"
+    },
+    "evidence_adjustments": [
+      {
+        "evidence_item_idx": 0,
+        "direction": "insured_more_fault",
+        "magnitude_points": "22.5",
+        "basis": "police_report_narrative (hard_data) \u2014 DOC-008-CHP"
+      },
+      {
+        "evidence_item_idx": 1,
+        "direction": "insured_more_fault",
+        "magnitude_points": "22.5",
+        "basis": "police_report_field (hard_data) \u2014 DOC-008-CHP"
+      },
+      {
+        "evidence_item_idx": 2,
+        "direction": "neutral",
+        "magnitude_points": "22.5",
+        "basis": "police_report_narrative (hard_data) \u2014 DOC-008-CHP"
+      },
+      {
+        "evidence_item_idx": 3,
+        "direction": "claimant_more_fault",
+        "magnitude_points": "7.5",
+        "basis": "police_report_field (rebuttable_signal) \u2014 DOC-008-CHP"
+      },
+      {
+        "evidence_item_idx": 4,
+        "direction": "neutral",
+        "magnitude_points": "12.5",
+        "basis": "er_record_mechanism (independent) \u2014 DOC-008-ED"
+      },
+      {
+        "evidence_item_idx": 5,
+        "direction": "neutral",
+        "magnitude_points": "7.5",
+        "basis": "damage_appraisal (rebuttable_signal) \u2014 DOC-008-ED"
+      },
+      {
+        "evidence_item_idx": 6,
+        "direction": "neutral",
+        "magnitude_points": "12.5",
+        "basis": "er_record_mechanism (independent) \u2014 DOC-008-ED"
+      }
+    ],
+    "doctrine_gates_applied": [
+      {
+        "doctrine_id": "hb_837_51_bar",
+        "effect": "Modified-comparative 51% bar for non-medical-negligence accruing after 2023-03-24.",
+        "statute_or_case_cite": "\u00a7768.81(6); HB 837 (eff. 2023-03-24)"
+      },
+      {
+        "doctrine_id": "rear_end_rebuttable_presumption",
+        "effect": "Rear driver presumed at fault unless four named rebuttals evidenced.",
+        "statute_or_case_cite": "Birge v. Charron; Pierce; Eppler; Douglas-Seibert"
+      },
+      {
+        "doctrine_id": "joint_several_abolished",
+        "effect": "Joint-and-several liability abolished for negligence.",
+        "statute_or_case_cite": "\u00a7768.81(3)"
+      }
+    ],
+    "net_apportionment_walk": "Start: rear_end anchor = 95% (rear_driver \u2192 insured_alvarez).\n  insured_more_fault: 22.5 pts (police_report_narrative (hard_data) \u2014 DOC-008-CHP)\n  insured_more_fault: 22.5 pts (police_report_field (hard_data) \u2014 DOC-008-CHP)\n  claimant_more_fault: 7.5 pts (police_report_field (rebuttable_signal) \u2014 DOC-008-CHP)\n  doctrine: hb_837_51_bar \u2014 \u00a7768.81(6); HB 837 (eff. 2023-03-24)\n  doctrine: rear_end_rebuttable_presumption \u2014 Birge v. Charron; Pierce; Eppler; Douglas-Seibert\n  doctrine: joint_several_abolished \u2014 \u00a7768.81(3)\nNet per party: insured_alvarez=90.00%, insured_owner_cedar_ridge=2.50%, claimant_marini=7.50%"
+  },
+  "diligence_ledger": {
+    "posture_percent_by_party": {
+      "insured_alvarez": "90.00",
+      "insured_owner_cedar_ridge": "2.50",
+      "claimant_marini": "7.50"
+    },
+    "basis_evidence": [
+      {
+        "source_doc_id": "DOC-008-CHP",
+        "quoted_span": "Vehicle 1 (insured) failed to stop in time and struck Vehicle 2 (claimant), which was stopped in traffic.",
+        "weight_class": "hard_data"
+      },
+      {
+        "source_doc_id": "DOC-008-CHP",
+        "quoted_span": "Primary collision factor: Vehicle 1 (insured) \u2014 following too closely.",
+        "weight_class": "hard_data"
+      },
+      {
+        "source_doc_id": "DOC-008-CHP",
+        "quoted_span": "Vehicle 1 displayed magnetic signage reading 'QuickRoute Deliveries.'",
+        "weight_class": "hard_data"
+      },
+      {
+        "source_doc_id": "DOC-008-ED",
+        "quoted_span": "Chief complaint: Neck and shoulder soreness after a low-speed motor-vehicle collision earlier today.",
+        "weight_class": "independent"
+      },
+      {
+        "source_doc_id": "DOC-008-ED",
+        "quoted_span": "Mild left cervical paraspinal tenderness. Full range of motion. Neurologic exam intact. No midline tenderness. Cervical X-ray obtained \u2014 no acute fracture or malalignment. Assessment: Cervical strain (whiplash), minor. No red-flag findings.",
+        "weight_class": "independent"
+      }
+    ],
+    "change_conditions": [
+      "If Birge-category rebuttal evidence lands (mechanical failure / sudden stop / lane-change-by-lead / illegal-stop), rear-driver anchor shifts down materially.",
+      "If poi_vs_claimant consistency check resolves (corroborated or contradicted), apportionment may shift.",
+      "If excess-judgment likelihood becomes clearer (damages evidence + low-limits confirmed), Powell duty to initiate tender solidifies.",
+      "Demand on file \u2014 sufficient-evidence assessment is the gating next decision; new evidence may flip the \u00a7624.155(4) call."
+    ],
+    "next_review_date": "2026-07-08",
+    "next_review_trigger": "VARIANCE_REVIEW",
+    "prior_posture_delta": null,
+    "open_requests": [
+      {
+        "request_type": "recorded_statement_insured",
+        "requested_date": "2026-06-08",
+        "age_days": 0,
+        "target_party": "insured"
+      }
+    ],
+    "evidence_not_obtained": [],
+    "supervisor_disagreement_record": []
+  },
+  "rationale_text": "LIABILITY EVALUATION \u2014 Claim CLM-008 | Eval #1 | 2026-06-08 | Examiner: system | constants v1.2026-06-01\nTRIGGER: INITIAL_APPORTIONMENT (2026-06-08)\n\nPARTIES (N=3):\n  insured_alvarez | role=insured_driver | identity_cite=DOC-008-CHP: 'Vehicle 1 operator identified as J. Alvarez.'\n  insured_owner_cedar_ridge | role=insured_owner | identity_cite=CLM-008 claim record: 'insured_name: Cedar Ridge Apartments LLC'\n  claimant_marini | role=claimant_driver | identity_cite=CLM-008 claim record: 'claimant_name: Sofia Marini'; DOC-008-CHP: 'Vehicle 2 (claimant)'\n\nFACT PATTERN: rear_end (anchor: 95% rear_driver; controlling: Birge v. Charron, 107 So. 3d 350 (Fla. 2012); Pierce v. Progressive Am. Ins. Co.; Eppler v. Tarmac)\n\nAPPLICABLE REGIME:\n  Statute: modified_51_bar_hb837\n  Accrual date 2026-04-13 \u2192 Accrual date 2026-04-13 \u2265 2023-03-24 \u2192 HB 837 modified-comparative 51% bar applies (\u00a7768.81(6)).\n  Recovery bar triggered: none (triggered=False)\n\nEXPOSURE CEILING:\n  Vicarious cap: none\n  Negligent entrustment path: not_evidenced\n  Fabre defendants: none pled\n\nAPPORTIONMENT WALK (anchor \u2192 evidence \u2192 doctrine \u2192 net):\n  Start: rear_end anchor = 95% (rear_driver \u2192 insured_alvarez).\n    insured_more_fault: 22.5 pts (police_report_narrative (hard_data) \u2014 DOC-008-CHP)\n    insured_more_fault: 22.5 pts (police_report_field (hard_data) \u2014 DOC-008-CHP)\n    claimant_more_fault: 7.5 pts (police_report_field (rebuttable_signal) \u2014 DOC-008-CHP)\n    doctrine: hb_837_51_bar \u2014 \u00a7768.81(6); HB 837 (eff. 2023-03-24)\n    doctrine: rear_end_rebuttable_presumption \u2014 Birge v. Charron; Pierce; Eppler; Douglas-Seibert\n    doctrine: joint_several_abolished \u2014 \u00a7768.81(3)\n  Net per party: insured_alvarez=90.00%, insured_owner_cedar_ridge=2.50%, claimant_marini=7.50%\n\nCONFIDENCE BAND: 85.00% \u2014 95.00% (confidence: 0.95)\n\nVARIANCE FLAGS (3 active):\n  - multi_party_matrix_required\n  - powell_duty_clarity\n  - roundtable_recommended\n\n\u00a7316.066(4) EVIDENCE PACK CLASSIFICATION:\n  Trial-admissible: 7 items\n  Privileged statements (reserve-only): 0 items\n  Physical-evidence carveout: 1 items\n  Chemical-test carveout: 0 items\n\nDILIGENCE LEDGER:\n  Posture by party:\n    claimant_marini: 7.50%\n    insured_alvarez: 90.00%\n    insured_owner_cedar_ridge: 2.50%\n  Basis evidence (5 items):\n    [hard_data] DOC-008-CHP: \"Vehicle 1 (insured) failed to stop in time and struck Vehicle 2 (claimant), which was stopped in traffic.\"\n    [hard_data] DOC-008-CHP: \"Primary collision factor: Vehicle 1 (insured) \u2014 following too closely.\"\n    [hard_data] DOC-008-CHP: \"Vehicle 1 displayed magnetic signage reading 'QuickRoute Deliveries.'\"\n    [independent] DOC-008-ED: \"Chief complaint: Neck and shoulder soreness after a low-speed motor-vehicle collision earlier today.\"\n    [independent] DOC-008-ED: \"Mild left cervical paraspinal tenderness. Full range of motion. Neurologic exam intact. No midline tenderness. Cervical \"\n  Change conditions:\n    - If Birge-category rebuttal evidence lands (mechanical failure / sudden stop / lane-change-by-lead / illegal-stop), rear-driver anchor shifts down materially.\n    - If poi_vs_claimant consistency check resolves (corroborated or contradicted), apportionment may shift.\n    - If excess-judgment likelihood becomes clearer (damages evidence + low-limits confirmed), Powell duty to initiate tender solidifies.\n    - Demand on file \u2014 sufficient-evidence assessment is the gating next decision; new evidence may flip the \u00a7624.155(4) call.\n  Next review: 2026-07-08 (trigger: VARIANCE_REVIEW)\n  Open requests:\n    - recorded_statement_insured \u2192 insured (age 0d, requested 2026-06-08)\n\nAUTHORITY:\n  Gross exposure: $0.00\n  Net apportioned exposure: $0.00\n  Required tier: roundtable\n  Committable at examiner: False\n  Basis: Mandatory-escalation variance flag active (powell_duty_clarity)\n\nDOWNSTREAM HANDOFFS:\n  Reserve: insured_liability_pct=90.00, band=[85.00, 95.00], regime=modified_51_bar_hb837, ceiling=vicarious_cap_applies=False\n  Brief: rationale + diligence ledger + 7 trial-admissible items\n  Authority/Tender: tier=roundtable, committable_at_examiner=False\n  Coverage: owner_type=business_not_in_leasing, permissive_use=evidenced, line_of_business=auto_bi",
+  "variance_flags": [
+    "multi_party_matrix_required",
+    "powell_duty_clarity",
+    "roundtable_recommended"
+  ],
+  "authority_tier_required": {
+    "committable_at_examiner": false,
+    "required_tier": "roundtable",
+    "gross_exposure": "0.00",
+    "net_apportioned_exposure": "0.00",
+    "basis_for_tier": "Mandatory-escalation variance flag active (powell_duty_clarity)"
+  },
+  "evidence_pack_classification": {
+    "reserve_only_evidence_idx": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "trial_admissible_evidence_idx": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "privileged_316_066_excluded_idx": [],
+    "physical_evidence_carveout_admissible_idx": [
+      2
+    ],
+    "chemical_test_carveout_admissible_idx": []
+  },
+  "subro_referral": null
+}
