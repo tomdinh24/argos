@@ -182,8 +182,12 @@ def _rationale_one_liner(
     if rec:
         r = (rec.get("recommendation") or "").strip()
         if r and r not in ("abstain", "uncommitted"):
-            lane = ((rec.get("subrogation_lane", {}) or {}).get("lane_id") or "")
-            lane = lane.replace("_", " ").strip()
+            # subrogation_lane may persist as {lane_id: ...} or a bare string
+            # (older results) — mirror _recovery_section's defensive handling so
+            # one odd result file can't 500 the whole /api/claims list.
+            lane_raw = rec.get("subrogation_lane")
+            lane = lane_raw.get("lane_id") if isinstance(lane_raw, dict) else lane_raw
+            lane = (lane or "").replace("_", " ").strip()
             tail = f" — {lane} lane" if lane else ""
             return f"Recovery: {r.replace('_', ' ')}{tail}."
 

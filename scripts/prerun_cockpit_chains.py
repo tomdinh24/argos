@@ -81,12 +81,17 @@ def _reset_claim(claim_id: str) -> None:
 def prerun_claim(
     runner: WorkflowRunner, claim_id: str, stages: list[str]
 ) -> list[Job]:
-    """Enqueue + drain the chain (in order) for one claim. Recovery/Closure read
-    their upstream snapshots from disk, so order matters and each stage is
-    persisted before the next runs (FIFO drain)."""
-    queue = runner.queue
+    """Run the chain (in order) for one claim, one stage at a time. Recovery and
+    Closure read their upstream snapshots from disk, so order matters and each
+    stage must be persisted before the next runs.
+
+    Stops the chain on the first stage that doesn't complete: a failed upstream
+    (e.g. a transient LLM error) would otherwise let the downstream stages run
+    against missing/incomplete snapshots and persist a polluted partial fixture.
+    """
+    processed: list[Job] = []
     for stage in stages:
-        queue.enqueue(
+        runner.queue.enqueue(
             Job(
                 workflow=stage,
                 claim_id=claim_id,
@@ -96,7 +101,14 @@ def prerun_claim(
                 posture_changed="prerun",
             )
         )
-    return runner.process_all()
+        job = runner.process_one()
+        if job is not None:
+            processed.append(job)
+        if job is None or job.status != JobStatus.DONE:
+            print(f"  [stop] {stage} did not complete — skipping remaining "
+                  f"stages for {claim_id} (no polluted downstream fixtures)")
+            break
+    return processed
 
 
 def main() -> int:
