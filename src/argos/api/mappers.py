@@ -151,14 +151,70 @@ def _reserve_total(results_root: Path, claim_id: str) -> float | None:
         return None
 
 
+def _short_money(amount: float) -> str:
+    """255360.0 → '$255k'; 1500000.0 → '$1.5M'; 800.0 → '$800'."""
+    if amount >= 1_000_000:
+        return f"${amount / 1_000_000:.1f}M".replace(".0M", "M")
+    if amount >= 1_000:
+        return f"${amount / 1_000:.0f}k"
+    return f"${amount:,.0f}"
+
+
 def _rationale_one_liner(
     results_root: Path, claim_id: str, next_wf: WorkflowName, band: TriageBand,
 ) -> str:
-    """A single-sentence summary for the caseload row. Pulls from the most
-    recent workflow result's summary if available; otherwise a band-based
-    default."""
+    """A single-sentence summary for the caseload row.
+
+    Surfaces the most *salient* signal across the committed chain so the
+    caseload list differentiates claims — rather than echoing the last stage,
+    which is `closure: blocked_by_defects` for every fully pre-run claim and
+    makes every row read identically. Priority: a live (non-abstain) recovery,
+    then an escalated reserve, then a liability bar, then contested coverage;
+    falling back to the most-recent-stage summary (partial chains) and finally
+    the band default."""
+    rec = _load_result(results_root, claim_id, "recovery")
+    res = _load_result(results_root, claim_id, "reserve")
+    lia = _load_result(results_root, claim_id, "liability")
+    cov = _load_result(results_root, claim_id, "coverage")
+
+    # 1. Recovery actively in play — the subrogation story (abstain is the
+    #    common case and not worth surfacing over the stages below).
+    if rec:
+        r = (rec.get("recommendation") or "").strip()
+        if r and r not in ("abstain", "uncommitted"):
+            lane = ((rec.get("subrogation_lane", {}) or {}).get("lane_id") or "")
+            lane = lane.replace("_", " ").strip()
+            tail = f" — {lane} lane" if lane else ""
+            return f"Recovery: {r.replace('_', ' ')}{tail}."
+
+    # 2. Reserve escalation — a real reserve that needs above-handler sign-off.
+    if res:
+        total = sum(
+            float((c.get("recommended_outstanding_band", {}) or {}).get("p50", 0))
+            for c in (res.get("per_component", []) or [])
+        )
+        auth = res.get("authority_required_level")
+        if total and auth and auth not in ("handler", "adjuster"):
+            return f"Reserve {_short_money(total)} — {auth} sign-off needed."
+
+    # 3. Liability barred — comparative-fault threshold tripped.
+    if lia:
+        bar = (lia.get("applicable_regime", {}) or {}).get("bar_basis")
+        if bar and bar not in ("none", ""):
+            return "Liability barred — comparative-fault threshold; reserve $0."
+
+    # 4. Contested coverage — ROR / denial leads the distribution.
+    if cov:
+        outcomes = (cov.get("synthesis", {}) or {}).get("outcomes", []) or []
+        if outcomes:
+            top = max(outcomes, key=lambda o: o.get("probability", 0))
+            verdict = _verdict_label(top.get("claim_text", ""))
+            prob = float(top.get("probability", 0))
+            if not verdict.lower().startswith("clean") and prob >= 0.45:
+                return f"Coverage: {verdict.lower()} — open coverage questions ({prob:.0%})."
+
     claim_dir = results_root / claim_id
-    # Pick the most recently completed workflow whose summary we can show.
+    # Fallback: the most recently completed workflow whose summary we can show.
     for w in reversed(WORKFLOW_CHAIN):
         p = claim_dir / f"{w}.json"
         if p.exists():
