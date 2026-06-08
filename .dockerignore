@@ -1,0 +1,15 @@
+# Keep the Docker build context lean. The Dockerfile only COPYs requirements.txt,
+# src/, and data/, but trimming the context speeds the upload and build.
+.git
+.venv
+web
+docs
+tests
+scripts
+__pycache__
+*.pyc
+.pytest_cache
+.ruff_cache
+.mypy_cache
+.vercel
+.gstack

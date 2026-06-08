@@ -16,12 +16,16 @@ HTTPS. This is the runbook for the hosted half of the "live end-to-end" path
 
 ## What's already wired (repo-side, no action needed)
 
-- **`railway.json`** — pins the Nixpacks builder, the start command
-  (`PYTHONPATH=src uvicorn argos.api.app:app --host 0.0.0.0 --port $PORT`), and a
-  `/healthz` health check. Railway honors `$PORT` automatically.
-- **`requirements.txt`** — deterministic dependency install (mirrors
-  `pyproject.toml`). The `argos` package is made importable via `PYTHONPATH=src`,
-  so no `pip install .` build step is needed.
+- **`Dockerfile`** — the builder (set in `railway.json` as `DOCKERFILE`). Builds
+  from `python:3.11-slim`, `pip install`s `requirements.txt`, copies `src/` + `data/`,
+  runs uvicorn on `$PORT`. Replaced Nixpacks, whose build-time fetch of the NixOS
+  package archive from GitHub failed intermittently with HTTP 504 (2026-06-08). The
+  Docker base is Docker-Hub-cached, so builds are deterministic.
+- **`railway.json`** — `DOCKERFILE` builder + a `/healthz` health check. Railway
+  injects `$PORT`; the Dockerfile `CMD` owns the start command.
+- **`requirements.txt`** — pinned dependency install (mirrors `pyproject.toml`). The
+  `argos` package is importable via `PYTHONPATH=/app/src` (set in the Dockerfile),
+  so no `pip install .` step is needed.
 - **`.python-version`** → `3.11` (matches the local venv all evals/tests ran on).
 - **`Procfile`** — aligned with the same start command (Heroku-style fallback).
 - **CORS** already allows `https://project-argos.vercel.app`

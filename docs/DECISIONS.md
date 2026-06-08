@@ -44,6 +44,34 @@ and surface the conflict.
 
 ---
 
+## 2026-06-08 — Backend deploys via Dockerfile, not Nixpacks (flaky nixpkgs fetch); one canonical Railway project
+
+**Decision:** The backend builds on Railway from a **Dockerfile** (`python:3.11-slim`
++ `pip install -r requirements.txt` + `COPY src data` + uvicorn), not Nixpacks.
+`railway.json` builder flipped `NIXPACKS` → `DOCKERFILE`. There is **one** Railway
+project — the pre-existing `Argos` (`36ed2290`, service `argos`, deploys from GitHub
+`tomdinh24/argos` main, public `argos-production-d382.up.railway.app`).
+
+**Why:** Nixpacks fetches its NixOS package archive from `github.com/NixOS/nixpkgs`
+at build time; GitHub returned intermittent HTTP 504s, failing the whole build
+nondeterministically (same commit, different result). The `python:3.11-slim` base is
+Docker-Hub-cached → reproducible, faster builds, no nix layer. Mirrors the verified
+local setup (pip + Python 3.11, `PYTHONPATH=src`).
+
+**Process miss (logged via /learn):** I ran `railway init` and provisioned a *duplicate*
+project (`argos-backend`) instead of discovering the existing `Argos` first. The
+duplicate only "worked" because `railway up` bypassed git; the real fix was commit +
+push to main so d382 auto-deploys. Duplicate deleted. Lesson: enumerate existing cloud
+resources (`railway list`, `vercel project ls`) before creating — discover before create.
+
+**Out of scope:** Foundry bridge stays OFF (OSDK drift, prior entry). Railway disk
+ephemeral — committed pre-run hero results survive; runtime decisions don't.
+
+**Code touched:** `Dockerfile`, `.dockerignore` (new); `railway.json` (builder);
+`docs/DEPLOY_RAILWAY.md`.
+
+---
+
 ## 2026-06-07 — Hosted backend = Railway (Phase 5 host pick + turnkey deploy config)
 
 **Decision:** The hosted demo backend runs on **Railway** (Tom's pick; the
