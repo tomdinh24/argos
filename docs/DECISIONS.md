@@ -44,6 +44,32 @@ and surface the conflict.
 
 ---
 
+## 2026-06-08 — Canonical hosted demo URL = `argos-claims.vercel.app` (Vercel project `argos`)
+
+**Decision:** The public cockpit demo lives at **`https://argos-claims.vercel.app`**.
+The Vercel project is named **`argos`** (`prj_yJk9…`); the URL is a manual alias on
+its production deployment. Vercel **SSO Deployment Protection is OFF** for the project
+so the URL is publicly reachable — the cockpit's own in-app access code is the actual
+gate on the claim data. The backend CORS allowlist (`api/app.py`) now lists
+`argos-claims.vercel.app` (+ `web-beryl-one-98.vercel.app`, Vercel's auto alias).
+
+**Why:** The project's auto-assigned domain was the unreadable `web-beryl-one-98`
+(the nice `*.vercel.app` names were taken — `project-argos.vercel.app` is an unrelated
+Angular app). A manual `argos-claims.vercel.app` alias was 401-gated by Deployment
+Protection (`all_except_custom_domains`); turning SSO off makes it public without a
+custom domain. App-level access code keeps the data protected, so the Vercel SSO layer
+was redundant.
+
+**Out of scope:** No custom domain yet. `argos.systems` (UltraDNS, needs Tom's DNS
+access) or a `fabryx.io` subdomain (Namecheap DNS) can be layered on later: add the
+domain to the `argos` project + one DNS record + a CORS origin. With SSO off, preview
+deploy URLs are also public.
+
+**Code touched:** `api/app.py` (CORS allowlist), `docs/DEPLOY_RAILWAY.md`.
+Infra: Vercel project rename + alias + SSO-off; Railway `ARGOS_CORS_EXTRA`.
+
+---
+
 ## 2026-06-08 — Backend deploys via Dockerfile, not Nixpacks (flaky nixpkgs fetch); one canonical Railway project
 
 **Decision:** The backend builds on Railway from a **Dockerfile** (`python:3.11-slim`

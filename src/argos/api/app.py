@@ -73,11 +73,14 @@ log = logging.getLogger(__name__)
 app = FastAPI(title="Argos API", version="0.1.0")
 
 # Cockpit local dev (Next defaults to 3000; this repo's dev server runs on
-# 3007) + Vercel deploy. Add more origins per environment via ARGOS_CORS_EXTRA.
+# 3007) + the Vercel-hosted cockpit. Public demo URL is argos-claims.vercel.app;
+# web-beryl-one-98 is Vercel's auto-assigned alias for the same project (kept as
+# a fallback). Add more origins per environment via ARGOS_CORS_EXTRA.
 _ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:3007",
-    "https://project-argos.vercel.app",
+    "https://argos-claims.vercel.app",
+    "https://web-beryl-one-98.vercel.app",
 ]
 _extra = os.environ.get("ARGOS_CORS_EXTRA", "").split(",")
 _ALLOWED_ORIGINS.extend(o.strip() for o in _extra if o.strip())

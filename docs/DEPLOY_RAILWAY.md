@@ -1,18 +1,21 @@
 # Deploying the Argos backend to Railway
 
 The FastAPI backend (`argos.api.app:app`) hosts the cockpit's live data + decision
-API. The Vercel-hosted cockpit (`https://project-argos.vercel.app`) talks to it over
+API. The Vercel-hosted cockpit (`https://argos-claims.vercel.app`) talks to it over
 HTTPS. This is the runbook for the hosted half of the "live end-to-end" path
-(Phase 5 of the cockpit-live plan; see `docs/DECISIONS.md` 2026-06-07).
+(Phase 5 of the cockpit-live plan; see `docs/DECISIONS.md` 2026-06-07/08).
 
 ## Live deployment
 
-- **Backend:** `https://argos-backend-production-0121.up.railway.app` (deployed
-  2026-06-07; auth ON via `ARGOS_DEMO_TOKEN`, Foundry bridge OFF).
-- **Railway project:** `argos-backend` (`b268fc55-eede-4099-b256-5a9a3fd8b567`).
-- `ANTHROPIC_API_KEY` is **not yet set** on the host → the two pre-baked hero
-  claims (CLM-001, CLM-004) render fully, but opening a *fresh* claim that needs a
-  cold chain run will fail until the key is added.
+- **Cockpit (public demo):** `https://argos-claims.vercel.app` — Vercel project
+  `argos` (`prj_yJk9…`); gated by an in-app access code. Vercel SSO Deployment
+  Protection is OFF so the URL is public (the app's own gate guards the data).
+- **Backend:** `https://argos-production-d382.up.railway.app` — Railway project
+  `Argos` (`36ed2290…`), service `argos`, deploys from GitHub `tomdinh24/argos`
+  `main` via the Dockerfile builder. Auth ON (`ARGOS_DEMO_TOKEN`), Foundry bridge
+  OFF, `ANTHROPIC_API_KEY` set (cold chains can run on-host).
+- **Do not confuse** with `project-argos.vercel.app`, an unrelated Angular app.
+- CORS allows the cockpit origin in code (`api/app.py`) + `ARGOS_CORS_EXTRA`.
 
 ## What's already wired (repo-side, no action needed)
 
